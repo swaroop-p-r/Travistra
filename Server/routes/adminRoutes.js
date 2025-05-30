@@ -1,5 +1,5 @@
 const express = require('express')
-const { adminViewUser, adminDeleteUser, adminToggleUserStatus, adminAddPackage, adminViewPackage, adminTogglePackageStatus, adminDeletePackage, adminViewPackageById, adminUpdatePackage } = require('../controller/adminControl')
+const { adminViewUser, adminDeleteUser, adminToggleUserStatus, adminAddPackage, adminViewPackage, adminTogglePackageStatus, adminDeletePackage, adminViewPackageById, adminUpdatePackage, adminAddVehicle } = require('../controller/adminControl')
 const adminRoutes = express.Router()
 const multer = require('multer')
 const path = require('path')
@@ -24,6 +24,6 @@ adminRoutes.patch('/packagestatus',adminTogglePackageStatus)
 adminRoutes.delete('/deletepackage',adminDeletePackage)
 adminRoutes.get('/adminviewpackagebyid/:id',adminViewPackageById)
 adminRoutes.patch('/updatepackage', upload.array('images'), adminUpdatePackage);
-
+adminRoutes.post('/adminvehicle',upload.single('image'),adminAddVehicle)
 
 module.exports = adminRoutes

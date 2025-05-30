@@ -1,6 +1,7 @@
 const User = require('../model/User')
 const Package = require('../model/Package')
 const path = require('path')
+const Vehicle = require('../model/Vehicle')
 const fs = require('fs').promises
 
 const adminViewUser = async (req, res) => {
@@ -228,15 +229,15 @@ const adminUpdatePackage = async (req, res) => {
         pkg.itinerary = itinerary;
 
         if (newImages.length > 0 && pkg.images && pkg.images.length > 0) {
-            for (const img of pkg.images){
-                const imgPath = path.join(__dirname,'..','uploads',img)
+            for (const img of pkg.images) {
+                const imgPath = path.join(__dirname, '..', 'uploads', img)
                 try {
                     await fs.unlink(imgPath)
                 } catch (err) {
-                    console.log(`Deletion Failed ${imgPath}`,err)
+                    console.log(`Deletion Failed ${imgPath}`, err)
                 }
             }
-            pkg.images=newImages
+            pkg.images = newImages
         }
 
         await pkg.save();
@@ -247,6 +248,34 @@ const adminUpdatePackage = async (req, res) => {
     }
 };
 
+const adminAddVehicle = async (req, res) => {
+    try {
+        const {
+            vehicle_name,
+            registration_no,
+            model,
+            type,
+            seat,
+        } = req.body;
+        if (!req.file) {
+            return res.status(400).json({msg:'Image not Uploaded',status:400})
+        }
+        const vehicle = await Vehicle({
+            vehicle_name,
+            registration_no,
+            model,
+            type,
+            seat,
+            image:req.file.filename,
+        })
+        await vehicle.save()
+        res.status(200).json({msg:'Vehicle Added Successful', status:200, newVehicle:vehicle})
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({ msg: "Server Error", status: 500 })
+    }
+}
 
 
-module.exports = { adminUpdatePackage, adminViewPackageById, adminDeletePackage, adminTogglePackageStatus, adminViewPackage, adminAddPackage, adminViewUser, adminDeleteUser, adminToggleUserStatus }
+
+module.exports = { adminAddVehicle, adminUpdatePackage, adminViewPackageById, adminDeletePackage, adminTogglePackageStatus, adminViewPackage, adminAddPackage, adminViewUser, adminDeleteUser, adminToggleUserStatus }

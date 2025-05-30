@@ -51,7 +51,7 @@ export default function AdminVehicle() {
         data.append('model', formData.model)
         data.append('type', formData.type)
         data.append('seat', formData.seat)
-        data.append('image', formData.image)
+        data.append('image', image)
 
         try {
             const res=await AXIOS.post('http://localhost:4000/api/admin/adminvehicle',
