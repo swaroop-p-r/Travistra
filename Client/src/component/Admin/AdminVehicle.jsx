@@ -54,15 +54,21 @@ export default function AdminVehicle() {
         data.append('image', image)
 
         try {
-            const res=await AXIOS.post('http://localhost:4000/api/admin/adminvehicle',
+            const res = await AXIOS.post('http://localhost:4000/api/admin/adminvehicle',
                 data,
                 {
-                headers:{'Content-Type':'multipart/form-data'}
-            });
+                    headers: { 'Content-Type': 'multipart/form-data' }
+                });
             alert(res.data.msg);
         } catch (err) {
-            console.log("Error Adding Vehicle", err)
-            alert("Error Adding Vehicle");
+            if (err.response && err.response.data && err.response.data.msg) {
+                alert(err.response.data.msg)
+            }
+            else {
+                console.log("Error Adding Vehicle", err)
+                alert("Error Adding Vehicle");
+            }
+
         }
     };
 
@@ -170,7 +176,7 @@ export default function AdminVehicle() {
                                     <img
                                         src={preview}
                                         alt="Preview"
-                                        style={{ borderRadius:8, width: '70%', maxHeight: '200px',objectFit:'contain' }}
+                                        style={{ borderRadius: 8, width: '70%', maxHeight: '200px', objectFit: 'contain' }}
                                     />
                                     <Button variant="danger" size="sm" className="mt-2" onClick={handleRemoveImage}>
                                         Remove Image

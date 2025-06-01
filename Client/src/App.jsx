@@ -10,6 +10,7 @@ import AdminViewPackage from "./component/Admin/AdminViewPackage";
 import AdminPackage from "./component/Admin/AdminPackage";
 import AdminVehicle from "./component/Admin/AdminVehicle";
 import AdminViewVehicle from "./component/Admin/AdminViewVehicle";
+import AdminViewVehicle1 from "./component/Admin/AdminViewVehicle1";
 
 function App() {
 
@@ -28,6 +29,7 @@ function App() {
         <Route path="/adminpackage" element={<AdminPackage />}/>
         <Route path="/adminvehicle" element={<AdminVehicle />}/>
         <Route path="/adminviewvehicle" element={<AdminViewVehicle/>}/>
+        <Route path="/adminviewvehicle1" element={<AdminViewVehicle1/>}/>
         
         {/* User page route */}
         <Route path="/userhome" element={<UserHome />} />

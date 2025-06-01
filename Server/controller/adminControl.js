@@ -3,6 +3,7 @@ const Package = require('../model/Package')
 const path = require('path')
 const Vehicle = require('../model/Vehicle')
 const fs = require('fs').promises
+const fss = require('fs')
 
 const adminViewUser = async (req, res) => {
     try {
@@ -91,7 +92,7 @@ const adminAddPackage = async (req, res) => {
         await newPackage.save();
         res.status(200).json({ msg: 'Package created successfully!' });
     } catch (err) {
-        console.error(err);
+        console.log(err);
         res.status(500).json({ msg: 'Something went wrong.' });
     }
 }
@@ -142,11 +143,15 @@ const adminDeletePackage = async (req, res) => {
         );
         await Package.findByIdAndDelete(id);
         for (const imagePath of imagePaths) {
-            try {
-                await fs.unlink(imagePath)
-            } catch (err) {
-                console.log(`Failed to delete image file: ${imagePath}`, err)
-                return res.json({ msg: `Cannot access image file: ${imagePath}\nPacakge Deleted`, status: 500 })
+            if (fss.existsSync(imagePath)) {
+                try {
+                    await fs.unlink(imagePath)
+                } catch (err) {
+                    console.log(`package deletion: Failed to delete image file: ${imagePath}`, err)
+                    //return res.json({ msg: `Cannot access image file: ${imagePath}\nPacakge Deleted`, status: 500 })
+                }
+            } else {
+                console.log(`Image not found for deletion: ${imagePath}`);
             }
         }
 
@@ -231,10 +236,14 @@ const adminUpdatePackage = async (req, res) => {
         if (newImages.length > 0 && pkg.images && pkg.images.length > 0) {
             for (const img of pkg.images) {
                 const imgPath = path.join(__dirname, '..', 'uploads', img)
-                try {
-                    await fs.unlink(imgPath)
-                } catch (err) {
-                    console.log(`Deletion Failed ${imgPath}`, err)
+                if (fss.existsSync(imgPath)) {
+                    try {
+                        await fs.unlink(imgPath);
+                    } catch (err) {
+                        console.log(`Image Deletion Failed ${imgPath}`, err);
+                    }
+                } else {
+                    console.log(`Image not found for deletion: ${imgPath}`);
                 }
             }
             pkg.images = newImages
@@ -258,7 +267,14 @@ const adminAddVehicle = async (req, res) => {
             seat,
         } = req.body;
         if (!req.file) {
-            return res.status(400).json({msg:'Image not Uploaded',status:400})
+            return res.status(400).json({ msg: 'Image not Uploaded', status: 400 })
+        }
+
+        const existVehicle = await Vehicle.findOne({ registration_no })
+        // console.log(existVehicle)
+        if (existVehicle) {
+            return res.json({ msg: 'Registered Vehicle Already Exist!', status: 400 })
+
         }
         const vehicle = await Vehicle({
             vehicle_name,
@@ -266,16 +282,133 @@ const adminAddVehicle = async (req, res) => {
             model,
             type,
             seat,
-            image:req.file.filename,
+            image: req.file.filename,
         })
         await vehicle.save()
-        res.status(200).json({msg:'Vehicle Added Successful', status:200, newVehicle:vehicle})
+        res.status(200).json({ msg: 'Vehicle Added Successful', status: 200, newVehicle: vehicle })
     } catch (err) {
         console.log(err)
         res.status(500).json({ msg: "Server Error", status: 500 })
     }
 }
 
+const adminViewVehicle = async (req, res) => {
+    try {
+        const vehicle = await Vehicle.find();
+        if (!vehicle) {
+            return res.status(400).json({ msg: 'No Vehicle Added', status: 400 })
+        }
+        res.json(vehicle)
+    } catch (err) {
+        console.log('Server Error', err)
+        res.status(500).json({ msg: 'Server Error', status: 500 })
+    }
+}
 
+const adminToggleVehicleStatus = async (req, res) => {
+    try {
+        const id = req.headers.vehicleid;
+        // console.log(id)
+        const vehicle = await Vehicle.findById(id)
+        if (!vehicle) {
+            return res.status(400).json({ msg: 'Vehicle not Found!', status: 400 })
+        }
+        vehicle.status = !vehicle.status
+        await vehicle.save()
+        res.status(200).json({
+            msg: `Vehicle is now ${vehicle.status ? 'Active' : 'Deactive'}`,
+            status: 200,
+            status: vehicle.status
+        })
+    } catch (err) {
+        console.log('Server Error', err)
+        res.status(500).json({ msg: 'Server Error', status: 500 })
+    }
+}
 
-module.exports = { adminAddVehicle, adminUpdatePackage, adminViewPackageById, adminDeletePackage, adminTogglePackageStatus, adminViewPackage, adminAddPackage, adminViewUser, adminDeleteUser, adminToggleUserStatus }
+const adminDeleteVehicle = async (req, res) => {
+    try {
+        const id = req.headers.vehicleid;
+        const vehicle = await Vehicle.findById(id);
+        if (!vehicle) {
+            return res.status(400).json({ msg: 'Vehicle not Found!', status: 400 });
+        }
+        const oldImageName = vehicle.image;
+        const oldImagePath = path.join(__dirname, '..', 'uploads', oldImageName);
+        await Vehicle.findByIdAndDelete(id);
+        let warning = null;
+        if (req.file && oldImageName && fss.existsSync(oldImagePath)) {
+            try {
+                await fs.promises.unlink(oldImagePath);
+            } catch (err) {
+                console.log(`Vehicle Updation: Failed to delete image: ${oldImageName}`, err)
+                warning = `Failed to delete image: ${oldImageName}`;
+            }
+        }
+        res.status(200).json({ msg: 'Vehicle Deleted\n' + (warning ? `${warning}` : ''), status: 200 })
+    } catch (err) {
+        console.log('Server Error', err)
+        res.status(500).json({ msg: "Server Error", status: 500 })
+    }
+}
+
+const adminViewVehicleById = async (req, res) => {
+    try {
+        const id = req.headers.vehicleid;
+        const vehicle = await Vehicle.findById(id)
+        if (!vehicle) {
+            return res.status(400).json({ msg: 'Vehicle not Found!', status: 400 })
+        }
+        res.json(vehicle);
+    } catch (err) {
+        console.log('Server Error', err)
+        res.status(500).json({ msg: "Server Error", status: 500 })
+    }
+}
+
+const adminUpdateVehicle = async (req, res) => {
+    try {
+        const id = req.headers.vehicleid;
+        // console.log("vehicle updated id", id)
+        const checkVehicle = await Vehicle.findById(id);
+        if (!checkVehicle) {
+            return res.status(400).json({ msg: 'Vehicle not Found!', status: 400 })
+        }
+        const oldImageName = checkVehicle.image;
+        const oldImagePath = path.join(__dirname, '..', 'uploads', oldImageName);
+        // console.log('old image path update:',oldImagePath)
+        const {
+            vehicle_name,
+            model,
+            type,
+            seat,
+        } = req.body;
+
+        const vehicle = {
+            vehicle_name,
+            model,
+            type,
+            seat,
+
+        }
+        if (req.file) {
+            vehicle.image = req.file.filename
+        }
+        let warning = null;
+        await await Vehicle.findByIdAndUpdate(id, vehicle);
+        if (req.file && oldImageName && fss.existsSync(oldImagePath)) {
+            try {
+                await fs.promises.unlink(oldImagePath);
+            } catch (err) {
+                console.log(`Vehicle Updation: Failed to delete image: ${oldImageName}`, err)
+                warning = `Failed to delete image: ${oldImageName}`;
+            }
+        }
+        res.status(200).json({ msg: 'Vehicle updated' + (warning ? `\n${warning}` : ''), status: 200 })
+    } catch (err) {
+        console.log('Server Error', err)
+        res.status(500).json({ msg: 'Server Error', status: 500 })
+    }
+}
+
+module.exports = { adminUpdateVehicle, adminViewVehicleById, adminDeleteVehicle, adminToggleVehicleStatus, adminViewVehicle, adminAddVehicle, adminUpdatePackage, adminViewPackageById, adminDeletePackage, adminTogglePackageStatus, adminViewPackage, adminAddPackage, adminViewUser, adminDeleteUser, adminToggleUserStatus }

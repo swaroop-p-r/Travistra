@@ -11,7 +11,7 @@ export default function AdminPackage() {
         price: '',
         seats: '',
         total_seats: '',
-        status: '',
+        status: 'Active',
         itinerary: []
     })
 
