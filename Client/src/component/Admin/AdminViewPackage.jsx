@@ -167,7 +167,7 @@ export default function AdminViewPackage() {
               </td>
             </tr>
           )}
-
+ 
         </tbody>
       </Table >
       {/* for imgModal */}

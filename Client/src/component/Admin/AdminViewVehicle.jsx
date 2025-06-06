@@ -141,7 +141,7 @@ export default function AdminViewVehicle1() {
             <tbody className="text-center align-middle">
               {vehicles.length > 0 ? (
                 vehicles.map((vehicle, index) => (
-                  <tr key={vehicle._id}>
+                  <tr key={vehicle._id}> 
                     <td>{index + 1}</td>
                     <td style={{ width: '250px' }}>
                       <img

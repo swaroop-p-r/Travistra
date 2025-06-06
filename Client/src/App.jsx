@@ -11,6 +11,7 @@ import AdminPackage from "./component/Admin/AdminPackage";
 import AdminVehicle from "./component/Admin/AdminVehicle";
 import AdminViewVehicle from "./component/Admin/AdminViewVehicle";
 import AdminViewVehicle1 from "./component/Admin/AdminViewVehicle1";
+import UserProfile from "./component/User/UserProfile";
 
 function App() {
 
@@ -33,6 +34,7 @@ function App() {
         
         {/* User page route */}
         <Route path="/userhome" element={<UserHome />} />
+        <Route path="/userprofile" element={<UserProfile/>} />
       </Routes>
     </BrowserRouter>  
     
