@@ -22,6 +22,7 @@ const jwt = require('jsonwebtoken');
 
 const verifyToken = (req, res, next) => {
     const token = req.headers.token;
+    // console.log('token :',token)
     if (!token) {
         return res.json({ msg: "No token found", status: false })
     }
@@ -31,6 +32,7 @@ const verifyToken = (req, res, next) => {
         next();
     } catch (err) {
         return res.json({ msg: "Invalid or expired token", status: false });
+        
     }
 };
 

@@ -11,8 +11,8 @@ export default function UserNav() {
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="ms-auto">
               <Nav.Link href="/userprofile">Profile</Nav.Link>
-              <Nav.Link href="/viewpackage">Package</Nav.Link>
-              <Nav.Link href="/booking">Booking</Nav.Link>
+              <Nav.Link href="/userviewpackage">Package</Nav.Link>
+              <Nav.Link href="/userbooking">Booking</Nav.Link>
               <Nav.Link href="/login">Logout</Nav.Link>
             </Nav>
           </Navbar.Collapse>

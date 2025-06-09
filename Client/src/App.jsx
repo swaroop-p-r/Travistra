@@ -13,6 +13,10 @@ import AdminViewVehicle from "./component/Admin/AdminViewVehicle";
 import AdminViewVehicle1 from "./component/Admin/AdminViewVehicle1";
 import UserProfile from "./component/User/UserProfile";
 import UserEditProfile from "./component/User/UserEditProfile";
+import UserViewPackage from "./component/User/UserViewPackage";
+import UserSelectPackage from "./component/User/UserSelectPackage";
+import UserBooking from "./component/User/UserBooking";
+import AdminViewBookings from "./component/Admin/AdminViewBookings";
 
 function App() {
 
@@ -32,11 +36,15 @@ function App() {
         <Route path="/adminvehicle" element={<AdminVehicle />}/>
         <Route path="/adminviewvehicle" element={<AdminViewVehicle/>}/>
         <Route path="/adminviewvehicle1" element={<AdminViewVehicle1/>}/>
+        <Route path="adminviewbooking" element={<AdminViewBookings/>}/>
         
         {/* User page route */}
         <Route path="/userhome" element={<UserHome />} />
         <Route path="/userprofile" element={<UserProfile/>} />
-        <Route path="/edituser/:id" element={<UserEditProfile/>}></Route>
+        <Route path="/edituser/:id" element={<UserEditProfile/>} />
+        <Route path="/userviewpackage" element={<UserViewPackage/>} />
+        <Route path="/userselectpackage/:id" element={<UserSelectPackage/>}></Route>
+        <Route path="/userbooking" element={<UserBooking/>}/>
       </Routes>
     </BrowserRouter>  
     

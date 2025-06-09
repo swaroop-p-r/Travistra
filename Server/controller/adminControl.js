@@ -4,6 +4,7 @@ const path = require('path')
 const Vehicle = require('../model/Vehicle')
 const fs = require('fs').promises
 const fss = require('fs')
+const Booking = require('../model/Booking')
 
 const adminViewUser = async (req, res) => {
     try {
@@ -411,4 +412,55 @@ const adminUpdateVehicle = async (req, res) => {
     }
 }
 
-module.exports = { adminUpdateVehicle, adminViewVehicleById, adminDeleteVehicle, adminToggleVehicleStatus, adminViewVehicle, adminAddVehicle, adminUpdatePackage, adminViewPackageById, adminDeletePackage, adminTogglePackageStatus, adminViewPackage, adminAddPackage, adminViewUser, adminDeleteUser, adminToggleUserStatus }
+const adminViewBookings = async (req, res) => {
+    try {
+        const bookings = await Booking.find()
+            .populate('package')
+            .populate('vehicle')
+        res.json(bookings);
+    } catch (err) {
+        console.log('Server Error', err);
+        res.json({ msg: 'Server Error', status: 500 })
+    }
+}
+
+const adminViewVehicleToAssign = async (req, res) => {
+    try {
+        const vehicle = await Vehicle.find();
+        if (!vehicle) {
+            return res.json({ msg: 'No Vehicle Added', status: 400 })
+        }
+        res.json(vehicle);
+    } catch (err) {
+        console.log('Server Error', err)
+        res.json({ msg: 'Server Error', status: 500 })
+    }
+}
+
+const adminAssignVehicle = async (req, res) => {
+    try {
+        const vehicleId = req.headers.vehicleid;
+        const bookingid = req.headers.id;
+        // console.log('adminAssignVehicleV:', vehicleId)
+        // console.log('adminAssignVehicleB:', bookingid)
+        if (!vehicleId) return res.json({ message: 'Vehicle ID required', status: 400 });
+
+        const vehicle = await Vehicle.findById(vehicleId);
+        if (!vehicle) return res.json({ message: 'Vehicle not found', status: 400 });
+
+        const booking = await Booking.findByIdAndUpdate(
+            bookingid,
+            { vehicle: vehicleId },
+            { new: true }
+        ).populate('vehicle');
+
+        if (!booking) return res.json({ status: 400, message: 'Booking not found' });
+
+        res.json({ status: 200, message: 'Vehicle assigned successfully', booking });
+    } catch (err) {
+        console.log('ServerError', err)
+        res.json({ msg: 'Server Error', status: 500 })
+    }
+}
+
+module.exports = { adminAssignVehicle, adminViewVehicleToAssign, adminViewBookings, adminUpdateVehicle, adminViewVehicleById, adminDeleteVehicle, adminToggleVehicleStatus, adminViewVehicle, adminAddVehicle, adminUpdatePackage, adminViewPackageById, adminDeletePackage, adminTogglePackageStatus, adminViewPackage, adminAddPackage, adminViewUser, adminDeleteUser, adminToggleUserStatus }

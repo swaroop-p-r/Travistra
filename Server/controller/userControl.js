@@ -1,5 +1,8 @@
+const Package = require('../model/Package');
 const User = require('../model/User')
-const jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken');
+const Vehicle = require('../model/Vehicle');
+const Booking = require('../model/Booking');
 
 const registerUser = async (req, res) => {
     try {
@@ -145,6 +148,85 @@ const userEditProfile=async(req,res)=>{
     }
 }
 
+const userViewPackages=async(req,res)=>{
+    try {
+    const packages= await Package.find();
+    res.json(packages);
+    } catch (err) {
+        console.log('Server Error',err)
+    }
+}
 
-module.exports = { userEditProfile, userProfilebyid, userViewProfile, registerUser, loginAdminUser };
+const userSelectPackage=async(req,res)=>{
+    try {
+        const id=req.headers.id;
+        // console.log(id)
+        const package=await Package.findById(id)
+        res.json(package);
+    } catch (err) {
+        console.log('Server Error',err)
+    }
+}
+
+const userBookPackage=async(req,res)=>{
+    try {
+        const userid=req.user.id;
+        const packageid=req.headers.packageid;
+        const {bookingDate, bookingTime}=req.body
+        // console.log('BookedDate:',bookingDate);
+        // console.log('BookedTime:',bookingTime);
+        // console.log('UserId:',userid);
+        // console.log('PackageId:',packageid);
+
+
+        if (!bookingDate || !bookingTime) {
+            return res.json({msg:'Please pick Date & Time', status:400})
+        }
+        
+        
+        const booking= new Booking({
+            user:userid,
+            package:packageid,
+            status:'Processing',
+            paymentStatus:'Pending',
+            bookingDate,
+            bookingTime,
+        });
+        await booking.save();
+        res.json({msg:'Packge Booked', status:200});
+    } catch (err) {
+        console.log('Server Error',err);
+        res.json({msg:'Server Error', status:500});
+    }
+}
+
+const userViewBookings=async(req,res)=>{
+    try {
+        const id=req.user.id;
+        // console.log('userViewBookings:',id)
+        const booking=await Booking.find({ user: id})
+        .populate('package')
+        .populate('vehicle')
+        res.json(booking);
+    } catch (err) {
+        console.log('Server Error',err)
+        res.json({msg:'Server Error', status:500});
+    }
+}
+
+// const userViewAssignedVehicle=async (req,res) => {
+//     try {
+//         const vehicle = await Vehicle.findById(req.headers.vehicleid);
+//         if (!vehicle) {
+//             return res.json({ message: 'Vehicle not found', status:400 });
+//         }
+//         res.json(vehicle);
+//     } catch (err) {
+//         console.log('Server Error',err)
+//         res.json({msg:'Server Error', status:500});
+//     }
+// }
+
+
+module.exports = {  userViewBookings, userBookPackage, userSelectPackage, userViewPackages, userEditProfile, userProfilebyid, userViewProfile, registerUser, loginAdminUser };
 
