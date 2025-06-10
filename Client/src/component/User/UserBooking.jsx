@@ -11,6 +11,7 @@ import {
     Image,
 } from 'react-bootstrap';
 import { Modal } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 
 export default function UserBooking() {
     const [bookings, setBookings] = useState([]);
@@ -23,24 +24,24 @@ export default function UserBooking() {
     const [showVehicleModal, setShowVehicleModal] = useState(false);
     const [selectedVehicle, setSelectedVehicle] = useState(null);
 
-    
+    const navigate = useNavigate();
 
 
+
+    const fetchBookings = async () => {
+        try {
+            const res = await axios.get('http://localhost:4000/api/user/userbookings', {
+                headers: { token },
+            });
+            setBookings(res.data);
+        } catch (err) {
+            console.error('Failed to fetch bookings:', err);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     useEffect(() => {
-        const fetchBookings = async () => {
-            try {
-                const res = await axios.get('http://localhost:4000/api/user/userbookings', {
-                    headers: { token },
-                });
-                setBookings(res.data);
-            } catch (err) {
-                console.error('Failed to fetch bookings:', err);
-            } finally {
-                setLoading(false);
-            }
-        };
-
         fetchBookings();
     }, []);
 
@@ -62,21 +63,30 @@ export default function UserBooking() {
     };
 
     const handlePayNow = async (bookingId) => {
-        try {
-            await axios.patch(`http://localhost:4000/api/user/paybooking/${bookingId}`, {}, {
-                headers: { token },
-            });
-            setBookings(prev =>
-                prev.map(b =>
-                    b._id === bookingId ? { ...b, paymentStatus: 'Paid' } : b
-                )
-            );
-            alert("Payment Successful!");
-        } catch (err) {
-            console.error("Payment failed", err);
-            alert("Failed to complete payment.");
-        }
+        navigate(`/userpayment/${bookingId}`)
     };
+
+    const [selectedPayment, setSelectedPayment] = useState(null);
+    const [showPaymentModal, setShowPaymentModal] = useState(false);
+
+
+    const handleViewPayment = async (bookingid) => {
+        try {
+            const res = await axios.get('http://localhost:4000/api/user/userviewpayment',
+                {
+                    headers: {
+                        bookingid,
+                    }
+                }
+            )
+            setSelectedPayment(res.data[0]);
+            // console.log(selectedPayment)
+            setShowPaymentModal(true);
+        } catch (err) {
+            console.log('Error fetching payment:', err);
+            alert('Server error while fetching payment');
+        }
+    }
 
     // Function to format date
     const formatDate = (dateString) => {
@@ -124,6 +134,25 @@ export default function UserBooking() {
         setSelectedVehicle(booking.vehicle);
         setShowVehicleModal(true);
     };
+
+    const handleConfirm = async (id) => {
+        try {
+            const res = await axios.patch('http://localhost:4000/api/user/userconfirmpackage',
+                {},
+                {
+                    headers: {
+                        bookingid: id,
+                        token: token,
+                    }
+                }
+            )
+            alert(res.data.msg)
+            fetchBookings();
+        } catch (err) {
+            console.log('Error when Confirming', err)
+            alert('Failed to confirm Booking')
+        }
+    }
 
 
 
@@ -246,7 +275,31 @@ export default function UserBooking() {
 
                                                 {/* Payment/Cancel actions */}
                                                 <div className="mt-auto pt-2 border-top">
-                                                    {booking.status !== 'Cancelled' && booking.paymentStatus === 'Pending' && (
+                                                    {booking.status !== 'Cancelled' && booking.status === 'Processing' && (
+                                                        <Button
+                                                            variant="primary"
+                                                            size="sm"
+                                                            onClick={() => {
+                                                                if (window.confirm('After Confirming You Cannot Cancel Booking\nAre you sure you want to confirm this booking?')) {
+                                                                    handleConfirm(booking._id);
+                                                                }
+                                                            }}
+                                                            className="me-2"
+                                                        >
+                                                            <i className="bi bi-check2-circle me-1"></i> Confirm
+                                                        </Button>
+                                                    )}
+                                                    {booking.paymentStatus === 'Paid' && (
+                                                        <Button
+                                                            variant="success"
+                                                            size="sm"
+                                                            onClick={() => handleViewPayment(booking._id)}
+                                                            className="me-2"
+                                                        >
+                                                            <i className="bi bi-credit-card me-1"></i> View Payment
+                                                        </Button>
+                                                    )}
+                                                    {booking.status !== 'Cancelled' && booking.status === 'Confirm' && booking.paymentStatus === 'Pending' && (
                                                         <Button
                                                             variant="success"
                                                             size="sm"
@@ -373,6 +426,32 @@ export default function UserBooking() {
                             </Card>
                         </Container>
                     </Modal.Body>
+                </Modal>
+            )}
+
+
+            {selectedPayment && (
+                <Modal show={showPaymentModal} onHide={() => setShowPaymentModal(false)} centered>
+                    <Modal.Header closeButton>
+                        <Modal.Title>💳 Payment Details</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        {selectedPayment ? (
+                            <div>
+                                <p><strong>Amount:</strong> ₹{selectedPayment.amount}</p>
+                                <p><strong>Method:</strong> {selectedPayment.method}</p>
+                                <p><strong>Status:</strong> {selectedPayment.status}</p>
+                                <p><strong>Date:</strong> {new Date(selectedPayment.paidAt).toLocaleString()}</p>
+                            </div>
+                        ) : (
+                            <p className="text-muted">No payment data available.</p>
+                        )}
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={() => setShowPaymentModal(false)}>
+                            Close
+                        </Button>
+                    </Modal.Footer>
                 </Modal>
             )}
 

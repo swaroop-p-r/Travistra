@@ -5,6 +5,7 @@ const Vehicle = require('../model/Vehicle')
 const fs = require('fs').promises
 const fss = require('fs')
 const Booking = require('../model/Booking')
+const Payment = require('../model/Payment')
 
 const adminViewUser = async (req, res) => {
     try {
@@ -463,4 +464,20 @@ const adminAssignVehicle = async (req, res) => {
     }
 }
 
-module.exports = { adminAssignVehicle, adminViewVehicleToAssign, adminViewBookings, adminUpdateVehicle, adminViewVehicleById, adminDeleteVehicle, adminToggleVehicleStatus, adminViewVehicle, adminAddVehicle, adminUpdatePackage, adminViewPackageById, adminDeletePackage, adminTogglePackageStatus, adminViewPackage, adminAddPackage, adminViewUser, adminDeleteUser, adminToggleUserStatus }
+const adminViewPaymentInBooking = async (req, res) => {
+    try {
+        const bookingid = req.headers.bookingid;
+        // console.log('userViewPaymentBid:',bookingid);
+        const payment = await Payment.find({ booking: bookingid })
+        // console.log(payment)
+        if (!payment) {
+            return res.json({ msg: 'Payment not Found!', status: 404 })
+        }
+        res.json(payment)
+    } catch (err) {
+        console.log('Server Error of userViewPayment', err)
+        res.json({ msg: 'Server Error of View Payment', status: 500 })
+    }
+}
+
+module.exports = { adminViewPaymentInBooking, adminAssignVehicle, adminViewVehicleToAssign, adminViewBookings, adminUpdateVehicle, adminViewVehicleById, adminDeleteVehicle, adminToggleVehicleStatus, adminViewVehicle, adminAddVehicle, adminUpdatePackage, adminViewPackageById, adminDeletePackage, adminTogglePackageStatus, adminViewPackage, adminAddPackage, adminViewUser, adminDeleteUser, adminToggleUserStatus }

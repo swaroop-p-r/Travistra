@@ -111,6 +111,27 @@ export default function AdminViewBookings() {
         return aScore - bScore || vehicles.find(v => v._id === a.value).seat - vehicles.find(v => v._id === b.value).seat;
     });
 
+    const [selectedPayment, setSelectedPayment] = useState(null);
+    const [showPaymentModal, setShowPaymentModal] = useState(false);
+
+    const handleViewPayment = async (bookingid) => {
+        try {
+            const res = await axios.get('http://localhost:4000/api/admin/adminviewpaymentinbooking',
+                {
+                    headers: {
+                        bookingid,
+                    }
+                }
+            )
+            setSelectedPayment(res.data[0]);
+            // console.log(selectedPayment)
+            setShowPaymentModal(true);
+        } catch (err) {
+            console.log('Error fetching payment:', err);
+            alert('Server error while fetching payment');
+        }
+    }
+
     return (
         <>
             <AdminNav />
@@ -217,6 +238,17 @@ export default function AdminViewBookings() {
                                                             <i className="bi bi-pencil-square me-1"></i>
                                                             {booking.vehicle ? 'Edit Vehicle' : 'Assign Vehicle'}
                                                         </Button>
+
+                                                        {booking.paymentStatus === 'Paid' && (
+                                                            <Button
+                                                                variant='outline-success'
+                                                                size="sm"
+                                                                onClick={() => handleViewPayment(booking._id)}
+                                                                className="me-2"
+                                                            >
+                                                                <i className="bi bi-credit-card me-1"></i> View Payment
+                                                            </Button>
+                                                        )}
 
                                                         <div className="d-flex align-items-center ms-auto">
                                                             <span className="me-2">Status:</span>
@@ -367,6 +399,31 @@ export default function AdminViewBookings() {
                     )}
                 </Modal.Body>
             </Modal>
+
+            {selectedPayment && (
+                <Modal show={showPaymentModal} onHide={() => setShowPaymentModal(false)} centered>
+                    <Modal.Header closeButton>
+                        <Modal.Title>💳 Payment Details</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        {selectedPayment ? (
+                            <div>
+                                <p><strong>Amount:</strong> ₹{selectedPayment.amount}</p>
+                                <p><strong>Method:</strong> {selectedPayment.method}</p>
+                                <p><strong>Status:</strong> {selectedPayment.status}</p>
+                                <p><strong>Date:</strong> {new Date(selectedPayment.paidAt).toLocaleString()}</p>
+                            </div>
+                        ) : (
+                            <p className="text-muted">No payment data available.</p>
+                        )}
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={() => setShowPaymentModal(false)}>
+                            Close
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
+            )}
         </>
     );
 }

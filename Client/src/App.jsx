@@ -17,6 +17,7 @@ import UserViewPackage from "./component/User/UserViewPackage";
 import UserSelectPackage from "./component/User/UserSelectPackage";
 import UserBooking from "./component/User/UserBooking";
 import AdminViewBookings from "./component/Admin/AdminViewBookings";
+import UserPayment from "./component/User/UserPayment";
 
 function App() {
 
@@ -45,6 +46,7 @@ function App() {
         <Route path="/userviewpackage" element={<UserViewPackage/>} />
         <Route path="/userselectpackage/:id" element={<UserSelectPackage/>}></Route>
         <Route path="/userbooking" element={<UserBooking/>}/>
+        <Route path="/userpayment/:id" element={<UserPayment/>}/>
       </Routes>
     </BrowserRouter>  
     

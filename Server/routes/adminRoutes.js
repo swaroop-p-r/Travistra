@@ -1,5 +1,5 @@
 const express = require('express')
-const { adminViewUser, adminDeleteUser, adminToggleUserStatus, adminAddPackage, adminViewPackage, adminTogglePackageStatus, adminDeletePackage, adminViewPackageById, adminUpdatePackage, adminAddVehicle, adminViewVehicle, adminToggleVehicleStatus, adminDeleteVehicle, adminViewVehicleById, adminUpdateVehicle, adminViewBookings, adminAssignVehicle, adminViewVehicleToAssign } = require('../controller/adminControl')
+const { adminViewUser, adminDeleteUser, adminToggleUserStatus, adminAddPackage, adminViewPackage, adminTogglePackageStatus, adminDeletePackage, adminViewPackageById, adminUpdatePackage, adminAddVehicle, adminViewVehicle, adminToggleVehicleStatus, adminDeleteVehicle, adminViewVehicleById, adminUpdateVehicle, adminViewBookings, adminAssignVehicle, adminViewVehicleToAssign, adminViewPaymentInBooking } = require('../controller/adminControl')
 const adminRoutes = express.Router()
 const multer = require('multer')
 const path = require('path')
@@ -33,5 +33,6 @@ adminRoutes.put('/adminupdatevehicle',upload.single('image'),adminUpdateVehicle)
 adminRoutes.get('/adminviewbookings',adminViewBookings)
 adminRoutes.get('/adminviewvehiclestoassign',adminViewVehicleToAssign)
 adminRoutes.put('/adminassignvehicle',adminAssignVehicle)
+adminRoutes.get('/adminviewpaymentinbooking',adminViewPaymentInBooking)
 
 module.exports = adminRoutes
