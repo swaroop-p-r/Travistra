@@ -329,6 +329,28 @@ const userViewPayment = async (req, res) => {
     }
 }
 
+const userCancelBooking = async (req, res) => {
+    try {
+        const bookingid = req.headers.bookingid;
+        // console.log('userCancelBookingBid:', bookingid)
+        const booking = await Booking.findByIdAndUpdate(bookingid,
+            {
+                status: 'Cancelled',
+            },
+            { new: true }
+        )
+        if (!booking) {
+            return res.json({ msg: 'Booking Status Cancellation Error', status: 400 })
+        }
+        if (booking.status === 'Cancelled') {
+            return res.json({ msg: 'Booking Cancellation Confirmed', status: 200 })
+        }
+        res.json({ msg: 'Booking Status Cancellation Error', status: 400 });
+    } catch (err) {
+        console.log('Server Error of userCancelBooking', err)
+        res.json({ msg: 'Server Error of Cancel Payment', status: 500 })
+    }
+}
 
-module.exports = { userViewPayment, userPayment, userBookingForPayment, userConfirmPackage, userViewBookings, userBookPackage, userSelectPackage, userViewPackages, userEditProfile, userProfilebyid, userViewProfile, registerUser, loginAdminUser };
+module.exports = { userCancelBooking, userViewPayment, userPayment, userBookingForPayment, userConfirmPackage, userViewBookings, userBookPackage, userSelectPackage, userViewPackages, userEditProfile, userProfilebyid, userViewProfile, registerUser, loginAdminUser };
 

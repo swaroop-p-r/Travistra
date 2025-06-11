@@ -13,6 +13,8 @@ import {
 import { Modal } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 
+
+
 export default function UserBooking() {
     const [bookings, setBookings] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -45,17 +47,13 @@ export default function UserBooking() {
         fetchBookings();
     }, []);
 
-    const handleCancel = async (bookingId) => {
+    const handleCancel = async (bookingid) => {
         if (!window.confirm("Are you sure you want to cancel this booking?")) return;
         try {
-            await axios.patch(`http://localhost:4000/api/user/cancelbooking/${bookingId}`, {}, {
-                headers: { token },
+            const res = await axios.patch('http://localhost:4000/api/user/usercancelbooking', {}, {
+                headers: { bookingid },
             });
-            setBookings(prev =>
-                prev.map(b =>
-                    b._id === bookingId ? { ...b, status: 'Cancelled' } : b
-                )
-            );
+            fetchBookings();
         } catch (err) {
             console.error("Cancellation failed", err);
             alert("Failed to cancel booking.");
@@ -159,6 +157,19 @@ export default function UserBooking() {
 
     return (
         <>
+            <style>
+                {`
+                    .cancelled-card {
+                        opacity: 0.6;
+                        transition: opacity 0.5s ease-in-out;
+                    }
+
+                    .cancelled-card:hover {
+                        opacity: 0.8;
+                    }
+                `}
+            </style>
+
             <UserNav />
             <Container className="py-4" style={{ maxWidth: 1200 }}>
                 <h2 className="mb-4">🧾 My Bookings</h2>
@@ -187,145 +198,172 @@ export default function UserBooking() {
                     <p className="text-muted">No bookings found.</p>
                 ) : (
                     <Row>
-                        {bookings.map((booking) => (
-                            <Col key={booking._id} xs={12} className="mb-4">
-                                <Card className="shadow-sm">
-                                    <div className="d-flex">
-                                        <div style={{ width: 250, overflow: 'hidden', flexShrink: 0 }}>
-                                            {booking.package?.images?.[0] ? (
-                                                <Image
-                                                    src={`http://localhost:4000/uploads/${booking.package.images[0]}`}
-                                                    alt={booking.package.package_name}
-                                                    style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 6 }}
-                                                    onError={(e) => {
-                                                        e.target.onerror = null;
-                                                        e.target.src = 'https://via.placeholder.com/300x180?text=No+Image';
-                                                    }}
-                                                />
-                                            ) : (
-                                                <div style={{
-                                                    width: '100%',
-                                                    height: '100%',
-                                                    backgroundColor: '#f0f0f0',
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    justifyContent: 'center',
-                                                    minHeight: 180
-                                                }}>
-                                                    <span className="text-muted">No image available</span>
-                                                </div>
-                                            )}
-                                        </div>
-                                        <Card.Body className="d-flex flex-column">
-                                            <div className="d-flex flex-column h-100">
-                                                <div>
-                                                    <Card.Title className="mb-3">{booking.package?.package_name || 'Unnamed Package'}</Card.Title>
+                        {bookings.map((booking) => {
+                            const isCancelled = booking.status === 'Cancelled' || booking.status === 'Admin Cancelled';
 
-                                                    {/* First row - Booking details */}
-                                                    <div className="d-flex flex-wrap gap-4 mb-3">
-                                                        <div className="d-flex align-items-center">
-                                                            <i className="bi bi-geo-alt me-2"></i>
-                                                            <span>{booking.package?.destination || 'Not specified'}</span>
-                                                        </div>
-                                                        <div className="d-flex align-items-center">
-                                                            <i className="bi bi-calendar me-2"></i>
-                                                            <span>{formatDate(booking.bookingDate)}</span>
-                                                        </div>
-                                                        <div className="d-flex align-items-center">
-                                                            <i className="bi bi-clock me-2"></i>
-                                                            <span>{booking.bookingTime || 'Not specified'}</span>
-                                                        </div>
-                                                    </div>
-
-                                                    {/* Second row - Action buttons and status */}
-                                                    <div className="d-flex flex-wrap align-items-center gap-3 mb-3">
-                                                        <Button
-                                                            variant="outline-primary"
-                                                            size="sm"
-                                                            onClick={() => handleViewPackage(booking._id)}
-                                                            className="d-flex align-items-center"
-                                                        >
-                                                            <i className="bi bi-briefcase-fill me-1"></i>View Package
-                                                        </Button>
-                                                        <Button
-                                                            variant="outline-primary"
-                                                            size="sm"
-                                                            onClick={() => handleViewVehicle(booking._id)}
-                                                            className="d-flex align-items-center"
-                                                        >
-                                                            <i className="bi bi-bus-front me-1"></i> View Vehicle
-                                                        </Button>
-
-                                                        <div className="d-flex align-items-center ms-auto">
-                                                            <span className="me-2">Status:</span>
-                                                            <span className={`badge ${booking.status === 'Confirmed' ? 'bg-success' :
-                                                                booking.status === 'Cancelled' ? 'bg-danger' : 'bg-warning'}`}>
-                                                                {booking.status}
-                                                            </span>
-                                                        </div>
-
-                                                        <div className="d-flex align-items-center">
-                                                            <span className="me-2">Payment:</span>
-                                                            <span className={`badge ${booking.paymentStatus === 'Paid' ? 'bg-success' : 'bg-danger'}`}>
-                                                                {booking.paymentStatus}
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                {/* Payment/Cancel actions */}
-                                                <div className="mt-auto pt-2 border-top">
-                                                    {booking.status !== 'Cancelled' && booking.status === 'Processing' && (
-                                                        <Button
-                                                            variant="primary"
-                                                            size="sm"
-                                                            onClick={() => {
-                                                                if (window.confirm('After Confirming You Cannot Cancel Booking\nAre you sure you want to confirm this booking?')) {
-                                                                    handleConfirm(booking._id);
-                                                                }
+                            return (
+                                <Col key={booking._id} xs={12} className="mb-4">
+                                    <div title={isCancelled ? 'This Booking is Cancelled' : ''}>
+                                        <Card className={`shadow-sm ${isCancelled ? 'cancelled-card' : ''}`}>
+                                            <div className="d-flex">
+                                                {/* Image Section */}
+                                                <div style={{ width: 250, overflow: 'hidden', flexShrink: 0 }}>
+                                                    {booking.package?.images?.[0] ? (
+                                                        <Image
+                                                            src={`http://localhost:4000/uploads/${booking.package.images[0]}`}
+                                                            alt={booking.package.package_name}
+                                                            style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 6 }}
+                                                            onError={(e) => {
+                                                                e.target.onerror = null;
+                                                                e.target.src = 'https://via.placeholder.com/300x180?text=No+Image';
                                                             }}
-                                                            className="me-2"
-                                                        >
-                                                            <i className="bi bi-check2-circle me-1"></i> Confirm
-                                                        </Button>
-                                                    )}
-                                                    {booking.paymentStatus === 'Paid' && (
-                                                        <Button
-                                                            variant="success"
-                                                            size="sm"
-                                                            onClick={() => handleViewPayment(booking._id)}
-                                                            className="me-2"
-                                                        >
-                                                            <i className="bi bi-credit-card me-1"></i> View Payment
-                                                        </Button>
-                                                    )}
-                                                    {booking.status !== 'Cancelled' && booking.status === 'Confirm' && booking.paymentStatus === 'Pending' && (
-                                                        <Button
-                                                            variant="success"
-                                                            size="sm"
-                                                            onClick={() => handlePayNow(booking._id)}
-                                                            className="me-2"
-                                                        >
-                                                            <i className="bi bi-credit-card me-1"></i> Pay Now
-                                                        </Button>
-                                                    )}
-                                                    {booking.status === 'Processing' && (
-                                                        <Button
-                                                            variant="outline-danger"
-                                                            size="sm"
-                                                            onClick={() => handleCancel(booking._id)}
-                                                        >
-                                                            <i className="bi bi-x-circle me-1"></i> Cancel Booking
-                                                        </Button>
+                                                        />
+                                                    ) : (
+                                                        <div style={{
+                                                            width: '100%',
+                                                            height: '100%',
+                                                            backgroundColor: '#f0f0f0',
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            justifyContent: 'center',
+                                                            minHeight: 180
+                                                        }}>
+                                                            <span className="text-muted">No image available</span>
+                                                        </div>
                                                     )}
                                                 </div>
+
+                                                {/* Body Section */}
+                                                <Card.Body className="d-flex flex-column">
+                                                    <div className="d-flex flex-column h-100">
+                                                        <div>
+                                                            <Card.Title className="mb-3">{booking.package?.package_name || 'Unnamed Package'}</Card.Title>
+
+                                                            {/* Booking details */}
+                                                            <div className="d-flex flex-wrap gap-4 mb-3">
+                                                                <div className="d-flex align-items-center">
+                                                                    <i className="bi bi-geo-alt me-2"></i>
+                                                                    <span>{booking.package?.destination || 'Not specified'}</span>
+                                                                </div>
+                                                                <div className="d-flex align-items-center">
+                                                                    <i className="bi bi-calendar me-2"></i>
+                                                                    <span>{formatDate(booking.bookingDate)}</span>
+                                                                </div>
+                                                                <div className="d-flex align-items-center">
+                                                                    <i className="bi bi-clock me-2"></i>
+                                                                    <span>{booking.bookingTime || 'Not specified'}</span>
+                                                                </div>
+                                                            </div>
+
+                                                            {/* Action buttons and status */}
+                                                            <div className="d-flex flex-wrap align-items-center gap-3 mb-3">
+                                                                <Button
+                                                                    variant="outline-primary"
+                                                                    size="sm"
+                                                                    onClick={() => handleViewPackage(booking._id)}
+                                                                    className="d-flex align-items-center"
+                                                                    disabled={isCancelled}
+                                                                >
+                                                                    <i className="bi bi-briefcase-fill me-1"></i>View Package
+                                                                </Button>
+                                                                <Button
+                                                                    variant="outline-primary"
+                                                                    size="sm"
+                                                                    onClick={() => handleViewVehicle(booking._id)}
+                                                                    className="d-flex align-items-center"
+                                                                    disabled={isCancelled}
+                                                                >
+                                                                    <i className="bi bi-bus-front me-1"></i> View Vehicle
+                                                                </Button>
+
+                                                                <div className="d-flex align-items-center ms-auto">
+                                                                    <span className="me-2">Status:</span>
+                                                                    <span className={`badge ${booking.status === 'Confirmed' ? 'bg-success' :
+                                                                        booking.status === 'Cancelled' ? 'bg-danger' : 'bg-warning'}`}>
+                                                                        {booking.status}
+                                                                    </span>
+                                                                </div>
+
+                                                                <div className="d-flex align-items-center">
+                                                                    <span className="me-2">Payment:</span>
+                                                                    <span className={`badge ${booking.paymentStatus === 'Paid' ? 'bg-success' : 'bg-danger'}`}>
+                                                                        {booking.paymentStatus}
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        {/* Footer actions */}
+                                                        <div className="mt-auto pt-2 border-top">
+                                                            {booking.status !== 'Cancelled' && booking.status === 'Processing' && (
+                                                                <Button
+                                                                    variant="primary"
+                                                                    size="sm"
+                                                                    onClick={() => {
+                                                                        if (window.confirm('After Confirming You Cannot Cancel Booking\nAre you sure you want to confirm this booking?')) {
+                                                                            handleConfirm(booking._id);
+                                                                        }
+                                                                    }}
+                                                                    className="me-2"
+                                                                    disabled={isCancelled}
+                                                                >
+                                                                    <i className="bi bi-check2-circle me-1"></i> Confirm
+                                                                </Button>
+                                                            )}
+                                                            {booking.paymentStatus === 'Paid' && (
+                                                                <Button
+                                                                    variant="success"
+                                                                    size="sm"
+                                                                    onClick={() => handleViewPayment(booking._id)}
+                                                                    className="me-2"
+                                                                    disabled={isCancelled}
+                                                                >
+                                                                    <i className="bi bi-credit-card me-1"></i> View Payment
+                                                                </Button>
+                                                            )}
+                                                            {booking.status !== 'Cancelled' && booking.status === 'Confirm' && booking.paymentStatus === 'Pending' && (
+                                                                <Button
+                                                                    variant="success"
+                                                                    size="sm"
+                                                                    onClick={() => handlePayNow(booking._id)}
+                                                                    className="me-2"
+                                                                    disabled={isCancelled}
+                                                                >
+                                                                    <i className="bi bi-credit-card me-1"></i> Pay Now
+                                                                </Button>
+                                                            )}
+                                                            {booking.status === 'Processing' && (
+                                                                <Button
+                                                                    variant="outline-danger"
+                                                                    size="sm"
+                                                                    onClick={() => handleCancel(booking._id)}
+                                                                    disabled={isCancelled}
+                                                                >
+                                                                    <i className="bi bi-x-circle me-1"></i> Cancel Booking
+                                                                </Button>
+                                                            )}
+                                                            {booking.status === 'Cancelled' && (
+                                                                <i
+                                                                    style={{ color: 'red' }}>
+                                                                    This Booking is Cancelled By You.                                                          </i>
+                                                            )}
+                                                            {booking.status === 'Admin Cancelled' && (
+                                                                <i
+                                                                    style={{ color: 'red' }}>
+                                                                    This Booking is Cancelled By Admin, <br />
+                                                                    Contact Admin For More Details...                                                              </i>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                </Card.Body>
                                             </div>
-                                        </Card.Body>
+                                        </Card>
                                     </div>
-                                </Card>
-                            </Col>
-                        ))}
+                                </Col>
+                            );
+                        })}
                     </Row>
+
                 )}
             </Container>
 

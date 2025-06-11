@@ -419,6 +419,7 @@ const adminViewBookings = async (req, res) => {
             .populate('package')
             .populate('vehicle')
         res.json(bookings);
+        // console.log(bookings)
     } catch (err) {
         console.log('Server Error', err);
         res.json({ msg: 'Server Error', status: 500 })
@@ -456,6 +457,10 @@ const adminAssignVehicle = async (req, res) => {
         ).populate('vehicle');
 
         if (!booking) return res.json({ status: 400, message: 'Booking not found' });
+        // console.log("vefd",booking.vehicle._id)
+        if (vehicleId===booking.vehicle._id) {
+            // console.log("vefd",booking.vehicle._id,vehicleId)
+        }
 
         res.json({ status: 200, message: 'Vehicle assigned successfully', booking });
     } catch (err) {
@@ -480,4 +485,42 @@ const adminViewPaymentInBooking = async (req, res) => {
     }
 }
 
-module.exports = { adminViewPaymentInBooking, adminAssignVehicle, adminViewVehicleToAssign, adminViewBookings, adminUpdateVehicle, adminViewVehicleById, adminDeleteVehicle, adminToggleVehicleStatus, adminViewVehicle, adminAddVehicle, adminUpdatePackage, adminViewPackageById, adminDeletePackage, adminTogglePackageStatus, adminViewPackage, adminAddPackage, adminViewUser, adminDeleteUser, adminToggleUserStatus }
+const adminCancelBooking = async (req, res) => {
+    try {
+        const bookingid = req.headers.bookingid;
+        // console.log('userCancelBookingBid:', bookingid)
+        const booking = await Booking.findByIdAndUpdate(bookingid,
+            {
+                status: 'Admin Cancelled',
+            },
+            { new: true }
+        )
+        if (!booking) {
+            return res.json({ msg: 'Booking Status Cancellation Error', status: 400 })
+        }
+        if (booking.status === 'Admin Cancelled') {
+            return res.json({ msg: 'Booking Cancellation Confirmed', status: 200 })
+        }
+        res.json({ msg: 'Booking Status Cancellation Error', status: 400 });
+    } catch (err) {
+        console.log('Server Error of userCancelBooking', err)
+        res.json({ msg: 'Server Error of Cancel Payment', status: 500 })
+    }
+}
+
+const adminViewPayments=async (req,res) => {
+    try {
+        const payment = await Payment.find()
+        .populate('user')
+        .populate('booking')
+        if (!payment) {
+            return res.json({ msg: 'Payment not Found!', status: 404 })
+        }
+        res.json({payment,status:200})
+    } catch (err) {
+        console.log('Server Error of userViewPayment', err)
+        res.json({ msg: 'Server Error of View Payment', status: 500 })
+    }
+}
+
+module.exports = {adminViewPayments, adminCancelBooking, adminViewPaymentInBooking, adminAssignVehicle, adminViewVehicleToAssign, adminViewBookings, adminUpdateVehicle, adminViewVehicleById, adminDeleteVehicle, adminToggleVehicleStatus, adminViewVehicle, adminAddVehicle, adminUpdatePackage, adminViewPackageById, adminDeletePackage, adminTogglePackageStatus, adminViewPackage, adminAddPackage, adminViewUser, adminDeleteUser, adminToggleUserStatus }

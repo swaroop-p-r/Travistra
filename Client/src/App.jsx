@@ -18,6 +18,7 @@ import UserSelectPackage from "./component/User/UserSelectPackage";
 import UserBooking from "./component/User/UserBooking";
 import AdminViewBookings from "./component/Admin/AdminViewBookings";
 import UserPayment from "./component/User/UserPayment";
+import AdminViewPayment from "./component/Admin/AdminViewPayment";
 
 function App() {
 
@@ -37,7 +38,8 @@ function App() {
         <Route path="/adminvehicle" element={<AdminVehicle />}/>
         <Route path="/adminviewvehicle" element={<AdminViewVehicle/>}/>
         <Route path="/adminviewvehicle1" element={<AdminViewVehicle1/>}/>
-        <Route path="adminviewbooking" element={<AdminViewBookings/>}/>
+        <Route path="/adminviewbooking" element={<AdminViewBookings/>}/>
+        <Route path="/adminviewpayments" element={<AdminViewPayment/>}/>
         
         {/* User page route */}
         <Route path="/userhome" element={<UserHome />} />

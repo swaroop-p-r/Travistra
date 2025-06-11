@@ -10,6 +10,7 @@ export default function AdminNav() {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="ms-auto">
+              <Nav.Link href="/adminhome">Home</Nav.Link>
               <Nav.Link href="/adminviewusers">User</Nav.Link>
               <NavDropdown title="Package" id="package-drop" menuVariant="dark">
                 <NavDropdown.Item href="/adminviewpackage">View</NavDropdown.Item>
@@ -20,6 +21,7 @@ export default function AdminNav() {
                 <NavDropdown.Item href="/adminvehicle">Add</NavDropdown.Item>
               </NavDropdown>
               <Nav.Link href="/adminviewbooking">Booking</Nav.Link>
+              <Nav.Link href="/adminviewpayments">Payment</Nav.Link>
               <Nav.Link href="/login">Logout</Nav.Link>
             </Nav>
           </Navbar.Collapse>

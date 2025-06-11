@@ -23,20 +23,22 @@ export default function AdminViewBookings() {
 
 
     // Fetch bookings and vehicles on mount
-    useEffect(() => {
-        async function fetchData() {
-            try {
-                const bookingRes = await axios.get('http://localhost:4000/api/admin/adminviewbookings');
-                setBookings(bookingRes.data);
 
-                const vehicleRes = await axios.get('http://localhost:4000/api/admin/adminviewvehiclestoassign');
-                setVehicles(vehicleRes.data);
-            } catch (err) {
-                console.error(err);
-            } finally {
-                setLoading(false);
-            }
+    const fetchData = async () => {
+        try {
+            const bookingRes = await axios.get('http://localhost:4000/api/admin/adminviewbookings');
+            setBookings(bookingRes.data);
+            // console.log("Bookings response:", bookingRes.data);
+
+            const vehicleRes = await axios.get('http://localhost:4000/api/admin/adminviewvehiclestoassign');
+            setVehicles(vehicleRes.data);
+        } catch (err) {
+            console.error(err);
+        } finally {
+            setLoading(false);
         }
+    }
+    useEffect(() => {
         fetchData();
     }, []);
 
@@ -71,29 +73,41 @@ export default function AdminViewBookings() {
 
     // Assign vehicle API call
     const assignVehicleToBooking = async (id) => {
-        console.log('bookingid:', id)
         try {
-            await axios.put('http://localhost:4000/api/admin/adminassignvehicle',
-                {},
-                {
-                    headers: {
-                        id: id,
-                        vehicleid: assignVehicleId,
-                    }
+            const res = await axios.put('http://localhost:4000/api/admin/adminassignvehicle', {}, {
+                headers: {
+                    id: id,
+                    vehicleid: assignVehicleId,
                 }
-            );
-            // Update local state for UI immediately or refetch bookings
-            setBookings((prev) => prev.map(b => b._id === selectedBooking._id ? { ...b, vehicle: vehicles.find(v => v._id === assignVehicleId) } : b));
-            alert('Vehicle assigned successfully');
-            setShowVehicleModal(false);
-            setSelectedBooking(null);
-            setAssignVehicleId('');
+            });
+
+            if (res.data.status === 200) {
+                alert('Vehicle assigned successfully');
+
+                // Directly update the booking in local state if needed
+                const updatedBooking = res.data.booking;
+
+                // Optional: update that booking in the bookings array if you're maintaining local state
+                setBookings(prev =>
+                    prev.map(b => b._id === updatedBooking._id ? updatedBooking : b)
+                );
+
+                setShowVehicleModal(false);
+                setSelectedBooking(null);
+                setAssignVehicleId('');
+
+                // Optional: refetch if your data changes elsewhere
+                await fetchData();
+            } else {
+                alert(res.data.mes || 'Assignment failed');
+            }
         } catch (err) {
             console.error(err);
             alert('Failed to assign vehicle');
         }
-
     };
+
+
 
     const vehicleOptions = vehicles.map(vehicle => ({
         value: vehicle._id,
@@ -132,19 +146,48 @@ export default function AdminViewBookings() {
         }
     }
 
+    const handleCancel = async (bookingid) => {
+        if (!window.confirm("Are you sure you want to cancel this booking?")) return;
+        try {
+            const res = await axios.patch('http://localhost:4000/api/admin/admincancelbooking', {}, {
+                headers: { bookingid },
+            });
+            fetchData();
+        } catch (err) {
+            console.log("Cancellation failed", err);
+            alert("Failed to cancel booking.");
+        }
+    };
+
     return (
         <>
+            <style>
+                {`
+                    .cancelled-card {
+                        opacity: 0.6;
+                        transition: opacity 0.5s ease-in-out;
+                    }
+
+                    .cancelled-card:hover {
+                        opacity: 0.8;
+                    }
+                `}
+            </style>
+
             <AdminNav />
             <Container className="py-4" style={{ maxWidth: 1200 }}>
                 <h2 className="mb-4">🧾 All Bookings</h2>
 
                 {loading ? (
                     <Row>
-                        {[1, 2, 3].map(idx => (
+                        {[1, 2, 3].map((idx) => (
                             <Col key={idx} xs={12} className="mb-4">
                                 <Card>
                                     <div className="d-flex">
-                                        <div style={{ width: 250, height: 180, backgroundColor: '#e0e0e0' }} className="placeholder-glow" />
+                                        <div
+                                            style={{ width: 250, height: 180, backgroundColor: '#e0e0e0' }}
+                                            className="placeholder-glow"
+                                        />
                                         <Card.Body>
                                             <div className="placeholder-glow">
                                                 <span className="placeholder col-7 mb-2"></span>
@@ -164,29 +207,37 @@ export default function AdminViewBookings() {
                     <Row>
                         {bookings.map((booking) => (
                             <Col key={booking._id} xs={12} className="mb-4">
-                                <Card className="shadow-sm">
+                                <Card className={`shadow-sm ${booking.status === 'Cancelled' ? 'cancelled-card' : ''}`}>
                                     <div className="d-flex">
                                         <div style={{ width: 250, overflow: 'hidden', flexShrink: 0 }}>
                                             {booking.package?.images?.[0] ? (
                                                 <Image
                                                     src={`http://localhost:4000/uploads/${booking.package.images[0]}`}
                                                     alt={booking.package.package_name}
-                                                    style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 6 }}
+                                                    style={{
+                                                        width: '100%',
+                                                        height: '100%',
+                                                        objectFit: 'cover',
+                                                        borderRadius: 6,
+                                                    }}
                                                     onError={(e) => {
                                                         e.target.onerror = null;
-                                                        e.target.src = 'https://via.placeholder.com/300x180?text=No+Image';
+                                                        e.target.src =
+                                                            'https://via.placeholder.com/300x180?text=No+Image';
                                                     }}
                                                 />
                                             ) : (
-                                                <div style={{
-                                                    width: '100%',
-                                                    height: '100%',
-                                                    backgroundColor: '#f0f0f0',
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    justifyContent: 'center',
-                                                    minHeight: 180
-                                                }}>
+                                                <div
+                                                    style={{
+                                                        width: '100%',
+                                                        height: '100%',
+                                                        backgroundColor: '#f0f0f0',
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        justifyContent: 'center',
+                                                        minHeight: 180,
+                                                    }}
+                                                >
                                                     <span className="text-muted">No image available</span>
                                                 </div>
                                             )}
@@ -194,7 +245,9 @@ export default function AdminViewBookings() {
                                         <Card.Body className="d-flex flex-column">
                                             <div className="d-flex flex-column h-100">
                                                 <div>
-                                                    <Card.Title className="mb-3">{booking.package?.package_name || 'Unnamed Package'}</Card.Title>
+                                                    <Card.Title className="mb-3">
+                                                        {booking.package?.package_name || 'Unnamed Package'}
+                                                    </Card.Title>
                                                     <div className="d-flex flex-wrap gap-4 mb-3">
                                                         <div className="d-flex align-items-center">
                                                             <i className="bi bi-geo-alt me-2"></i>
@@ -231,9 +284,12 @@ export default function AdminViewBookings() {
                                                         </Button>
 
                                                         <Button
-                                                            variant={booking.vehicle ? 'outline-danger' : "outline-success"}
+                                                            variant={
+                                                                booking.vehicle ? 'outline-danger' : 'outline-success'
+                                                            }
                                                             size="sm"
                                                             onClick={() => handleAssignVehicle(booking)}
+                                                            disabled={booking.status === 'Cancelled' || booking.status==='Admin Cancelled'}
                                                         >
                                                             <i className="bi bi-pencil-square me-1"></i>
                                                             {booking.vehicle ? 'Edit Vehicle' : 'Assign Vehicle'}
@@ -241,7 +297,7 @@ export default function AdminViewBookings() {
 
                                                         {booking.paymentStatus === 'Paid' && (
                                                             <Button
-                                                                variant='outline-success'
+                                                                variant="outline-success"
                                                                 size="sm"
                                                                 onClick={() => handleViewPayment(booking._id)}
                                                                 className="me-2"
@@ -252,18 +308,54 @@ export default function AdminViewBookings() {
 
                                                         <div className="d-flex align-items-center ms-auto">
                                                             <span className="me-2">Status:</span>
-                                                            <span className={`badge ${booking.status === 'Confirmed' ? 'bg-success' :
-                                                                booking.status === 'Cancelled' ? 'bg-danger' : 'bg-warning'}`}>
+                                                            <span
+                                                                className={`badge ${booking.status === 'Confirmed'
+                                                                    ? 'bg-success'
+                                                                    : booking.status === 'Cancelled'
+                                                                        ? 'bg-danger'
+                                                                        : 'bg-warning'
+                                                                    }`}
+                                                            >
                                                                 {booking.status}
                                                             </span>
                                                         </div>
 
                                                         <div className="d-flex align-items-center">
                                                             <span className="me-2">Payment:</span>
-                                                            <span className={`badge ${booking.paymentStatus === 'Paid' ? 'bg-success' : 'bg-danger'}`}>
+                                                            <span
+                                                                className={`badge ${booking.paymentStatus === 'Paid'
+                                                                    ? 'bg-success'
+                                                                    : 'bg-danger'
+                                                                    }`}
+                                                            >
                                                                 {booking.paymentStatus}
                                                             </span>
                                                         </div>
+                                                    </div>
+                                                    <div>
+                                                        {(booking.status === 'Cancelled' || booking.status === 'Admin Cancelled') && (
+                                                            <>
+                                                                <hr />
+                                                                <i
+                                                                    style={{ color: 'red' }}
+                                                                >
+                                                                    This Booking is Cancelled By {booking.status==='Cancelled'?'User':'Admin'}
+                                                                </i>
+                                                            </>
+                                                        )}
+                                                        {(booking.status === 'Confirmed' || booking.status === 'Processing') && (
+                                                            <>
+                                                                <hr />
+                                                                <Button
+                                                                    variant="outline-danger"
+                                                                    size="sm"
+                                                                    onClick={() => handleCancel(booking._id)}
+                                                                    // disabled={isCancelled}
+                                                                >
+                                                                    <i className="bi bi-x-circle me-1"></i> Cancel Booking
+                                                                </Button>
+                                                            </>
+                                                        )}
                                                     </div>
                                                 </div>
                                             </div>
@@ -275,6 +367,7 @@ export default function AdminViewBookings() {
                     </Row>
                 )}
             </Container>
+
 
             {/* Package Details Modal */}
             {selectedBooking && (
@@ -367,7 +460,8 @@ export default function AdminViewBookings() {
                                 onClick={() => assignVehicleToBooking(selectedBooking._id)}
                                 disabled={!assignVehicleId}
                             >
-                                {selectedBooking.vehicle ? 'Edit Vehicle' : 'Assign Vehicle'}
+                                {selectedBooking?.vehicle ? 'Edit Vehicle' : 'Assign Vehicle'}
+
                             </Button>
 
                         </>
