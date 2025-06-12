@@ -20,6 +20,8 @@ import AdminViewBookings from "./component/Admin/AdminViewBookings";
 import UserPayment from "./component/User/UserPayment";
 import AdminViewPayment from "./component/Admin/AdminViewPayment";
 
+import "bootstrap/dist/css/bootstrap.min.css";
+
 function App() {
 
   return (

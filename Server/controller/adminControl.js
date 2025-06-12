@@ -575,6 +575,7 @@ const adminHomeDetails = async (req, res) => {
 
         });
     } catch (err) {
+        console.log('Dashboard Server Error',err)
         res.status(500).json({ status: 500, msg: "Dashboard fetch failed", error: err.message });
     }
 }

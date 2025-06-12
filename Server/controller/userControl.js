@@ -352,5 +352,69 @@ const userCancelBooking = async (req, res) => {
     }
 }
 
-module.exports = { userCancelBooking, userViewPayment, userPayment, userBookingForPayment, userConfirmPackage, userViewBookings, userBookPackage, userSelectPackage, userViewPackages, userEditProfile, userProfilebyid, userViewProfile, registerUser, loginAdminUser };
+const userHomeDetails = async (req, res) => {
+    try {
+        const userid = req.user.id;
+        // console.log('userId:',userid)
+
+        const user = await User.findById(userid);
+
+        const username = user.username;
+        const userProfilePhoto = user.profile_image;
+        const userEmail = user.email;
+        const userPhone = user.phone;
+        const userStatus = user.status;
+        // console.log(user)
+        // console.log(userStatus)
+
+
+        const totalUsers = await User.countDocuments();
+
+        const totalBookings = await Booking.countDocuments({ user: userid });
+        const confirmedBooking = await Booking.countDocuments({ user: userid, status: 'Confirm' });
+        const cancelledBooking = await Booking.countDocuments({ user: userid, status: { $in: ['Cancelled', 'Admin Cancelled'] } });
+
+        const totalPayment = await Payment.countDocuments({ user: userid });
+
+        const totalVehicle = await Vehicle.countDocuments();
+        const totalTraveller = await Vehicle.countDocuments({ type: 'Traveller' })
+        const totalBus = await Vehicle.countDocuments({ type: 'Bus' })
+        const totalCar = await Vehicle.countDocuments({ type: 'Car' })
+        const totalJeep = await Vehicle.countDocuments({ type: 'Jeep' })
+
+        const totalPackage = await Package.countDocuments();
+
+        res.json({
+            status: 200,
+
+            username,
+            userProfilePhoto,
+            userEmail,
+            userPhone,
+            userStatus,
+
+            totalUsers,
+
+            totalBookings,
+            confirmedBooking,
+            cancelledBooking,
+
+            totalPayment,
+
+            totalVehicle,
+            totalTraveller,
+            totalBus,
+            totalCar,
+            totalJeep,
+
+            totalPackage,
+
+        });
+    } catch (err) {
+        console.log('Dashboard Server Error', err)
+        res.status(500).json({ status: 500, msg: "Dashboard fetch failed", error: err.message });
+    }
+}
+
+module.exports = { userHomeDetails, userCancelBooking, userViewPayment, userPayment, userBookingForPayment, userConfirmPackage, userViewBookings, userBookPackage, userSelectPackage, userViewPackages, userEditProfile, userProfilebyid, userViewProfile, registerUser, loginAdminUser };
 
