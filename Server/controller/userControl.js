@@ -17,7 +17,7 @@ const registerUser = async (req, res) => {
         const image = req.files?.image?.[0]?.filename;
 
         if (!image) {
-            return res.json({ msg: 'ID photo is requires', status: 400 });
+            return res.json({ msg: 'ID photo is required', status: 400 });
         }
 
         const data = new User({

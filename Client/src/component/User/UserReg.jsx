@@ -2,7 +2,44 @@ import React, { useRef, useState, } from 'react';
 import AXIOS from 'axios';
 import HomeNav from '../Home/homeNav';
 import { useNavigate } from 'react-router-dom';
-import { Container, Row, Col, Form, Button, Image } from 'react-bootstrap';
+// import { Container, Row, Col, Form, Button, Image } from 'react-bootstrap';
+
+import {
+  Card,
+  CardContent,
+  TextField,
+  Button,
+  Typography,
+  Link,
+  Box,
+  InputAdornment,
+  Radio,
+  RadioGroup,
+  FormControlLabel,
+  FormLabel,
+  FormControl,
+  Snackbar,
+  Alert,
+  Divider,
+  Avatar,
+  IconButton
+} from '@mui/material';
+import {
+  Person as PersonIcon,
+  Email as EmailIcon,
+  Lock as LockIcon,
+  Phone as PhoneIcon,
+  Home as HomeIcon,
+  Cake as CakeIcon,
+  Male as MaleIcon,
+  Female as FemaleIcon,
+  Transgender as OtherIcon,
+  CameraAlt as CameraIcon,
+  Close as CloseIcon,
+  CheckCircle,
+  Visibility,
+  VisibilityOff,
+} from '@mui/icons-material';
 
 export default function UserReg() {
 
@@ -23,10 +60,35 @@ export default function UserReg() {
   const profileInputRef = useRef(null);
   const imageInputRef = useRef(null);
 
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(false);
 
+  const [showPassword, setShowPassword] = useState(false);
+
+  const navigate = useNavigate();
+
+  // const handleChange = (e) => {
+  //   setRecord({ ...record, [e.target.name]: e.target.value })
+  // };
   const handleChange = (e) => {
-    setRecord({ ...record, [e.target.name]: e.target.value })
-  };
+  const { name, value } = e.target;
+
+  if (name === 'username') {
+    // Allow only letters (both uppercase and lowercase)
+    const lettersOnly = /^[A-Za-z\s]*$/;
+    if (!lettersOnly.test(value)) return;
+  } else if (name === 'phone') {
+    const numbersOnly = /^[0-9]{0,10}$/;
+    if (!numbersOnly.test(value)) return;
+  }
+
+  setRecord((prev) => ({
+    ...prev,
+    [name]: value,
+  }));
+};
+
 
   const handleProfileImage = (e) => {
     const file = e.target.files[0]
@@ -58,9 +120,9 @@ export default function UserReg() {
     }
   }
 
-  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log(record)
 
@@ -72,230 +134,367 @@ export default function UserReg() {
     formData.append('dob', record.dob);
     formData.append('phone', record.phone);
     formData.append('gender', record.gender);
+    if (!record.gender) {
+      return setError('Gender is required')
+    }
     if (profileImage) {
       formData.append('profile_image', profileImage)
     }
     if (image) {
       formData.append('image', image);
+    } else {
+      return setError('ID Photo is Required')
     }
-
-    AXIOS.post("http://localhost:4000/api/user/register", formData,
-      {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      })
-      .then((res) => {
-        console.log(res.data)
-        alert(res.data.msg)
-        if (res.data.status === 200) {
-          navigate('/login')
-        }
-      }).catch((err) => {
-        console.log(err)
-        alert("Registration failed");
-      })
+    try {
+      const res = await AXIOS.post("http://localhost:4000/api/user/register", formData,
+        {
+          headers: { 'Content-Type': 'multipart/form-data' }
+        })
+      if (res.data.status === 200) {
+        setSuccess(true);
+        setTimeout(() => navigate('/login'), 2000);
+      } else {
+        setError(res.data.msg);
+      }
+    } catch (err) {
+      console.log(err)
+      setError("Registration failed");
+    } finally {
+      setLoading(false);
+    }
   }
+
+  const handleCloseSnackbar = () => {
+    setSuccess(false);
+    setError(null);
+  };
+
+  const handleClickShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
+
 
   return (
     <>
       <HomeNav />
-      <Container className="mt-4">
-        <h2 className="text-center mb-4">Register</h2>
-        <Form onSubmit={handleSubmit}>
-          <hr />
-          {/* Basic Info */}
-          <Row className="mb-3">
-            <Col xs={12} md={4}>
-              <Form.Group controlId="formUsername">
-                <Form.Label>Username</Form.Label>
-                <Form.Control
-                  type="text"
-                  name="username"
-                  placeholder="Enter name"
-                  onChange={handleChange}
-                  required
-                  pattern="[A-Za-z\s]+"
-                  title="Username must be letters"
-                />
-              </Form.Group>
-            </Col>
-            <Col xs={12} md={4}>
-              <Form.Group controlId="formPhone">
-                <Form.Label>Phone No</Form.Label>
-                <Form.Control
-                  type="tel"
-                  name="phone"
-                  placeholder="Enter phone"
-                  onChange={handleChange}
-                  required
-                  pattern="[0-9]{10}"
-                  title="Phone number must be 10 digits"
-                />
-              </Form.Group>
-            </Col>
-            <Col xs={12} md={4}>
-              <Form.Group controlId="dob">
-                <Form.Label>Date of Birth</Form.Label>
-                <Form.Control
-                  type="date"
-                  name="dob"
-                  onChange={handleChange}
-                  required
-                />
-              </Form.Group>
-            </Col>
-          </Row>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          minHeight: '80vh',
+          background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
+          p: 2
+        }}
+      >
+        <Card
+          sx={{
+            width: '100%',
+            maxWidth: 900,
+            boxShadow: 3,
+            borderRadius: 2,
+            overflow: 'hidden'
+          }}
+        >
+          <Box
+            sx={{
+              background: 'linear-gradient(45deg, #3f51b5 30%, #2196f3 90%)',
+              color: 'white',
+              textAlign: 'center',
+              py: 3
+            }}
+          >
+            <Typography variant="h4" component="h1">
+              Register
+            </Typography>
+            <Typography variant="subtitle1">
+              Create your account
+            </Typography>
+          </Box>
 
-          {/* Gender, Address, Email, Password */}
-          <Row className="mb-3">
-            <Col xs={9} md={1}>
-              <Form.Group>
-                <Form.Label>Gender</Form.Label>
-                <div>
-                  <Form.Check
-                    type="radio"
-                    label="Male"
+          <CardContent sx={{ p: 4 }}>
+            {error && (
+              <Alert severity="error" sx={{ mb: 3 }}>
+                {error}
+              </Alert>
+            )}
+
+            <form onSubmit={handleSubmit}>
+              {/* Basic Info Row */}
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mb: 3 }}>
+                <TextField
+                  fullWidth
+                  label="Username"
+                  name="username"
+                  value={record.username}
+                  onChange={handleChange}
+                  required
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <PersonIcon color="action" />
+                      </InputAdornment>
+                    ),
+                  }}
+                  sx={{ flex: '1 1 200px' }}
+                />
+                <TextField
+                  fullWidth
+                  label="Phone Number"
+                  name="phone"
+                  value={record.phone}
+                  onChange={handleChange}
+                  required
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <PhoneIcon color="action" />
+                      </InputAdornment>
+                    ),
+                  }}
+                  sx={{ flex: '1 1 200px' }}
+                />
+                <TextField
+                  fullWidth
+                  label="Date of Birth"
+                  name="dob"
+                  type="date"
+                  value={record.dob}
+                  onChange={handleChange}
+                  required
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <CakeIcon color="action" />
+                      </InputAdornment>
+                    ),
+                  }}
+                  InputLabelProps={{ shrink: true }}
+                  sx={{ flex: '1 1 200px' }}
+                />
+              </Box>
+
+              {/* Gender, Address, Email, Password */}
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mb: 3 }}>
+                <FormControl sx={{ flex: '1 1 200px' }}>
+                  <FormLabel>Gender<sup> *</sup></FormLabel>
+                  <RadioGroup
+                    row
                     name="gender"
-                    value="male"
+                    value={record.gender}
                     onChange={handleChange}
                     required
-                  />
-                  <Form.Check
-                    type="radio"
-                    label="Female"
-                    name="gender"
-                    value="female"
-                    onChange={handleChange}
-                  />
-                  <Form.Check
-                    type="radio"
-                    label="Other"
-                    name="gender"
-                    value="other"
-                    onChange={handleChange}
-                  />
-                </div>
-              </Form.Group>
-            </Col>
-            <Col xs={12} md={4}>
-              <Form.Group controlId="formAddress">
-                <Form.Label>Address</Form.Label>
-                <Form.Control
-                  as="textarea"
-                  rows={2}
+                  >
+                    <FormControlLabel
+                      value="male"
+                      control={<Radio />}
+                      label={<Box sx={{ display: 'flex', alignItems: 'center' }}><MaleIcon sx={{ mr: 1 }} /> Male</Box>}
+                    />
+                    <FormControlLabel
+                      value="female"
+                      control={<Radio />}
+                      label={<Box sx={{ display: 'flex', alignItems: 'center' }}><FemaleIcon sx={{ mr: 1 }} /> Female</Box>}
+                    />
+                    <FormControlLabel
+                      value="other"
+                      control={<Radio />}
+                      label={<Box sx={{ display: 'flex', alignItems: 'center' }}><OtherIcon sx={{ mr: 1 }} /> Other</Box>}
+                    />
+                  </RadioGroup>
+                </FormControl>
+                <TextField
+                  fullWidth
+                  label="Address"
                   name="address"
-                  placeholder="Enter address"
+                  value={record.address}
                   onChange={handleChange}
                   required
+                  multiline
+                  rows={2}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <HomeIcon color="action" />
+                      </InputAdornment>
+                    ),
+                  }}
+                  sx={{ flex: '1 1 300px' }}
                 />
-              </Form.Group>
-            </Col>
-            <Col xs={12} md={4}>
-              <Form.Group controlId="formEmail">
-                <Form.Label>Email</Form.Label>
-                <Form.Control
-                  type="email"
+              </Box>
+
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mb: 3 }}>
+                <TextField
+                  fullWidth
+                  label="Email"
                   name="email"
-                  placeholder="Enter email"
+                  type="email"
+                  value={record.email}
                   onChange={handleChange}
                   required
-                  pattern="[A-Za-z0-9._%+\-]+@[A-Za-z0-9.\-]+\.[A-Za-z]{2,}$"
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <EmailIcon color="action" />
+                      </InputAdornment>
+                    ),
+                  }}
+                  sx={{ flex: '1 1 300px' }}
                 />
-              </Form.Group>
-            </Col>
-            <Col xs={12} md={3}>
-              <Form.Group controlId="formPassword">
-                <Form.Label>Password</Form.Label>
-                <Form.Control
-                  type="password"
+                <TextField
+                  fullWidth
+                  label="Password"
                   name="password"
-                  placeholder="Enter password"
+                  type={showPassword ? 'text' : 'password'}
                   value={record.password}
                   onChange={handleChange}
+                  variant="outlined"
                   required
-                  pattern="[A-Za-z0-9@]{6,}"
-                  title='Password must have 6 digits'
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <LockIcon color="action" />
+                      </InputAdornment>
+                    ),
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={handleClickShowPassword}
+                          edge="end"
+                        >
+                          {showPassword ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
+                  sx={{ flex: '1 1 300px' }}
                 />
-              </Form.Group>
-            </Col>
-          </Row>
+              </Box>
 
-          <hr />
-          {/* Images */}
-          <Row className="mb-3">
-            <Col xs={12} md={6}>
-              <Form.Group controlId="formProfileImage">
-                <Form.Label>Profile Image (Optional)</Form.Label>
-                <Form.Control
-                  type="file"
-                  name="profile_image"
-                  onChange={handleProfileImage}
-                  ref={profileInputRef}
-                  accept="image/*"
-                />
-                {profilePrev && (
-                  <div className="mt-2 d-flex flex-column flex-md-row align-items-center gap-2">
-                    <Image
-                      src={profilePrev}
-                      alt="Profile Preview"
-                      fluid
-                      rounded
-                      style={{ maxHeight: '125px', objectFit: 'contain' }}
+              <Divider sx={{ my: 3 }} />
+
+              {/* Image Uploads */}
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 4, mb: 3 }}>
+                <Box sx={{ flex: '1 1 300px' }}>
+                  <Typography variant="subtitle1" gutterBottom>
+                    Profile Image (Optional)
+                  </Typography>
+                  <Button
+                    variant="outlined"
+                    component="label"
+                    startIcon={<CameraIcon />}
+                    fullWidth
+                  >
+                    Upload Profile Image
+                    <input
+                      type="file"
+                      hidden
+                      onChange={handleProfileImage}
+                      ref={profileInputRef}
+                      accept="image/*"
                     />
-                    <Button
-                      variant="outline-danger"
-                      size="sm"
-                      onClick={handleRemoveProfileImage}
-                    >
-                      Remove
-                    </Button>
-                  </div>
-                )}
-              </Form.Group>
-            </Col>
+                  </Button>
+                  {profilePrev && (
+                    <Box sx={{ mt: 2, display: 'flex', alignItems: 'center', gap: 2 }}>
+                      <Avatar
+                        src={profilePrev}
+                        alt="Profile Preview"
+                        sx={{ width: 80, height: 80 }}
+                      />
+                      <IconButton color="error" onClick={handleRemoveProfileImage}>
+                        <CloseIcon />
+                      </IconButton>
+                    </Box>
+                  )}
+                </Box>
 
-            <Col xs={12} md={6}>
-              <Form.Group controlId="formIDImage">
-                <Form.Label>ID Photo (Required)</Form.Label>
-                <Form.Control
-                  type="file"
-                  name="image"
-                  onChange={handleImage}
-                  ref={imageInputRef}
-                  accept="image/*"
-                  required
-                />
-                {imagePrev && (
-                  <div className="mt-2 d-flex flex-column flex-md-row align-items-center gap-2">
-                    <Image
-                      src={imagePrev}
-                      alt="ID Preview"
-                      fluid
-                      rounded
-                      style={{ maxHeight: '125px', objectFit: 'contain' }}
+                <Box sx={{ flex: '1 1 300px' }}>
+                  <Typography variant="subtitle1" gutterBottom>
+                    ID Photo (Required)
+                  </Typography>
+                  <Button
+                    variant="outlined"
+                    component="label"
+                    startIcon={<CameraIcon />}
+                    fullWidth
+                    required
+                  >
+                    Upload ID Photo
+                    <input
+                      type="file"
+                      hidden
+                      onChange={handleImage}
+                      ref={imageInputRef}
+                      accept="image/*"
                     />
-                    <Button
-                      variant="outline-danger"
-                      size="sm"
-                      onClick={handleRemoveImage}
-                    >
-                      Remove
-                    </Button>
-                  </div>
-                )}
-              </Form.Group>
-            </Col>
-          </Row>
+                  </Button>
+                  {imagePrev && (
+                    <Box sx={{ mt: 2, display: 'flex', alignItems: 'center', gap: 2 }}>
+                      <Avatar
+                        src={imagePrev}
+                        alt="ID Preview"
+                        sx={{ width: 80, height: 80 }}
+                        variant='rounded'
+                      />
+                      <IconButton color="error" onClick={handleRemoveImage}>
+                        <CloseIcon />
+                      </IconButton>
+                    </Box>
+                  )}
+                </Box>
+              </Box>
 
-          <div className="text-center mt-4">
-            <hr />
-            <Button type="submit" variant="primary">Register</Button>
-          </div>
+              <Box sx={{ textAlign: 'center', mt: 4 }}>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  size="large"
+                  sx={{
+                    px: 6,
+                    py: 1.5,
+                    background: 'linear-gradient(45deg, #3f51b5 30%, #2196f3 90%)',
+                    '&:hover': {
+                      background: 'linear-gradient(45deg, #303f9f 30%, #1976d2 90%)',
+                    }
+                  }}
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <CircularProgress size={24} color="inherit" />
+                  ) : (
+                    "Register"
+                  )}
+                </Button>
+              </Box>
 
-          <div className="text-center mt-3">
-            <p>Already have an account? <a href="/login">Login here</a></p>
-          </div>
-        </Form>
-      </Container>
+              <Typography variant="body2" align="center" sx={{ mt: 2 }}>
+                Already have an account?{' '}
+                <Link href="/login" color="primary" underline="hover">
+                  Login here
+                </Link>
+              </Typography>
+            </form>
+          </CardContent>
+        </Card>
+      </Box>
+
+      {/* Success Toast */}
+      <Snackbar
+        open={success}
+        autoHideDuration={2000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert
+          icon={<CheckCircle fontSize="inherit" />}
+          severity="success"
+          variant="filled"
+          sx={{ width: '100%' }}
+        >
+          Registration successful! Redirecting to login...
+        </Alert>
+      </Snackbar>
     </>
 
   );

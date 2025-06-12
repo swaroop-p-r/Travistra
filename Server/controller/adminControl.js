@@ -458,7 +458,7 @@ const adminAssignVehicle = async (req, res) => {
 
         if (!booking) return res.json({ status: 400, message: 'Booking not found' });
         // console.log("vefd",booking.vehicle._id)
-        if (vehicleId===booking.vehicle._id) {
+        if (vehicleId === booking.vehicle._id) {
             // console.log("vefd",booking.vehicle._id,vehicleId)
         }
 
@@ -508,19 +508,75 @@ const adminCancelBooking = async (req, res) => {
     }
 }
 
-const adminViewPayments=async (req,res) => {
+const adminViewPayments = async (req, res) => {
     try {
         const payment = await Payment.find()
-        .populate('user')
-        .populate('booking')
+            .populate('user')
+            .populate('booking')
         if (!payment) {
             return res.json({ msg: 'Payment not Found!', status: 404 })
         }
-        res.json({payment,status:200})
+        res.json({ payment, status: 200 })
     } catch (err) {
         console.log('Server Error of userViewPayment', err)
         res.json({ msg: 'Server Error of View Payment', status: 500 })
     }
 }
 
-module.exports = {adminViewPayments, adminCancelBooking, adminViewPaymentInBooking, adminAssignVehicle, adminViewVehicleToAssign, adminViewBookings, adminUpdateVehicle, adminViewVehicleById, adminDeleteVehicle, adminToggleVehicleStatus, adminViewVehicle, adminAddVehicle, adminUpdatePackage, adminViewPackageById, adminDeletePackage, adminTogglePackageStatus, adminViewPackage, adminAddPackage, adminViewUser, adminDeleteUser, adminToggleUserStatus }
+const adminHomeDetails = async (req, res) => {
+    try {
+        const totalUsers = await User.countDocuments();
+        const activeUsers = await User.countDocuments({ status: true });
+        const inActiveUsers = await User.countDocuments({ status: false });
+
+        const totalBookings = await Booking.countDocuments();
+        const confirmedBooking = await Booking.countDocuments({ status: 'Confirm' });
+        const cancelledBooking = await Booking.countDocuments({ status: { $in: ['Cancelled', 'Admin Cancelled'] } });
+
+        const totalPayment = await Payment.countDocuments();
+        const totalRevenue = await Payment.aggregate([{ $group: { _id: null, total: { $sum: "$amount" } } }]);
+
+        const totalVehicle = await Vehicle.countDocuments();
+        const activeVehicle = await Vehicle.countDocuments({ status: true });
+        const inActiveVehicle = await Vehicle.countDocuments({ status: false });
+        const totalTraveller = await Vehicle.countDocuments({ type: 'Traveller' })
+        const totalBus = await Vehicle.countDocuments({ type: 'Bus' })
+        const totalCar = await Vehicle.countDocuments({ type: 'Car' })
+        const totalJeep = await Vehicle.countDocuments({ type: 'Jeep' })
+
+        const totalPackage = await Package.countDocuments();
+        const activePackage = await Package.countDocuments({ status: 'Active' });
+        const inActivePackage = await Package.countDocuments({ status: 'Inactive' });
+
+        res.json({
+            status: 200,
+            totalUsers,
+            activeUsers,
+            inActiveUsers,
+
+            totalBookings,
+            confirmedBooking,
+            cancelledBooking,
+
+            totalPayment,
+            totalRevenue: totalRevenue[0]?.total || 0,
+
+            totalVehicle,
+            activeVehicle,
+            inActiveVehicle,
+            totalTraveller,
+            totalBus,
+            totalCar,
+            totalJeep,
+            
+            totalPackage,
+            activePackage,
+            inActivePackage,
+
+        });
+    } catch (err) {
+        res.status(500).json({ status: 500, msg: "Dashboard fetch failed", error: err.message });
+    }
+}
+
+module.exports = { adminHomeDetails, adminViewPayments, adminCancelBooking, adminViewPaymentInBooking, adminAssignVehicle, adminViewVehicleToAssign, adminViewBookings, adminUpdateVehicle, adminViewVehicleById, adminDeleteVehicle, adminToggleVehicleStatus, adminViewVehicle, adminAddVehicle, adminUpdatePackage, adminViewPackageById, adminDeletePackage, adminTogglePackageStatus, adminViewPackage, adminAddPackage, adminViewUser, adminDeleteUser, adminToggleUserStatus }

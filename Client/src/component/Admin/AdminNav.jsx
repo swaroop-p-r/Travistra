@@ -1,7 +1,16 @@
 import React from "react";
 import { Container, Navbar, Nav, NavDropdown } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
 export default function AdminNav() {
+
+  const navigate=useNavigate();
+
+  const handleLogout=()=>{
+    localStorage.removeItem('token');
+    navigate('/login');
+  }
+
   return (
     <>
       <Navbar bg="dark" variant="dark" expand="lg" style={{marginBottom:20}}>
@@ -22,7 +31,7 @@ export default function AdminNav() {
               </NavDropdown>
               <Nav.Link href="/adminviewbooking">Booking</Nav.Link>
               <Nav.Link href="/adminviewpayments">Payment</Nav.Link>
-              <Nav.Link href="/login">Logout</Nav.Link>
+              <Nav.Link onClick={handleLogout}>Logout</Nav.Link>
             </Nav>
           </Navbar.Collapse>
         </Container>
