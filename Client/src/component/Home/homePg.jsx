@@ -287,7 +287,7 @@ export default function HomePg() {
                       flexDirection: 'column',
                       justifyContent: 'space-between',
                       height: 460, // fixed height for uniformity
-                      width:320,
+                      // width:320,
                       transition: 'transform 0.3s',
                       '&:hover': { transform: 'scale(1.03)' },
                     }}
