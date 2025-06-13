@@ -51,7 +51,7 @@ export default function UserViewPackage() {
                                         maxWidth: 345,
                                         borderRadius: 3,
                                         boxShadow: 3,
-                                        opacity: 0.6,
+                                        opacity: 0.8,
                                         transition: 'transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease',
                                         '&:hover': {
                                             transform: 'scale(1.05)',

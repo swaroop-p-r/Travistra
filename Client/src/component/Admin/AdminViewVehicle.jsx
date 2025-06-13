@@ -90,6 +90,7 @@ export default function AdminViewVehicle1() {
   };
   const handleDelete = async (id) => {
     // alert(`Delete vehicle ID: ${id}`)
+    if (!window.confirm('Are sure you want to delete this Vehicle?')) return;
     try {
       const res = await axios.delete('http://localhost:4000/api/admin/admindeletevehicle',
         {
@@ -123,8 +124,16 @@ export default function AdminViewVehicle1() {
       <AdminNav />
       <Container className="py-7">
         <h2 className="mb-4 fw-bold text-dark">Vehicle Management</h2>
-        <div className="bg-white">
-          <Table bordered responsive hover >
+
+        <div
+          className="bg-white"
+          style={{
+            borderRadius: 8,
+            overflow: 'hidden',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+          }}
+        >
+          <Table striped bordered responsive hover className="mb-0">
             <thead className="table-light text-uppercase text-secondary">
               <tr className="text-center align-middle">
                 <th>#</th>
@@ -141,7 +150,7 @@ export default function AdminViewVehicle1() {
             <tbody className="text-center align-middle">
               {vehicles.length > 0 ? (
                 vehicles.map((vehicle, index) => (
-                  <tr key={vehicle._id}> 
+                  <tr key={vehicle._id}>
                     <td>{index + 1}</td>
                     <td style={{ width: '250px' }}>
                       <img
@@ -153,7 +162,7 @@ export default function AdminViewVehicle1() {
                           e.target.onerror = null;
                           e.target.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==';;
                         }}
-                        onClick={()=>handleImageClick(vehicle.image,vehicle.vehicle_name)}
+                        onClick={() => handleImageClick(vehicle.image, vehicle.vehicle_name)}
                       />
                     </td>
                     <td>{vehicle.vehicle_name}</td>
@@ -202,7 +211,7 @@ export default function AdminViewVehicle1() {
           <Modal.Title>{modalTitle} Image</Modal.Title>
         </Modal.Header>
         <Modal.Body className="text-center">
-          {currentImage? (
+          {currentImage ? (
             <img
               src={currentImage}
               alt="Preview"

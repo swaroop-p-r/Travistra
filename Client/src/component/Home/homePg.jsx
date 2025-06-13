@@ -202,7 +202,7 @@ export default function HomePg() {
 
   return (
     <>
-      <div style={{ backgroundColor: 'white' }}>
+      <div>
         <HomeNav />
         {/* ====================Header============================= */}
 
@@ -278,7 +278,7 @@ export default function HomePg() {
               alignItems="stretch"
             >
               {tours.map((tour) => (
-                <Grid item xs={12} sm={6} md={4} key={tour.id} sx={{ display: 'flex' }}>
+                <Grid key={tour.id} sx={{ display: 'flex' }}>
                   <Card
                     elevation={4}
                     sx={{
@@ -352,7 +352,7 @@ export default function HomePg() {
               <Button
                 variant="outlined"
                 color="primary"
-                sx={{ bgcolor: '#ffffff',px: 4, py: 1.5, textTransform: 'none', fontWeight: 500 }}
+                sx={{ bgcolor: '#ffffff', px: 4, py: 1.5, textTransform: 'none', fontWeight: 500 }}
               >
                 View All Tours
               </Button>
@@ -442,7 +442,7 @@ export default function HomePg() {
           <Box sx={{ maxWidth: 1200, mx: 'auto', px: 2 }}>
             <Grid container spacing={6} alignItems="center">
               {/* Text Section */}
-              <Grid item xs={12} lg={6}>
+              <Grid>
                 <Typography variant="h4" fontWeight="bold" gutterBottom color="text.primary">
                   About Travistra
                 </Typography>
@@ -471,9 +471,9 @@ export default function HomePg() {
               </Grid>
 
               {/* Image Section */}
-              <Grid item xs={12} lg={6}>
+              <Grid>
                 <Grid container spacing={2}>
-                  <Grid item xs={12} maxWidth={150}>
+                  <Grid maxWidth={150}>
                     <Box
                       sx={{
                         height: 260,
@@ -488,7 +488,7 @@ export default function HomePg() {
                       />
                     </Box>
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid >
                     <Box sx={{ height: 200, borderRadius: 2, overflow: 'hidden' }}>
                       <img
                         src="https://images.unsplash.com/photo-1504150558240-0b4fd8946624?auto=format&fit=crop&w=1964&q=80"
@@ -497,7 +497,7 @@ export default function HomePg() {
                       />
                     </Box>
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid>
                     <Box sx={{ height: 200, borderRadius: 2, overflow: 'hidden' }}>
                       <img
                         src="https://images.unsplash.com/photo-1519055548599-6d4d129508c4?auto=format&fit=crop&w=1970&q=80"
@@ -513,11 +513,11 @@ export default function HomePg() {
             {/* Features Section */}
             <Grid container spacing={4} mt={6} justifyContent={'center'}>
               {features.map((feature, index) => (
-                <Grid item xs={12} md={4} key={index}>
+                <Grid key={index}>
                   <Card
                     sx={{
                       p: 3,
-                      maxWidth:280,
+                      maxWidth: 280,
                       borderRadius: 2,
                       backgroundColor: '#ffffff',
                       height: '100%',
@@ -556,16 +556,16 @@ export default function HomePg() {
             {/* Content Grid */}
             <Grid container spacing={6}>
               {/* Contact Form */}
-              <Grid item xs={12} lg={6}>
+              <Grid >
                 <Paper elevation={1} sx={{ p: 4, bgcolor: '#f9fafb' }}>
                   <Typography variant="h5" fontWeight="bold" gutterBottom>
                     Send Us a Message
                   </Typography>
                   <Grid container spacing={2} mt={1}>
-                    <Grid item xs={12} md={6}>
+                    <Grid >
                       <TextField fullWidth label="Full Name" placeholder="John Doe" />
                     </Grid>
-                    <Grid item xs={12} md={6}>
+                    <Grid >
                       <TextField fullWidth label="Email Address" placeholder="john@example.com" />
                     </Grid>
                   </Grid>
@@ -593,7 +593,7 @@ export default function HomePg() {
               </Grid>
 
               {/* Contact Info */}
-              <Grid marginLeft={18} item xs={12} lg={6}>
+              <Grid marginLeft={18} >
                 <Typography variant="h5" fontWeight="bold" gutterBottom>
                   Contact Information
                 </Typography>
@@ -629,7 +629,7 @@ export default function HomePg() {
                     <Typography color="text.secondary">bookings@travistra.com</Typography>
                   </Box>
                 </Box>
-                
+
 
                 <Divider sx={{ my: 4 }} />
 
@@ -683,7 +683,7 @@ export default function HomePg() {
         <Box component="footer" sx={{ bgcolor: 'grey.900', color: 'white', py: 8 }}>
           <Box className="container" sx={{ px: 2, mx: 'auto' }}>
             <Grid container spacing={4}>
-              <Grid item xs={12} md={6} lg={3}>
+              <Grid >
                 <Box display="flex" alignItems="center" mb={2}>
                   <LocationOn sx={{ color: 'primary.main', mr: 1 }} />
                   <Typography variant="h6" fontWeight="bold">
@@ -710,7 +710,7 @@ export default function HomePg() {
                 </Box>
               </Grid>
 
-              <Grid item xs={12} sm={6} md={3}>
+              <Grid >
                 <Typography variant="h6" gutterBottom>
                   Popular Destinations
                 </Typography>
@@ -727,7 +727,7 @@ export default function HomePg() {
                 ))}
               </Grid>
 
-              <Grid item xs={12} sm={6} md={3}>
+              <Grid >
                 <Typography variant="h6" gutterBottom>
                   Quick Links
                 </Typography>
@@ -744,7 +744,7 @@ export default function HomePg() {
                 ))}
               </Grid>
 
-              <Grid item xs={12} md={3}>
+              <Grid >
                 <Typography variant="h6" gutterBottom>
                   Newsletter
                 </Typography>
@@ -778,12 +778,12 @@ export default function HomePg() {
               alignItems="center"
               spacing={2}
             >
-              <Grid item>
+              <Grid >
                 <Typography variant="body2" color="grey.400">
                   © {new Date().getFullYear()} Travistra. All rights reserved.
                 </Typography>
               </Grid>
-              <Grid item>
+              <Grid >
                 <Box display="flex" gap={3}>
                   {['Terms of Service', 'Privacy Policy', 'Cookie Policy'].map((text) => (
                     <Link

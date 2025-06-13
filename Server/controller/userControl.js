@@ -9,6 +9,9 @@ const registerUser = async (req, res) => {
     try {
         const { username, address, email, password, dob, phone, gender } = req.body;
         const existUser = await User.findOne({ email });
+        if (email === process.env.AdminEmail) {
+            return res.json({ msg: "Email already exists", status: 400 });
+        }
         if (existUser) {
             return res.json({ msg: "Email already exists", status: 400 });
         }

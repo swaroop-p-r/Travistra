@@ -184,7 +184,7 @@ export default function UserReg() {
           justifyContent: 'center',
           alignItems: 'center',
           minHeight: '80vh',
-          background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
+          // background: 'linear-gradient(135deg,rgb(13, 13, 14) 0%, #c3cfe2 100%)',
           p: 2
         }}
       >
@@ -199,14 +199,14 @@ export default function UserReg() {
         >
           <Box
             sx={{
-              background: 'linear-gradient(45deg, #3f51b5 30%, #2196f3 90%)',
+              background: 'linear-gradient(45deg,rgb(36, 37, 41) 30%,rgb(88, 96, 103) 90%)',
               color: 'white',
               textAlign: 'center',
               py: 3
             }}
           >
             <Typography variant="h4" component="h1">
-              Register
+              Registration
             </Typography>
             <Typography variant="subtitle1">
               Create your account
@@ -453,9 +453,9 @@ export default function UserReg() {
                   sx={{
                     px: 6,
                     py: 1.5,
-                    background: 'linear-gradient(45deg, #3f51b5 30%, #2196f3 90%)',
+                    background: 'linear-gradient(45deg,rgb(44, 44, 49) 30%,rgb(97, 106, 114) 90%)',
                     '&:hover': {
-                      background: 'linear-gradient(45deg, #303f9f 30%, #1976d2 90%)',
+                      background: 'linear-gradient(45deg,rgb(25, 26, 28) 30%,rgb(30, 32, 34) 90%)',
                     }
                   }}
                   disabled={loading}

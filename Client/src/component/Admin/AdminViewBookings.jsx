@@ -99,7 +99,7 @@ export default function AdminViewBookings() {
                 // Optional: refetch if your data changes elsewhere
                 await fetchData();
             } else {
-                alert(res.data.mes || 'Assignment failed');
+                alert(res.data.msg || 'Assignment failed');
             }
         } catch (err) {
             console.error(err);
@@ -113,8 +113,8 @@ export default function AdminViewBookings() {
         value: vehicle._id,
         label: (
             <div style={{ display: 'flex', alignItems: 'center' }}>
-                <img src={`http://localhost:4000/uploads/${vehicle.image}`} alt={vehicle.vehicle_name} style={{ width: 150, height: 100, marginRight: 10 }} />
-                <span>{vehicle.vehicle_name} - {vehicle.registration_no} - {vehicle.model} ({vehicle.type}) [{vehicle.seat} seats]</span>
+                <img src={`http://localhost:4000/uploads/${vehicle.image}`} alt={vehicle.vehicle_name} style={{ width: 125, height: 70, marginRight: 10 }} />
+                <span style={{ color: !vehicle.status ? 'red' : 'black' }}>{vehicle.vehicle_name} - {vehicle.registration_no} - {vehicle.model} ({vehicle.type}) [{vehicle.seat} seats] - {vehicle.status ? 'Active' : 'Inactive'}</span>
             </div>
         )
     }));
@@ -207,7 +207,7 @@ export default function AdminViewBookings() {
                     <Row>
                         {bookings.map((booking) => (
                             <Col key={booking._id} xs={12} className="mb-4">
-                                <Card className={`shadow-sm ${booking.status === 'Cancelled' ? 'cancelled-card' : ''}`}>
+                                <Card className={`shadow-sm ${booking.status === 'Cancelled' || booking.status === 'Admin Cancelled' ? 'cancelled-card' : ''}`}>
                                     <div className="d-flex">
                                         <div style={{ width: 250, overflow: 'hidden', flexShrink: 0 }}>
                                             {booking.package?.images?.[0] ? (
@@ -289,7 +289,7 @@ export default function AdminViewBookings() {
                                                             }
                                                             size="sm"
                                                             onClick={() => handleAssignVehicle(booking)}
-                                                            disabled={booking.status === 'Cancelled' || booking.status==='Admin Cancelled'}
+                                                            disabled={booking.status === 'Cancelled' || booking.status === 'Admin Cancelled'}
                                                         >
                                                             <i className="bi bi-pencil-square me-1"></i>
                                                             {booking.vehicle ? 'Edit Vehicle' : 'Assign Vehicle'}
@@ -339,7 +339,7 @@ export default function AdminViewBookings() {
                                                                 <i
                                                                     style={{ color: 'red' }}
                                                                 >
-                                                                    This Booking is Cancelled By {booking.status==='Cancelled'?'User':'Admin'}
+                                                                    This Booking is Cancelled By {booking.status === 'Cancelled' ? 'User' : 'Admin'}
                                                                 </i>
                                                             </>
                                                         )}
@@ -350,7 +350,7 @@ export default function AdminViewBookings() {
                                                                     variant="outline-danger"
                                                                     size="sm"
                                                                     onClick={() => handleCancel(booking._id)}
-                                                                    // disabled={isCancelled}
+                                                                // disabled={isCancelled}
                                                                 >
                                                                     <i className="bi bi-x-circle me-1"></i> Cancel Booking
                                                                 </Button>

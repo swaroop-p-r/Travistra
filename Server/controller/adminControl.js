@@ -445,10 +445,13 @@ const adminAssignVehicle = async (req, res) => {
         const bookingid = req.headers.id;
         // console.log('adminAssignVehicleV:', vehicleId)
         // console.log('adminAssignVehicleB:', bookingid)
-        if (!vehicleId) return res.json({ message: 'Vehicle ID required', status: 400 });
+        if (!vehicleId) return res.json({ msg: 'Vehicle ID required', status: 400 });
 
         const vehicle = await Vehicle.findById(vehicleId);
         if (!vehicle) return res.json({ message: 'Vehicle not found', status: 400 });
+        if (!vehicle.status) {
+            return res.json({ msg: 'Assignment Failed: Vehicle Inactive', status: 400 });
+        }
 
         const booking = await Booking.findByIdAndUpdate(
             bookingid,
@@ -456,13 +459,12 @@ const adminAssignVehicle = async (req, res) => {
             { new: true }
         ).populate('vehicle');
 
-        if (!booking) return res.json({ status: 400, message: 'Booking not found' });
+        if (!booking) return res.json({ status: 400, msg: 'Booking not found' });
         // console.log("vefd",booking.vehicle._id)
         if (vehicleId === booking.vehicle._id) {
             // console.log("vefd",booking.vehicle._id,vehicleId)
         }
-
-        res.json({ status: 200, message: 'Vehicle assigned successfully', booking });
+        res.json({ status: 200, msg: 'Vehicle assigned successfully', booking });
     } catch (err) {
         console.log('ServerError', err)
         res.json({ msg: 'Server Error', status: 500 })

@@ -82,7 +82,7 @@ return (
                     justifyContent: 'center',
                     alignItems: 'center',
                     minHeight: '80vh',
-                    background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
+                    // background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
                     p: 2,
                 }}
             >
@@ -97,7 +97,7 @@ return (
                 >
                     <Box
                         sx={{
-                            background: 'linear-gradient(45deg, #3f51b5 30%, #2196f3 90%)',
+                            background: 'linear-gradient(45deg,rgb(18, 18, 23) 30%,rgb(116, 123, 129) 90%)',
                             color: 'white',
                             textAlign: 'center',
                             py: 3
@@ -177,9 +177,9 @@ return (
                                     mt: 3,
                                     mb: 2,
                                     py: 1.5,
-                                    background: 'linear-gradient(45deg, #3f51b5 30%, #2196f3 90%)',
+                                    background: 'linear-gradient(45deg,rgb(36, 37, 43) 30%,rgb(121, 129, 135) 90%)',
                                     '&:hover': {
-                                        background: 'linear-gradient(45deg, #303f9f 30%, #1976d2 90%)',
+                                        background: 'linear-gradient(45deg,rgb(8, 8, 9) 30%,rgb(22, 24, 26) 90%)',
                                     }
                                 }}
                                 disabled={loading}

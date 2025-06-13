@@ -60,6 +60,22 @@ export default function AdminVehicle() {
                     headers: { 'Content-Type': 'multipart/form-data' }
                 });
             alert(res.data.msg);
+            if (res.status === 200) {
+                setFormData({
+                    vehicle_name: '',
+                    registration_no: '',
+                    model: '',
+                    type: '',
+                    seat: ''
+                });
+
+                setImage(null);
+                setPreview(null);
+
+                if (fileInputRef.current) {
+                    fileInputRef.current.value = '';
+                }
+            }
         } catch (err) {
             if (err.response && err.response.data && err.response.data.msg) {
                 alert(err.response.data.msg)
@@ -75,66 +91,62 @@ export default function AdminVehicle() {
     return (
         <>
             <AdminNav />
-            <div style={{ maxWidth: '600px', margin: 'auto' }}>
-                <h2>Add Vehicle</h2>
-                <Form noValidate onSubmit={handleSubmit}>
-                    <Row className="mb-3">
-                        <Form.Group
-                            as={Col}
-                            md="4"
-                            controlId="vehicleName"
-                            className="position-relative"
-                        >
-                            <Form.Label>Vehicle Name</Form.Label>
+            <div style={{ maxWidth: '800px', margin: 'auto', padding: '20px', backgroundColor: 'black', borderRadius: '10px', boxShadow: '0 2px 10px rgba(0,0,0,0.1)' }}>
+                <h2 style={{ color: 'white', marginBottom: '25px', textAlign: 'center', fontWeight: '600' }}>Add New Vehicle</h2>
+
+                <Form onSubmit={handleSubmit} style={{ backgroundColor: 'white', padding: '25px', borderRadius: '8px' }}>
+                    <Row className="mb-4">
+                        <Form.Group as={Col} md="6" controlId="vehicleName" className="mb-3">
+                            <Form.Label style={{ fontWeight: '500' }}>Vehicle Name</Form.Label>
                             <Form.Control
                                 type="text"
                                 name="vehicle_name"
-                                placeholder="Vehicle Name"
+                                placeholder="Enter vehicle name"
+                                value={formData.vehicle_name}
                                 onChange={handleChange}
                                 required
+                                style={{ padding: '10px', borderRadius: '5px' }}
                             />
                         </Form.Group>
-                        <Form.Group
-                            as={Col}
-                            md="4"
-                            controlId="registrationNumber"
-                            className="position-relative"
-                        >
-                            <Form.Label>Registration Number</Form.Label>
+
+                        <Form.Group as={Col} md="6" controlId="registrationNumber" className="mb-3">
+                            <Form.Label style={{ fontWeight: '500' }}>Registration Number</Form.Label>
                             <Form.Control
                                 type="text"
                                 name="registration_no"
-                                placeholder="Registration Number"
+                                value={formData.registration_no}
+                                placeholder="Enter registration number"
                                 onChange={handleChange}
                                 required
-                            />
-                        </Form.Group>
-                        <Form.Group
-                            as={Col}
-                            md="4"
-                            controlId="vehicleModel"
-                            className="position-relative"
-                        >
-                            <Form.Label>Vehicle Model</Form.Label>
-                            <Form.Control
-                                type="text"
-                                name="model"
-                                placeholder="Vehicle Model"
-                                onChange={handleChange}
-                                required
+                                style={{ padding: '10px', borderRadius: '5px' }}
                             />
                         </Form.Group>
                     </Row>
-                    <Row className="mb-3">
-                        <Form.Group as={Col} md="6" controlId="vehicleType" className="position-relative zindex-fix">
-                            <Form.Label>Type</Form.Label>
+
+                    <Row className="mb-4">
+                        <Form.Group as={Col} md="6" controlId="vehicleModel" className="mb-3">
+                            <Form.Label style={{ fontWeight: '500' }}>Vehicle Model</Form.Label>
+                            <Form.Control
+                                type="text"
+                                name="model"
+                                value={formData.model}
+                                placeholder="Enter vehicle model"
+                                onChange={handleChange}
+                                required
+                                style={{ padding: '10px', borderRadius: '5px' }}
+                            />
+                        </Form.Group>
+
+                        <Form.Group as={Col} md="6" controlId="vehicleType" className="mb-3">
+                            <Form.Label style={{ fontWeight: '500' }}>Vehicle Type</Form.Label>
                             <Form.Select
                                 name="type"
                                 value={formData.type}
                                 onChange={handleChange}
                                 required
+                                style={{ padding: '10px', borderRadius: '5px', height: '42px' }}
                             >
-                                <option value="" disabled>Select Vehicle Type</option>
+                                <option value="" disabled>Select vehicle type</option>
                                 <option value="Traveller">Tempo Traveller</option>
                                 <option value="Bus">Bus</option>
                                 <option value="Car">Car</option>
@@ -142,51 +154,79 @@ export default function AdminVehicle() {
                                 <option value="Jeep">Jeep</option>
                             </Form.Select>
                         </Form.Group>
+                    </Row>
 
-                        <Form.Group
-                            as={Col}
-                            md="6"
-                            controlId="vehicleSeat"
-                            className="position-relative"
-                        >
-                            <Form.Label>Seat</Form.Label>
+                    <Row className="mb-4">
+                        <Form.Group as={Col} md="6" controlId="vehicleSeat" className="mb-3">
+                            <Form.Label style={{ fontWeight: '500' }}>Seating Capacity</Form.Label>
                             <Form.Control
-                                type="text"
-                                placeholder="Seat"
+                                type="number"
+                                placeholder="Enter seat count"
                                 name="seat"
+                                value={formData.seat}
                                 onChange={handleChange}
                                 required
+                                style={{ padding: '10px', borderRadius: '5px' }}
+                            />
+                        </Form.Group>
+
+                        <Form.Group as={Col} md="6" controlId="vehicleImage" className="mb-3">
+                            <Form.Label style={{ fontWeight: '500' }}>Vehicle Image</Form.Label>
+                            <Form.Control
+                                type="file"
+                                required
+                                name="image"
+                                onChange={handleImage}
+                                ref={fileInputRef}
+                                style={{ padding: '5px', borderRadius: '5px' }}
                             />
                         </Form.Group>
                     </Row>
-                    <Row className='mb-3'>
-                        <Col md={12}>
-                            <Form.Group controlId='vehicleImage' className="position-relative mb-3">
-                                <Form.Label>Vehicle Image</Form.Label>
-                                <Form.Control
-                                    type="file"
-                                    required
-                                    name="image"
-                                    onChange={handleImage}
-                                    ref={fileInputRef}
-                                />
-                            </Form.Group>
-                            {preview && (
-                                <div className="mb-3 text-center">
+
+                    {preview && (
+                        <Row className="mb-4">
+                            <Col md={12} className="text-center">
+                                <div >
                                     <img
                                         src={preview}
                                         alt="Preview"
-                                        style={{ borderRadius: 8, width: '70%', maxHeight: '200px', objectFit: 'contain' }}
+                                        style={{
+                                            borderRadius: '8px',
+                                            maxWidth: '100%',
+                                            maxHeight: '150px',
+                                            objectFit: 'cover',
+                                            boxShadow: '0 2px 5px rgba(0,0,0,0.1)'
+                                        }}
                                     />
-                                    <Button variant="danger" size="sm" className="mt-2" onClick={handleRemoveImage}>
-                                        Remove Image
-                                    </Button>
+                                    <div className="mt-3">
+                                        <Button
+                                            variant="outline-danger"
+                                            size="sm"
+                                            onClick={handleRemoveImage}
+                                            style={{ padding: '5px 15px', borderRadius: '20px' }}
+                                        >
+                                            Remove Image
+                                        </Button>
+                                    </div>
                                 </div>
-                            )}
-                        </Col>
-                    </Row>
+                            </Col>
+                        </Row>
+                    )}
 
-                    <Button type="submit">Add Vehicle</Button>
+                    <div className="text-center mt-4">
+                        <Button
+                            type="submit"
+                            style={{
+                                backgroundColor: 'black',
+                                borderColor: '#3498db',
+                                padding: '8px 30px',
+                                borderRadius: '20px',
+                                fontWeight: '500'
+                            }}
+                        >
+                            Add Vehicle
+                        </Button>
+                    </div>
                 </Form>
             </div>
         </>

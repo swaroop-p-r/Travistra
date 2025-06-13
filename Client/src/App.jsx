@@ -32,6 +32,7 @@ function App() {
         <Route path="/" element={<HomePg />} />
         <Route path='/register' element={<UserReg />}/>
         <Route path='/login' element={<Login />}/>
+        {/* <Route path="/van" element={<VantaHero/>}/> */}
         {/* Admin page route */}
         <Route path="/adminhome" element={<AdminHome />} />
         <Route path="/adminviewusers" element={<AdminViewUser/>} />

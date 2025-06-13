@@ -57,7 +57,8 @@ export default function AdminViewUser() {
     }
 
     const deleteUser = (id) => {
-        console.log("deleteduserid:", id)
+        // console.log("deleteduserid:", id)
+            if (!window.confirm('Are sure you want to delete this User?')) return;
         AXIOS.delete("http://localhost:4000/api/admin/deleteuser", { headers: { userid: id } })
             .then((res) => {
                 alert(res.data.msg)
@@ -80,8 +81,15 @@ export default function AdminViewUser() {
     return (
         <>
             <AdminNav />
-            <h1 style={{ padding: 10 }}>Users</h1>
-            <Table striped bordered hover>
+            <div style={{ padding: 25 }}>
+        <h1>User</h1>
+
+        <div style={{
+          borderRadius: 20,
+          overflow: 'hidden',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+        }}>
+            <Table striped bordered hover style={{borderRadius:8}}>
                 <thead>
                     <tr>
                         <th>#</th>
@@ -153,6 +161,8 @@ export default function AdminViewUser() {
                     )}
                 </tbody>
             </Table>
+            </div>
+            </div>
 
             <Modal show={showModal} onHide={() => setShowModal(false)} size='lg' centered>
                 <Modal.Header closeButton>
@@ -175,6 +185,7 @@ export default function AdminViewUser() {
                     )}
                 </Modal.Body>
             </Modal>
+            
         </>
     )
 }

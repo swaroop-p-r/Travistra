@@ -74,8 +74,8 @@ export default function UserProfile() {
     return (
         <>
             <UserNav />
-            <Card className="mx-auto mt-5 shadow" style={{ width: '90%', maxWidth: '1200px' }}>
-                <Card.Header className="text-center bg-light text-dark d-flex align-items-center justify-content-between">
+            <Card className="mx-auto mt-5 shadow " style={{ width: '90%', maxWidth: '1200px' }}>
+                <Card.Header className="text-center bg-black text-white d-flex align-items-center justify-content-between">
                     <div>
                         <h4 className="mb-0">{user.username.charAt(0).toUpperCase() + user.username.slice(1)}</h4>
                         <p className="mb-0">{user.role}</p>
@@ -85,7 +85,7 @@ export default function UserProfile() {
                     </div>
                 </Card.Header>
                 <Card.Body>
-                    <div className="d-flex flex-wrap align-items-center">
+                    <div className="d-flex bg-white flex-wrap align-items-center">
                         <Image
                             src={user.profile_image ? `http://localhost:4000/uploads/${user.profile_image}` : 'https://via.placeholder.com/120?text=No+Image'}
                             roundedCircle
@@ -119,7 +119,7 @@ export default function UserProfile() {
                         </div>
                     </div>
                     <hr />
-                    <h5>Individual Information</h5>
+                    <h5 style={{color:'white'}}>Individual Information</h5>
                     <Table striped bordered hover>
                         <tbody>
                             <tr><th>Gender</th><td>{user.gender}</td></tr>
