@@ -4,7 +4,7 @@ import { Container, Navbar, Nav } from "react-bootstrap";
 const HomeNav = () => {
   return (
     <>
-      <Navbar bg="dark" variant="dark" sticky="top" expand="lg" style={{marginBottom:1}}>
+      <Navbar bg="dark" variant="dark" sticky="top" expand="lg" style={{marginBottom:0}}>
         <Container>
           <Navbar.Brand href="/#">Travistra</Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />

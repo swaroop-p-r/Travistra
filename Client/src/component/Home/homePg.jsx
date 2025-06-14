@@ -51,12 +51,22 @@ import {
 
 } from '@mui/icons-material'
 import HomeNav from './homeNav';
+import MouseAttractText from './VantaBg';
+
+
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import bgImage from './HomeImage/blended.png'
 
 
 
 export default function HomePg() {
 
   useEffect(() => {
+
+
+
+
     const hash = window.location.hash;
     if (hash) {
       const element = document.querySelector(hash);
@@ -200,73 +210,96 @@ export default function HomePg() {
   ];
 
 
+
+  const handleLogin = () => {
+    toast.success('Login Here');
+  }
+
+
   return (
     <>
-      <div>
+      <div style={{backgroundColor: 'black' }}>
+
         <HomeNav />
         {/* ====================Header============================= */}
 
+        <ToastContainer />
+        <h1 style={{ color:'white',marginTop:'-30px',textAlign:'center',zIndex:-1,fontSize:'230px',fontFamily: "'Cinzel', serif",}}>Travistra</h1>
 
         {/* ==================Hero================== */}
-        <Box
-          component="section" id="/"
-          sx={{
-            position: 'relative',
-            width: '100%',
-            height: '80vh',
-            backgroundImage: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1530789253388-582c481c54b0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80')`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            display: 'flex',
-            alignItems: 'center',
-            color: 'white',
-          }}
-        >
-          <Container maxWidth="md" sx={{ textAlign: 'center' }}>
-            <Typography variant="h2" fontWeight="bold" gutterBottom>
-              Discover the World with Us
-            </Typography>
-            <Typography variant="h5" sx={{ mb: 4 }}>
-              Unforgettable adventures await. Experience breathtaking destinations
-              with our expert guides.
-            </Typography>
-            <Stack
-              direction={{ xs: 'column', sm: 'row' }}
-              spacing={2}
-              justifyContent="center"
-            >
-              <Button
-                variant="contained"
-                color="primary"
-                startIcon={<CalendarIcon size={20} />}
+        <div style={{ padding: 70, backgroundColor: 'black',marginTop:'-150px' }}>
+          <Box
+            component="section" id="/"
+            sx={{
+              position: 'relative',
+              width: '100%',
+              height: '700px',
+              // clipPath: 'polygon(0 0, 100% 0, 100% 85%, 0 100%)',
+              // backgroundImage: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1530789253388-582c481c54b0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80')`,
+              backgroundImage: `url(${bgImage})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              display: 'flex',
+              alignItems: 'center',
+              marginTop: -9,
+              color: 'white',
+            }}
+          >
+            <Container maxWidth="md" sx={{ textAlign: 'center', }}>
+              <Typography variant="h2" fontWeight="bold" gutterBottom>
+                Discover the World with Us
+              </Typography>
+              <Typography variant="h5" sx={{ mb: 4 }}>
+                Unforgettable adventures await. Experience breathtaking destinations
+                with our expert guides.
+              </Typography>
+              <br />
+              <br />
+              <br />
+              <Stack
+
+                direction={{ xs: 'column', sm: 'row' }}
+                spacing={2}
+                justifyContent="center"
               >
-                Book a Tour
-              </Button>
-              <Button
-                variant="outlined"
-                color="inherit"
-                startIcon={<MapIcon size={20} />}
-                sx={{
-                  borderColor: 'white',
-                  '&:hover': {
-                    backgroundColor: 'white',
-                    color: 'black',
-                  },
-                }}
-              >
-                Explore Destinations
-              </Button>
-            </Stack>
-          </Container>
-        </Box>
+
+                <Button
+                  onClick={handleLogin}
+                  variant="contained"
+                  color="primary"
+                  startIcon={<CalendarIcon size={20} />}
+                >
+                  Book a Tour
+                </Button>
+                <Button
+                  onClick={handleLogin}
+                  variant="outlined"
+                  color="inherit"
+                  startIcon={<MapIcon size={20} />}
+                  sx={{
+                    borderColor: 'white',
+                    '&:hover': {
+                      backgroundColor: 'white',
+                      color: 'black',
+                    },
+                  }}
+                >
+                  Explore Destinations
+                </Button>
+              </Stack>
+            </Container>
+          </Box>
+        </div>
+        {/* ===================LOGO========================= */}
+        {/* <MouseAttractText/> */}
         {/* ==================Tour========================== */}
         <Box component="section" id="tours" sx={{ py: 8, bgcolor: 'transparent', width: '100%' }}>
           <Box sx={{ maxWidth: 1200, mx: 'auto', px: 2 }}>
             <Box textAlign="center" mb={6}>
-              <Typography variant="h4" fontWeight="bold" gutterBottom>
+              <Typography color='white' variant="h4" fontWeight="bold" gutterBottom>
                 Featured Tours
               </Typography>
-              <Typography variant="body1" color="text.secondary" maxWidth={600} mx="auto">
+              <Typography  variant="body1" color="white" maxWidth={600} mx="auto">
                 Explore our most popular destinations with hand-crafted itineraries designed to maximize your experience.
               </Typography>
             </Box>
@@ -337,7 +370,11 @@ export default function HomePg() {
                         <Typography variant="h6" color="primary" fontWeight="bold">
                           ${tour.price}
                         </Typography>
-                        <Button variant="contained" color="primary" size="small">
+                        <Button
+                          onClick={handleLogin}
+                          variant="contained"
+                          color="primary"
+                          size="small">
                           Book Now
                         </Button>
                       </Box>
@@ -350,9 +387,10 @@ export default function HomePg() {
 
             <Box textAlign="center" mt={6}>
               <Button
+                onClick={handleLogin}
                 variant="outlined"
                 color="primary"
-                sx={{ bgcolor: '#ffffff', px: 4, py: 1.5, textTransform: 'none', fontWeight: 500 }}
+                sx={{ bgcolor: 'darkblue', px: 4, py: 1.5, textTransform: 'none', fontWeight: 500 }}
               >
                 View All Tours
               </Button>
@@ -364,10 +402,10 @@ export default function HomePg() {
         <Box component="section" id="testimonials" sx={{ py: 8, bgcolor: 'transparent', width: '100%' }}>
           <Box sx={{ maxWidth: 1200, mx: 'auto', px: 2 }}>
             <Box textAlign="center" mb={6}>
-              <Typography variant="h4" fontWeight="bold" gutterBottom color="text.primary">
+              <Typography variant="h4" fontWeight="bold" gutterBottom color="white">
                 What Our Travelers Say
               </Typography>
-              <Typography padding={3} variant="body1" color="text.secondary" maxWidth={600} mx="auto">
+              <Typography padding={3} variant="body1" color="white" maxWidth={600} mx="auto">
                 Don&apos;t just take our word for it. Hear from travelers who&apos;ve experienced our tours firsthand.
               </Typography>
             </Box>
@@ -443,17 +481,17 @@ export default function HomePg() {
             <Grid container spacing={6} alignItems="center">
               {/* Text Section */}
               <Grid>
-                <Typography variant="h4" fontWeight="bold" gutterBottom color="text.primary">
+                <Typography variant="h4" fontWeight="bold" gutterBottom color="white">
                   About Travistra
                 </Typography>
 
-                <Typography variant="body1" color="text.secondary" paragraph>
+                <Typography variant="body1" color="white" paragraph>
                   Founded in 2010, Travistra has been creating unforgettable travel experiences
                   for over a decade. We believe in sustainable tourism that benefits local communities
                   while providing authentic adventures for our travelers.
                 </Typography>
 
-                <Typography variant="body1" color="text.secondary" paragraph>
+                <Typography variant="body1" color="white" paragraph>
                   Our team of experienced travel experts designs each tour to showcase the best of each
                   destination, from iconic landmarks to hidden local treasures.
                 </Typography>
@@ -464,7 +502,7 @@ export default function HomePg() {
                       <ListItemIcon sx={{ minWidth: 30 }}>
                         <CheckIcon size={18} style={{ color: '#22c55e' }} />
                       </ListItemIcon>
-                      <ListItemText primary={point} primaryTypographyProps={{ color: 'text.primary' }} />
+                      <ListItemText primary={point} primaryTypographyProps={{ color: 'white' }} />
                     </ListItem>
                   ))}
                 </List>
@@ -544,10 +582,10 @@ export default function HomePg() {
           <Box sx={{ maxWidth: 1200, mx: 'auto', px: 2 }}>
             {/* Section Heading */}
             <Box textAlign="center" mb={6}>
-              <Typography variant="h4" fontWeight="bold" gutterBottom color="text.primary">
+              <Typography variant="h4" fontWeight="bold" gutterBottom color="white">
                 Contact Us
               </Typography>
-              <Typography variant="body1" color="text.secondary" maxWidth="600px" mx="auto">
+              <Typography variant="body1" color="white" maxWidth="600px" mx="auto">
                 Have questions about our tours or need help planning your next adventure? Get in touch
                 with our travel experts.
               </Typography>
@@ -594,15 +632,15 @@ export default function HomePg() {
 
               {/* Contact Info */}
               <Grid marginLeft={18} >
-                <Typography variant="h5" fontWeight="bold" gutterBottom>
+                <Typography color='white' variant="h5" fontWeight="bold" gutterBottom>
                   Contact Information
                 </Typography>
 
                 <Box maxHeight={70} mt={3} display="flex" gap={2}>
-                  <MapPin style={{ color: '#2563eb', marginTop: 4 }} />
+                  <MapPin style={{ color: 'white', marginTop: 4 }} />
                   <Box>
-                    <Typography fontWeight="bold">Our Office</Typography>
-                    <Typography color="text.secondary">
+                    <Typography fontWeight="bold" color='white'>Our Office</Typography>
+                    <Typography color="white">
                       123 Adventure Avenue
                       <br />
                       Traveler's District
@@ -613,20 +651,20 @@ export default function HomePg() {
                 </Box>
 
                 <Box maxHeight={50} mt={4} display="flex" gap={2}>
-                  <Phone style={{ color: '#2563eb', marginTop: 4 }} />
+                  <Phone style={{ color:'white', marginTop: 4 }} />
                   <Box>
-                    <Typography fontWeight="bold">Phone</Typography>
-                    <Typography color="text.secondary">+1 (555) 123-4567</Typography>
-                    <Typography color="text.secondary">Mon-Fri 9:00 AM - 6:00 PM PT</Typography>
+                    <Typography color='white' fontWeight="bold">Phone</Typography>
+                    <Typography color="white">+1 (555) 123-4567</Typography>
+                    <Typography color="white">Mon-Fri 9:00 AM - 6:00 PM PT</Typography>
                   </Box>
                 </Box>
 
                 <Box maxHeight={50} mt={4} display="flex" gap={2}>
-                  <Mail style={{ color: '#2563eb', marginTop: 4 }} />
+                  <Mail style={{ color: 'white', marginTop: 4 }} />
                   <Box>
-                    <Typography fontWeight="bold">Email</Typography>
-                    <Typography color="text.secondary">info@travistra.com</Typography>
-                    <Typography color="text.secondary">bookings@travistra.com</Typography>
+                    <Typography color='white' fontWeight="bold">Email</Typography>
+                    <Typography color="white">info@travistra.com</Typography>
+                    <Typography color="white">bookings@travistra.com</Typography>
                   </Box>
                 </Box>
 
@@ -634,7 +672,7 @@ export default function HomePg() {
                 <Divider sx={{ my: 4 }} />
 
                 {/* Social Media */}
-                <Typography variant="h6" fontWeight="bold" gutterBottom>
+                <Typography color='white' variant="h6" fontWeight="bold" gutterBottom>
                   Follow Us
                 </Typography>
                 <Box display="flex" gap={2}>
