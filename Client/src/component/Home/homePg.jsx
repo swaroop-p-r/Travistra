@@ -41,22 +41,28 @@ import {
   TextField,
   Paper,
   Link,
-
+  Alert,
+  Snackbar,
 
 } from '@mui/material';
 
 import {
   Facebook, Twitter, Instagram, YouTube,
   LocationOn,
+  CheckCircle,
 
 } from '@mui/icons-material'
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+
 import HomeNav from './homeNav';
 import MouseAttractText from './VantaBg';
 
 
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+
 import bgImage from './HomeImage/blended.png'
+import travistraBgImage from './HomeImage/travitsralogobg1.jpeg'
+
+import { motion } from 'framer-motion';
 
 
 
@@ -211,85 +217,156 @@ export default function HomePg() {
 
 
 
+  const fadeIn = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { duration: .8 } }
+  };
+
+  const slideUp = {
+    hidden: { y: 20, opacity: 0 },
+    visible: { y: 0, opacity: 1, transition: { duration: 1.5 } }
+  };
+
+  const staggerContainer = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const [success, setSuccess] = useState(false);
+
   const handleLogin = () => {
-    toast.success('Login Here');
+    setSuccess(true);
   }
+  const handleCloseSnackbar = () => {
+    setSuccess(false);
+  };
 
 
   return (
     <>
-      <div style={{backgroundColor: 'black' }}>
+      <div style={{ backgroundColor: 'black' }}>
 
         <HomeNav />
         {/* ====================Header============================= */}
 
-        <ToastContainer />
-        <h1 style={{ color:'white',marginTop:'-30px',textAlign:'center',zIndex:-1,fontSize:'230px',fontFamily: "'Cinzel', serif",}}>Travistra</h1>
 
-        {/* ==================Hero================== */}
-        <div style={{ padding: 70, backgroundColor: 'black',marginTop:'-150px' }}>
-          <Box
-            component="section" id="/"
-            sx={{
-              position: 'relative',
-              width: '100%',
-              height: '700px',
-              // clipPath: 'polygon(0 0, 100% 0, 100% 85%, 0 100%)',
-              // backgroundImage: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1530789253388-582c481c54b0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80')`,
-              backgroundImage: `url(${bgImage})`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              display: 'flex',
-              alignItems: 'center',
-              marginTop: -9,
-              color: 'white',
-            }}
-          >
-            <Container maxWidth="md" sx={{ textAlign: 'center', }}>
-              <Typography variant="h2" fontWeight="bold" gutterBottom>
-                Discover the World with Us
-              </Typography>
-              <Typography variant="h5" sx={{ mb: 4 }}>
-                Unforgettable adventures await. Experience breathtaking destinations
-                with our expert guides.
-              </Typography>
-              <br />
-              <br />
-              <br />
-              <Stack
+        <style>
+          {`
+      @keyframes animateBg {
+        0% { background-position-x: 0; }
+        100% { background-position-x: -200px; }
+      }
+        @keyframes bounceUp {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-6px);
+    }
+  }
+    `}
+        </style>
 
-                direction={{ xs: 'column', sm: 'row' }}
-                spacing={2}
-                justifyContent="center"
+
+
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          variants={staggerContainer}>
+
+          <h1 id='travistrahead' style={{
+            marginTop: '-30px',
+            textAlign: 'center',
+            zIndex: -1,
+            fontSize: '15vw',
+            fontFamily: "'Cinzel', serif",
+            backgroundImage: `url(${travistraBgImage})`,
+            backgroundPosition: 'center',
+            backgroundSize: 'cover',
+            backgroundClip: 'text',
+            WebkitBackgroundClip: 'text',       // needed for Safari/Chrome
+            color: 'rgba(255, 255, 255, 0.5)',
+            animation: 'animateBg 10s linear infinite',
+          }}>
+            <motion.div variants={slideUp}>
+              Travistra
+            </motion.div>
+          </h1>
+
+
+          {/* ==================Hero================== */}
+          <motion.div variants={fadeIn}>
+            <div style={{ padding: 70, backgroundColor: 'transparent', marginTop: '-150px' }}>
+
+              <Box
+                component="section" id="/"
+                sx={{
+                  position: 'relative',
+                  width: '100%',
+                  height: '700px',
+                  // clipPath: 'polygon(0 0, 100% 0, 100% 85%, 0 100%)',
+                  // backgroundImage: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1530789253388-582c481c54b0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80')`,
+                  backgroundImage: `url(${bgImage})`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                  display: 'flex',
+                  alignItems: 'center',
+                  marginTop: -9,
+                  color: 'white',
+                }}
               >
+                <Container maxWidth="md" sx={{ textAlign: 'center', }}>
+                  <Typography variant="h2" fontWeight="bold" gutterBottom>
+                    Discover the World with Us
+                  </Typography>
+                  <Typography variant="h5" sx={{ mb: 4 }}>
+                    Unforgettable adventures await. Experience breathtaking destinations
+                    with our expert guides.
+                  </Typography>
+                  <br />
+                  <br />
+                  <br />
+                  <Stack
 
-                <Button
-                  onClick={handleLogin}
-                  variant="contained"
-                  color="primary"
-                  startIcon={<CalendarIcon size={20} />}
-                >
-                  Book a Tour
-                </Button>
-                <Button
-                  onClick={handleLogin}
-                  variant="outlined"
-                  color="inherit"
-                  startIcon={<MapIcon size={20} />}
-                  sx={{
-                    borderColor: 'white',
-                    '&:hover': {
-                      backgroundColor: 'white',
-                      color: 'black',
-                    },
-                  }}
-                >
-                  Explore Destinations
-                </Button>
-              </Stack>
-            </Container>
-          </Box>
-        </div>
+                    direction={{ xs: 'column', sm: 'row' }}
+                    spacing={2}
+                    justifyContent="center"
+                  >
+
+                    <Button
+                      onClick={handleLogin}
+                      variant="contained"
+                      color="primary"
+                      startIcon={<CalendarIcon size={20} />}
+                    >
+                      Book a Tour
+                    </Button>
+                    <Button
+                      onClick={handleLogin}
+                      variant="outlined"
+                      color="inherit"
+                      startIcon={<MapIcon size={20} />}
+                      sx={{
+                        borderColor: 'white',
+                        '&:hover': {
+                          backgroundColor: 'white',
+                          color: 'black',
+                        },
+                      }}
+                    >
+                      Explore Destinations
+                    </Button>
+                  </Stack>
+                </Container>
+              </Box>
+            </div>
+          </motion.div>
+        </motion.div>
         {/* ===================LOGO========================= */}
         {/* <MouseAttractText/> */}
         {/* ==================Tour========================== */}
@@ -299,7 +376,7 @@ export default function HomePg() {
               <Typography color='white' variant="h4" fontWeight="bold" gutterBottom>
                 Featured Tours
               </Typography>
-              <Typography  variant="body1" color="white" maxWidth={600} mx="auto">
+              <Typography variant="body1" color="white" maxWidth={600} mx="auto">
                 Explore our most popular destinations with hand-crafted itineraries designed to maximize your experience.
               </Typography>
             </Box>
@@ -372,8 +449,8 @@ export default function HomePg() {
                         </Typography>
                         <Button
                           onClick={handleLogin}
-                          variant="contained"
-                          color="primary"
+                          variant='outlined'
+                          color='info'
                           size="small">
                           Book Now
                         </Button>
@@ -388,15 +465,16 @@ export default function HomePg() {
             <Box textAlign="center" mt={6}>
               <Button
                 onClick={handleLogin}
-                variant="outlined"
-                color="primary"
-                sx={{ bgcolor: 'darkblue', px: 4, py: 1.5, textTransform: 'none', fontWeight: 500 }}
+                // variant="outlined"
+                color='info'
+                sx={{ bgcolor: 'transparent', px: 4, py: 1.5, textTransform: 'none', fontWeight: 500 }}
               >
                 View All Tours
               </Button>
             </Box>
           </Box>
         </Box>
+
 
         {/* =====================test========================== */}
         <Box component="section" id="testimonials" sx={{ py: 8, bgcolor: 'transparent', width: '100%' }}>
@@ -651,7 +729,7 @@ export default function HomePg() {
                 </Box>
 
                 <Box maxHeight={50} mt={4} display="flex" gap={2}>
-                  <Phone style={{ color:'white', marginTop: 4 }} />
+                  <Phone style={{ color: 'white', marginTop: 4 }} />
                   <Box>
                     <Typography color='white' fontWeight="bold">Phone</Typography>
                     <Typography color="white">+1 (555) 123-4567</Typography>
@@ -840,6 +918,31 @@ export default function HomePg() {
           </Box>
         </Box>
       </div>
+
+      {/* Success Toast */}
+      <Snackbar
+        open={success}
+        autoHideDuration={2000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        sx={{ mt: 6, mr: 2 }}
+      >
+        <Alert
+          icon={false}
+          severity='success'
+          variant='standard'
+          sx={{ width: '100%', display: 'flex', alignItems: 'center' }}
+        >
+          Login Here
+          <KeyboardArrowUpIcon
+            sx={{
+              ml: 1,
+              animation: 'bounceUp 1s infinite',
+              fontSize: '1.5rem',
+            }}
+          />
+        </Alert>
+      </Snackbar>
     </>
   );
 }

@@ -41,16 +41,16 @@ export default function Login() {
         setRecord({ ...record, [e.target.name]: e.target.value })
     };
 
-    const handleSubmit = async(e) => {
+    const handleSubmit = async (e) => {
         try {
             e.preventDefault()
-            const res=await AXIOS.post("http://localhost:4000/api/user/login", record)
+            const res = await AXIOS.post("http://localhost:4000/api/user/login", record)
             if (res.data.status === 200) {
                 localStorage.setItem("token", res.data.token)
                 setSuccess(true);
                 setTimeout(() => {
                     const redirectPath = res.data.role === "admin" ? '/adminhome' : '/userhome';
-                    navigate(redirectPath);
+                    //navigate(redirectPath);
                 }, 2000);
             } else {
                 // alert(res.data.msg);
@@ -72,11 +72,11 @@ export default function Login() {
         setSuccess(false);
     };
 
-return (
-    <>
-        <HomeNav />
-        <br />
-        <Box
+    return (
+        <>
+            <HomeNav />
+            <br />
+            <Box
                 sx={{
                     display: 'flex',
                     justifyContent: 'center',
@@ -207,7 +207,8 @@ return (
                 open={success}
                 autoHideDuration={2000}
                 onClose={handleCloseSnackbar}
-                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                sx={{ mt: 6 }}
             >
                 <Alert
                     icon={<CheckCircle fontSize="inherit" />}
@@ -218,6 +219,6 @@ return (
                     Login successful! Redirecting...
                 </Alert>
             </Snackbar>
-    </>
-)
+        </>
+    )
 }
