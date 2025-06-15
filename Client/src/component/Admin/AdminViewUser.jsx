@@ -7,9 +7,13 @@ import { useState } from 'react'
 import { useEffect } from 'react'
 import Modal from 'react-bootstrap/Modal';
 import {
-  Spinner,
+    Spinner,
 } from 'react-bootstrap';
 import { Form } from 'react-bootstrap';
+
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { toast } from 'react-toastify';
 
 export default function AdminViewUser() {
     const [user, setUser] = useState([])
@@ -49,7 +53,7 @@ export default function AdminViewUser() {
                 headers: { userid: id }
             })
             .then((res) => {
-                alert(res.data.msg)
+                toast.success(res.data.msg);
                 fetchUser()
             }).catch((err) => {
                 console.log("frontend catch", err)
@@ -58,10 +62,10 @@ export default function AdminViewUser() {
 
     const deleteUser = (id) => {
         // console.log("deleteduserid:", id)
-            if (!window.confirm('Are sure you want to delete this User?')) return;
+        if (!window.confirm('Are sure you want to delete this User?')) return;
         AXIOS.delete("http://localhost:4000/api/admin/deleteuser", { headers: { userid: id } })
             .then((res) => {
-                alert(res.data.msg)
+                toast.success("User Deleted Sccessfully");
                 fetchUser()
             }).catch((err) => {
                 console.log(err)
@@ -81,88 +85,123 @@ export default function AdminViewUser() {
     return (
         <>
             <AdminNav />
+            <ToastContainer
+                position="top-right"
+                autoClose={2000}
+                style={{
+                    top: '80px',
+                    right: '30px',
+                    zIndex: 9999
+                }}
+            />
             <div style={{ padding: 25 }}>
-        <h1>User</h1>
+                <h1>User</h1>
 
-        <div style={{
-          borderRadius: 20,
-          overflow: 'hidden',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
-        }}>
-            <Table striped bordered hover style={{borderRadius:8}}>
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Profile Photo</th>
-                        <th>Username</th>
-                        <th>Phone No</th>
-                        <th>Gender</th>
-                        <th>DOB</th>
-                        <th>Email</th>
-                        <th>Address</th>
-                        <th>ID Card</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody className="text-center align-middle">
-                    {user.length > 0 ? (
-                            user.map((item, index) => {
-                                return (
-                                    <tr key={item._id} >
-                                        <td>{index + 1}</td>
-                                        <td>
-                                            <img src={`http://localhost:4000/uploads/${item.profile_image}`}
-                                                alt="Profile photo"
-                                                // className="img-thumbnail"
-                                                style={{ width: "auto", maxHeight: '125px', objectFit: "cover", borderRadius: 8, alignContent: 'center' }}
-                                                onError={(e) => {
-                                                    e.target.onerror = null;
-                                                    e.target.src = '/project_image/profile_error.png';
-                                                    e.target.style.objectFit = 'contain';
-                                                }}
-                                                onClick={() => handleImageClick(item.profile_image, item.username, 'Profile Photo')}
-
-                                            />
+                <div
+                    style={{
+                        borderRadius: 20,
+                        overflow: 'hidden',
+                        boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                    }}
+                >
+                    {/* 👇 Responsive scroll wrapper */}
+                    <div style={{ overflowX: 'auto' }}>
+                        <Table striped bordered hover responsive style={{ minWidth: 1000 }}>
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Profile Photo</th>
+                                    <th>Username</th>
+                                    <th>Phone No</th>
+                                    <th>Gender</th>
+                                    <th>DOB</th>
+                                    <th>Email</th>
+                                    <th>Address</th>
+                                    <th>ID Card</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody className="text-center align-middle">
+                                {user.length > 0 ? (
+                                    user.map((item, index) => (
+                                        <tr key={item._id}>
+                                            <td>{index + 1}</td>
+                                            <td>
+                                                <img
+                                                    src={`http://localhost:4000/uploads/${item.profile_image}`}
+                                                    alt="Profile"
+                                                    style={{
+                                                        width: 'auto',
+                                                        maxHeight: '125px',
+                                                        objectFit: 'cover',
+                                                        borderRadius: 8,
+                                                    }}
+                                                    onError={(e) => {
+                                                        e.target.onerror = null;
+                                                        e.target.src = '/project_image/profile_error.png';
+                                                        e.target.style.objectFit = 'contain';
+                                                    }}
+                                                    onClick={() =>
+                                                        handleImageClick(item.profile_image, item.username, 'Profile Photo')
+                                                    }
+                                                />
+                                            </td>
+                                            <td>{item.username}</td>
+                                            <td>{item.phone}</td>
+                                            <td>{item.gender}</td>
+                                            <td>{new Date(item.dob).toLocaleDateString()}</td>
+                                            <td>{item.email}</td>
+                                            <td>{item.address}</td>
+                                            <td>
+                                                <img
+                                                    src={`http://localhost:4000/uploads/${item.image}`}
+                                                    alt="ID"
+                                                    style={{
+                                                        width: '200px',
+                                                        height: '125px',
+                                                        objectFit: 'cover',
+                                                        borderRadius: 8,
+                                                    }}
+                                                    onError={(e) => {
+                                                        e.target.onerror = null;
+                                                        e.target.src = '/project_image/profile_error.png';
+                                                        e.target.style.objectFit = 'contain';
+                                                    }}
+                                                    onClick={() =>
+                                                        handleImageClick(item.image, item.username, 'ID Image')
+                                                    }
+                                                />
+                                            </td>
+                                            <td>
+                                                <Button
+                                                    style={{ width: 130 }}
+                                                    variant={item.status ? 'success' : 'warning'}
+                                                    onClick={() => adminToggleUserStatus(item._id)}
+                                                >
+                                                    {item.status ? 'Activated' : 'Deactivated'}
+                                                </Button>
+                                            </td>
+                                            <td>
+                                                <Button variant="danger" onClick={() => deleteUser(item._id)}>
+                                                    Delete
+                                                </Button>
+                                            </td>
+                                        </tr>
+                                    ))
+                                ) : (
+                                    <tr>
+                                        <td colSpan="11" className="text-center text-muted py-4">
+                                            No User found.
                                         </td>
-                                        <td>{item.username}</td>
-                                        <td>{item.phone}</td>
-                                        <td>{item.gender}</td>
-                                        {/* <td>{item.dob}</td> */}
-                                        <td>{new Date(item.dob).toLocaleDateString()}</td>
-                                        <td>{item.email}</td>
-                                        <td>{item.address}</td>
-                                        <td>
-                                            <img src={`http://localhost:4000/uploads/${item.image}`}
-                                                alt="Profile photo"
-                                                // className="img-thumbnail"
-                                                style={{ width: "200px", height: "125px", objectFit: "cover", borderRadius: 8, alignContent: 'center' }}
-                                                onError={(e) => {
-                                                    e.target.onerror = null;
-                                                    e.target.src = '/project_image/profile_error.png';
-                                                    e.target.style.objectFit = 'contain';
-                                                }}
-                                                onClick={() => handleImageClick(item.image, item.username, 'ID Image')}
-
-                                            />
-                                        </td>
-                                        <td><Button style={{ width: 130 }} variant={item.status ? "success" : "warning"} onClick={() => adminToggleUserStatus(item._id)}>{item.status ? "Activated" : "Deactivated"}</Button></td>
-                                        <td><Button variant="danger" onClick={() => deleteUser(item._id)}>Delete</Button></td>
-
                                     </tr>
-                                )
-                            })
-                    ) : (
-                        <tr>
-                  <td colSpan="11" className="text-center text-muted py-4">
-                    No User found.
-                  </td>
-                </tr>
-                    )}
-                </tbody>
-            </Table>
+                                )}
+                            </tbody>
+                        </Table>
+                    </div>
+                </div>
             </div>
-            </div>
+
 
             <Modal show={showModal} onHide={() => setShowModal(false)} size='lg' centered>
                 <Modal.Header closeButton>
@@ -185,7 +224,7 @@ export default function AdminViewUser() {
                     )}
                 </Modal.Body>
             </Modal>
-            
+
         </>
     )
 }

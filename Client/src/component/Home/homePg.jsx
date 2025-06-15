@@ -55,7 +55,6 @@ import {
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
 import HomeNav from './homeNav';
-import MouseAttractText from './VantaBg';
 
 
 
@@ -257,19 +256,19 @@ export default function HomePg() {
 
         <style>
           {`
-      @keyframes animateBg {
-        0% { background-position-x: 0; }
-        100% { background-position-x: -200px; }
-      }
-        @keyframes bounceUp {
-    0%, 100% {
-      transform: translateY(0);
-    }
-    50% {
-      transform: translateY(-6px);
-    }
-  }
-    `}
+            @keyframes animateBg {
+              0% { background-position-x: 0; }
+              100% { background-position-x: -200px; }
+            }
+            @keyframes bounceUp {
+              0%, 100% {
+                transform: translateY(0);
+            }
+              50% {
+                transform: translateY(-6px);
+              }
+            }
+          `}
         </style>
 
 
