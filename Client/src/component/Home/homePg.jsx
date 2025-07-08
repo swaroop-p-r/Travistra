@@ -339,9 +339,16 @@ export default function HomePg() {
 
                     <Button
                       onClick={handleLogin}
-                      variant="contained"
-                      color="primary"
+                      variant="outlined"
+                      color="inherit"
                       startIcon={<CalendarIcon size={20} />}
+                      sx={{
+                        borderColor: 'white',
+                        '&:hover': {
+                          backgroundColor: 'white',
+                          color: 'black',
+                        },
+                      }}
                     >
                       Book a Tour
                     </Button>

@@ -21,6 +21,13 @@ export default function AdminViewUser() {
     const [showModal, setShowModal] = useState(false);
     const [currentImage, setCurrentImage] = useState('');
     const [modalTitle, setModalTitle] = useState('')
+    // search filter
+    const [searchTerm, setSearchTerm] = useState('');
+    const [statusFilter, setStatusFilter] = useState('');
+    //pagenation
+    const [currentPage, setCurrentPage] = useState(1);
+    const usersPerPage = 5;
+
 
     const fetchUser = () => {
         // setLoading(true);
@@ -82,6 +89,29 @@ export default function AdminViewUser() {
     }
 
 
+
+    const filterUsers = user.filter((item) => {
+        const matchesSearch =
+            item.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            item.phone.toString().includes(searchTerm) ||
+            item.email.toLowerCase().includes(searchTerm.toLowerCase());
+
+        const matchesStatus =
+            statusFilter === '' ||
+            (statusFilter === 'active' && item.status === true) ||
+            (statusFilter === 'deactive' && item.status === false);
+
+        return matchesSearch && matchesStatus;
+    });
+
+    // Pagination
+    const indexOfLastUser = currentPage * usersPerPage;
+    const indexOfFirstUser = indexOfLastUser - usersPerPage;
+    const currentUsers = filterUsers.slice(indexOfFirstUser, indexOfLastUser);
+
+    const totalPages = Math.ceil(filterUsers.length / usersPerPage);
+
+
     return (
         <>
             <AdminNav />
@@ -96,6 +126,40 @@ export default function AdminViewUser() {
             />
             <div style={{ padding: 25 }}>
                 <h1>User</h1>
+
+                {/* Search Filter */}
+                <Form.Group className="mb-3" controlId="search">
+                    <div className="d-flex align-items-center gap-2 flex-wrap">
+                        <Form.Control
+                            type="text"
+                            placeholder="Search by Username, Phone, or Email"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            style={{ maxWidth: '20rem' }}
+                        />
+                        <Button
+                            variant="outline-success"
+                            onClick={() => setStatusFilter('active')}
+                            active={statusFilter === 'active'}
+                        >
+                            Active
+                        </Button>
+                        <Button
+                            variant="outline-danger"
+                            onClick={() => setStatusFilter('deactive')}
+                            active={statusFilter === 'deactive'}
+                        >
+                            Deactive
+                        </Button>
+                        <Button
+                            variant="outline-secondary"
+                            onClick={() => setStatusFilter('')}
+                            active={statusFilter === ''}
+                        >
+                            All
+                        </Button>
+                    </div>
+                </Form.Group>
 
                 <div
                     style={{
@@ -123,10 +187,10 @@ export default function AdminViewUser() {
                                 </tr>
                             </thead>
                             <tbody className="text-center align-middle">
-                                {user.length > 0 ? (
-                                    user.map((item, index) => (
+                                {currentUsers.length > 0 ? (
+                                    currentUsers.map((item, index) => (
                                         <tr key={item._id}>
-                                            <td>{index + 1}</td>
+                                            <td>{indexOfFirstUser + index + 1}</td>
                                             <td>
                                                 <img
                                                     src={`http://localhost:4000/uploads/${item.profile_image}`}
@@ -199,6 +263,36 @@ export default function AdminViewUser() {
                             </tbody>
                         </Table>
                     </div>
+
+                    {/* pagenation */}
+                    <div className="d-flex justify-content-center align-items-center mt-3 gap-2 flex-wrap">
+                        <Button
+                            variant="secondary"
+                            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                            disabled={currentPage === 1}
+                        >
+                            Previous
+                        </Button>
+
+                        {[...Array(totalPages)].map((_, idx) => (
+                            <Button
+                                key={idx}
+                                variant={currentPage === idx + 1 ? 'primary' : 'outline-primary'}
+                                onClick={() => setCurrentPage(idx + 1)}
+                            >
+                                {idx + 1}
+                            </Button>
+                        ))}
+
+                        <Button
+                            variant="secondary"
+                            onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                            disabled={currentPage === totalPages}
+                        >
+                            Next
+                        </Button>
+                    </div>
+
                 </div>
             </div>
 

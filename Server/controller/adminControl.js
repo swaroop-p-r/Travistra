@@ -6,6 +6,7 @@ const fs = require('fs').promises
 const fss = require('fs')
 const Booking = require('../model/Booking')
 const Payment = require('../model/Payment')
+const { model } = require('mongoose')
 
 const adminViewUser = async (req, res) => {
     try {
@@ -418,6 +419,7 @@ const adminViewBookings = async (req, res) => {
         const bookings = await Booking.find()
             .populate('package')
             .populate('vehicle')
+            .populate('user')
         res.json(bookings);
         // console.log(bookings)
     } catch (err) {
@@ -461,10 +463,13 @@ const adminAssignVehicle = async (req, res) => {
 
         if (!booking) return res.json({ status: 400, msg: 'Booking not found' });
         // console.log("vefd",booking.vehicle._id)
-        if (vehicleId === booking.vehicle._id) {
-            // console.log("vefd",booking.vehicle._id,vehicleId)
+        if (booking.vehicle && booking.vehicle._id.toString() === vehicleId) {
+            
+            vehicle.status = false;
+            await vehicle.save();
+            return res.json({ status: 200, msg: 'Vehicle assigned successfully', booking });
         }
-        res.json({ status: 200, msg: 'Vehicle assigned successfully', booking });
+        res.json({ msg: 'Vehicle not assigned',status:400 });
     } catch (err) {
         console.log('ServerError', err)
         res.json({ msg: 'Server Error', status: 500 })
@@ -514,7 +519,13 @@ const adminViewPayments = async (req, res) => {
     try {
         const payment = await Payment.find()
             .populate('user')
-            .populate('booking')
+            .populate({
+                path:'booking',
+                populate:{
+                    path:'package',
+                    model:'package_tblcd'
+                }
+            })
         if (!payment) {
             return res.json({ msg: 'Payment not Found!', status: 404 })
         }

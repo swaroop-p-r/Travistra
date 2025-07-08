@@ -246,6 +246,10 @@ export default function AdminViewBookings() {
                                             <div className="d-flex flex-column h-100">
                                                 <div>
                                                     <Card.Title className="mb-3">
+                                                        {booking.user?.username}
+                                                        ---
+                                                        {booking.user?.email}
+                                                         <br />
                                                         {booking.package?.package_name || 'Unnamed Package'}
                                                     </Card.Title>
                                                     <div className="d-flex flex-wrap gap-4 mb-3">

@@ -21,6 +21,7 @@ import UserPayment from "./component/User/UserPayment";
 import AdminViewPayment from "./component/Admin/AdminViewPayment";
 
 import "bootstrap/dist/css/bootstrap.min.css";
+import MissingPage from "./component/MissingPg/MissingPage";
 
 function App() {
 
@@ -28,6 +29,8 @@ function App() {
     <>
     <BrowserRouter>
       <Routes>
+        {/* Missing Page */}
+        <Route path="/*" element={<MissingPage/>}/>
         {/* Home page route */}
         <Route path="/" element={<HomePg />} />
         <Route path='/register' element={<UserReg />}/>

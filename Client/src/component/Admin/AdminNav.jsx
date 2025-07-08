@@ -4,16 +4,16 @@ import { useNavigate } from "react-router-dom";
 
 export default function AdminNav() {
 
-  const navigate=useNavigate();
+  const navigate = useNavigate();
 
-  const handleLogout=()=>{
+  const handleLogout = () => {
     localStorage.removeItem('token');
     navigate('/login');
   }
 
   return (
     <>
-      <Navbar bg="dark" variant="dark" sticky="top" expand="lg" style={{marginBottom:20}}>
+      <Navbar bg="dark" variant="dark" sticky="top" expand="lg" style={{ marginBottom: 20 }}>
         <Container>
           <Navbar.Brand href="/">Travistra</Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />

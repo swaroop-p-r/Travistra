@@ -87,10 +87,7 @@ export default function UserBooking() {
     }
 
     // Function to format date
-    const formatDate = (dateString) => {
-        const options = { year: 'numeric', month: 'long', day: 'numeric' };
-        return new Date(dateString).toLocaleDateString(undefined, options);
-    };
+    const formatDate = (dateStr) => new Date(dateStr).toLocaleDateString();
 
 
     const handleViewPackage = (bookingId) => {

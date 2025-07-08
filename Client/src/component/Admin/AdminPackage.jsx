@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react'
 import AXIOS from 'axios'
 import AdminNav from './AdminNav'
 
+
 export default function AdminPackage() {
 
     const [formData, setFormData] = useState({
@@ -26,8 +27,11 @@ export default function AdminPackage() {
     }
 
     const handleImage = (e) => {
-        setImages([...e.target.files]);
+       const selected = Array.from(e.target.files);
+  setImages((prev) => [...prev, ...selected]);
+  e.target.value = null; // allow reselecting same file
     }
+
 
     const addItineraryItem = () => {
         if (newItineraryItem.trim() !== '') {
@@ -256,14 +260,7 @@ export default function AdminPackage() {
                                         <h4 className="mb-0">Package Images</h4>
                                     </div>
                                     <div className="card-body">
-                                        <input
-                                            type="file"
-                                            className="form-control mb-3"
-                                            multiple
-                                            accept="image/*"
-                                            onChange={handleImage}
-                                            ref={fileInputRef}
-                                        />
+                                        <input type="file" multiple={false} onChange={handleImage} />
 
                                         <div className="d-flex flex-wrap gap-2">
                                             {Array.from(images).map((file, i) => (

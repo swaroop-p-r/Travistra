@@ -60,11 +60,17 @@ export default function AdminViewPayment() {
                   <div className="mb-2">
                     <strong>Method:</strong> {payment.method}
                   </div>
-                  <div className="mb-2">
+                  {/* <div className="mb-2">
                     <strong>Booking ID:</strong> {payment.booking?._id || 'N/A'}
+                  </div> */}
+                  <div className="mb-2">
+                    <strong>Package Name:</strong> {payment.booking?.package?.package_name || 'N/A'}
                   </div>
                   <div className="mb-2">
-                    <strong>User ID:</strong> {payment.user?._id || 'N/A'}
+                    <strong>User Name:</strong> {payment.user?.username || 'N/A'}
+                  </div>
+                  <div className="mb-2">
+                    <strong>User Email:</strong> {payment.user?.email || 'N/A'}
                   </div>
                   <div className="mb-2">
                     <strong>Paid At:</strong> {new Date(payment.paidAt).toLocaleString()}
