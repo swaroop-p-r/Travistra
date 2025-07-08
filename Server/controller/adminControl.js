@@ -133,52 +133,54 @@ const adminTogglePackageStatus = async (req, res) => {
     }
 }
 
-const adminDeletePackage = async (req, res) => {
-    try {
-        const id = req.headers.userid
-
-        const packageToDelete = await Package.findById({ _id: id })
-        if (!packageToDelete) {
-            return res.json({ msg: "Package not Found!", status: 400 })
-        }
-        const imagePaths = (packageToDelete.images || []).map(imageName =>
-            path.join(__dirname, '..', 'uploads', imageName)
-        );
-        await Package.findByIdAndDelete(id);
-        for (const imagePath of imagePaths) {
-            if (fss.existsSync(imagePath)) {
-                try {
-                    await fs.unlink(imagePath)
-                } catch (err) {
-                    console.log(`package deletion: Failed to delete image file: ${imagePath}`, err)
-                    //return res.json({ msg: `Cannot access image file: ${imagePath}\nPacakge Deleted`, status: 500 })
-                }
-            } else {
-                console.log(`Image not found for deletion: ${imagePath}`);
-            }
-        }
-
-        res.json({ msg: "Package deleted successfully", status: 200 })
-    } catch (err) {
-        console.log(err)
-        res.json({ msg: "Server Error", status: 500 })
-    }
-}
-
 // const adminDeletePackage = async (req, res) => {
 //     try {
 //         const id = req.headers.userid
-//         const deletedPackage = await Package.findByIdAndDelete(id)
-//         if (deletedPackage) {
-//             res.json({ msg: "Package Deleted", status: 200 })
-//         } else {
-//             res.json({ msg: "Package Not Deleted!", status: 400 })
+
+//         const packageToDelete = await Package.findById({ _id: id })
+//         if (!packageToDelete) {
+//             return res.json({ msg: "Package not Found!", status: 400 })
 //         }
+//         const imagePaths = (packageToDelete.images || []).map(imageName =>
+//             path.join(__dirname, '..', 'uploads', imageName)
+//         );
+//         await Package.findByIdAndDelete(id);
+
+//         // fs deletion
+//         for (const imagePath of imagePaths) {
+//             if (fss.existsSync(imagePath)) {
+//                 try {
+//                     await fs.unlink(imagePath)
+//                 } catch (err) {
+//                     console.log(`package deletion: Failed to delete image file: ${imagePath}`, err)
+//                     //return res.json({ msg: `Cannot access image file: ${imagePath}\nPacakge Deleted`, status: 500 })
+//                 }
+//             } else {
+//                 console.log(`Image not found for deletion: ${imagePath}`);
+//             }
+//         }
+
+//         res.json({ msg: "Package deleted successfully", status: 200 })
 //     } catch (err) {
 //         console.log(err)
 //         res.json({ msg: "Server Error", status: 500 })
 //     }
 // }
+
+const adminDeletePackage = async (req, res) => {
+    try {
+        const id = req.headers.userid
+        const deletedPackage = await Package.findByIdAndDelete(id)
+        if (deletedPackage) {
+            res.json({ msg: "Package Deleted", status: 200 })
+        } else {
+            res.json({ msg: "Package Not Deleted!", status: 400 })
+        }
+    } catch (err) {
+        console.log(err)
+        res.json({ msg: "Server Error", status: 500 })
+    }
+}
 
 const adminViewPackageById = async (req, res) => {
     try {
@@ -210,10 +212,10 @@ const adminUpdatePackage = async (req, res) => {
             total_seats
         } = req.body;
 
-        console.log("Full req.body:", req.body);
+        //console.log("Full req.body:", req.body);
 
         let itinerary = req.body.itinerary
-        console.log("Received itinerary:", itinerary);
+        //console.log("Received itinerary:", itinerary);
 
         if (!itinerary) {
             itinerary = [];
@@ -237,18 +239,19 @@ const adminUpdatePackage = async (req, res) => {
         pkg.itinerary = itinerary;
 
         if (newImages.length > 0 && pkg.images && pkg.images.length > 0) {
-            for (const img of pkg.images) {
-                const imgPath = path.join(__dirname, '..', 'uploads', img)
-                if (fss.existsSync(imgPath)) {
-                    try {
-                        await fs.unlink(imgPath);
-                    } catch (err) {
-                        console.log(`Image Deletion Failed ${imgPath}`, err);
-                    }
-                } else {
-                    console.log(`Image not found for deletion: ${imgPath}`);
-                }
-            }
+            // //for fs deletion 
+            // for (const img of pkg.images) {
+            //     const imgPath = path.join(__dirname, '..', 'uploads', img)
+            //     if (fss.existsSync(imgPath)) {
+            //         try {
+            //             await fs.unlink(imgPath);
+            //         } catch (err) {
+            //             console.log(`Image Deletion Failed ${imgPath}`, err);
+            //         }
+            //     } else {
+            //         console.log(`Image not found for deletion: ${imgPath}`);
+            //     }
+            // }
             pkg.images = newImages
         }
 
@@ -329,6 +332,32 @@ const adminToggleVehicleStatus = async (req, res) => {
     }
 }
 
+// const adminDeleteVehicle = async (req, res) => {
+//     try {
+//         const id = req.headers.vehicleid;
+//         const vehicle = await Vehicle.findById(id);
+//         if (!vehicle) {
+//             return res.status(400).json({ msg: 'Vehicle not Found!', status: 400 });
+//         }
+//         const oldImageName = vehicle.image;
+//         const oldImagePath = path.join(__dirname, '..', 'uploads', oldImageName);
+//         await Vehicle.findByIdAndDelete(id);
+//         let warning = null;
+//         if (req.file && oldImageName && fss.existsSync(oldImagePath)) {
+//             try {
+//                 await fs.promises.unlink(oldImagePath);
+//             } catch (err) {
+//                 console.log(`Vehicle Updation: Failed to delete image: ${oldImageName}`, err)
+//                 warning = `Failed to delete image: ${oldImageName}`;
+//             }
+//         }
+//         res.status(200).json({ msg: 'Vehicle Deleted\n' + (warning ? `${warning}` : ''), status: 200 })
+//     } catch (err) {
+//         console.log('Server Error', err)
+//         res.status(500).json({ msg: "Server Error", status: 500 })
+//     }
+// }
+
 const adminDeleteVehicle = async (req, res) => {
     try {
         const id = req.headers.vehicleid;
@@ -336,24 +365,16 @@ const adminDeleteVehicle = async (req, res) => {
         if (!vehicle) {
             return res.status(400).json({ msg: 'Vehicle not Found!', status: 400 });
         }
-        const oldImageName = vehicle.image;
-        const oldImagePath = path.join(__dirname, '..', 'uploads', oldImageName);
+
         await Vehicle.findByIdAndDelete(id);
-        let warning = null;
-        if (req.file && oldImageName && fss.existsSync(oldImagePath)) {
-            try {
-                await fs.promises.unlink(oldImagePath);
-            } catch (err) {
-                console.log(`Vehicle Updation: Failed to delete image: ${oldImageName}`, err)
-                warning = `Failed to delete image: ${oldImageName}`;
-            }
-        }
-        res.status(200).json({ msg: 'Vehicle Deleted\n' + (warning ? `${warning}` : ''), status: 200 })
+
+        res.status(200).json({ msg: 'Vehicle Deleted Successfully', status: 200 });
     } catch (err) {
-        console.log('Server Error', err)
-        res.status(500).json({ msg: "Server Error", status: 500 })
+        console.log('Server Error', err);
+        res.status(500).json({ msg: "Server Error", status: 500 });
     }
-}
+};
+
 
 const adminViewVehicleById = async (req, res) => {
     try {
@@ -369,17 +390,60 @@ const adminViewVehicleById = async (req, res) => {
     }
 }
 
+// const adminUpdateVehicle = async (req, res) => {
+//     try {
+//         const id = req.headers.vehicleid;
+//         // console.log("vehicle updated id", id)
+//         const checkVehicle = await Vehicle.findById(id);
+//         if (!checkVehicle) {
+//             return res.status(400).json({ msg: 'Vehicle not Found!', status: 400 })
+//         }
+//         const oldImageName = checkVehicle.image;
+//         const oldImagePath = path.join(__dirname, '..', 'uploads', oldImageName);
+//         // console.log('old image path update:',oldImagePath)
+//         const {
+//             vehicle_name,
+//             model,
+//             type,
+//             seat,
+//         } = req.body;
+
+//         const vehicle = {
+//             vehicle_name,
+//             model,
+//             type,
+//             seat,
+
+//         }
+//         if (req.file) {
+//             vehicle.image = req.file.filename
+//         }
+//         let warning = null;
+//         await await Vehicle.findByIdAndUpdate(id, vehicle);
+//         if (req.file && oldImageName && fss.existsSync(oldImagePath)) {
+//             try {
+//                 await fs.promises.unlink(oldImagePath);
+//             } catch (err) {
+//                 console.log(`Vehicle Updation: Failed to delete image: ${oldImageName}`, err)
+//                 warning = `Failed to delete image: ${oldImageName}`;
+//             }
+//         }
+//         res.status(200).json({ msg: 'Vehicle updated' + (warning ? `\n${warning}` : ''), status: 200 })
+//     } catch (err) {
+//         console.log('Server Error', err)
+//         res.status(500).json({ msg: 'Server Error', status: 500 })
+//     }
+// }
+
 const adminUpdateVehicle = async (req, res) => {
     try {
         const id = req.headers.vehicleid;
-        // console.log("vehicle updated id", id)
+
         const checkVehicle = await Vehicle.findById(id);
         if (!checkVehicle) {
-            return res.status(400).json({ msg: 'Vehicle not Found!', status: 400 })
+            return res.status(400).json({ msg: 'Vehicle not Found!', status: 400 });
         }
-        const oldImageName = checkVehicle.image;
-        const oldImagePath = path.join(__dirname, '..', 'uploads', oldImageName);
-        // console.log('old image path update:',oldImagePath)
+
         const {
             vehicle_name,
             model,
@@ -392,27 +456,23 @@ const adminUpdateVehicle = async (req, res) => {
             model,
             type,
             seat,
+        };
 
-        }
+        // Only update image if a new image is uploaded
         if (req.file) {
-            vehicle.image = req.file.filename
+            vehicle.image = req.file.filename;
         }
-        let warning = null;
-        await await Vehicle.findByIdAndUpdate(id, vehicle);
-        if (req.file && oldImageName && fss.existsSync(oldImagePath)) {
-            try {
-                await fs.promises.unlink(oldImagePath);
-            } catch (err) {
-                console.log(`Vehicle Updation: Failed to delete image: ${oldImageName}`, err)
-                warning = `Failed to delete image: ${oldImageName}`;
-            }
-        }
-        res.status(200).json({ msg: 'Vehicle updated' + (warning ? `\n${warning}` : ''), status: 200 })
+
+        await Vehicle.findByIdAndUpdate(id, vehicle);
+
+        res.status(200).json({ msg: 'Vehicle updated successfully', status: 200 });
     } catch (err) {
-        console.log('Server Error', err)
-        res.status(500).json({ msg: 'Server Error', status: 500 })
+        console.log('Server Error', err);
+        res.status(500).json({ msg: 'Server Error', status: 500 });
     }
-}
+};
+
+
 
 const adminViewBookings = async (req, res) => {
     try {
