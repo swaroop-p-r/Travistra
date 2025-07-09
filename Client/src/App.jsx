@@ -73,7 +73,7 @@ import loadingAnimation from './animations/loading.json';
 const HomePg = lazy(() => import('./component/Home/homePg'));
 const UserReg = lazy(() => import('./component/User/UserReg'));
 const Login = lazy(() => import('./component/Login'));
-const AdminHome = lazy(() => import('./component/Admin/adminHome'));
+const AdminHome = lazy(() => import('./component/Admin/AdminHome'));
 const UserHome = lazy(() => import('./component/User/UserHome'));
 const AdminViewUser = lazy(() => import('./component/Admin/AdminViewUser'));
 const AdminViewPackage = lazy(() => import('./component/Admin/AdminViewPackage'));
