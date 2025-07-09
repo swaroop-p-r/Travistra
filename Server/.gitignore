@@ -1,0 +1,11 @@
+# Ignore .env file inside Server/
+.env
+
+# Ignore all files inside uploads/
+uploads/*
+
+# Allow .gitkeep to keep folder in repo
+!uploads/.gitkeep
+
+# Ignore node_modules folder
+node_modules/

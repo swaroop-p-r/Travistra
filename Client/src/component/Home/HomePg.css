@@ -1,0 +1,25 @@
+#travistrahead {
+  color: white;
+  margin-top: -30px;
+  text-align: center;
+  z-index: -1;
+  font-size: 15vw; /* Responsive font size */
+  font-family: 'Cinzel', serif;
+  line-height: 1;
+  position: relative;
+}
+
+/* Optional: Adjust on very small screens */
+@media (max-width: 480px) {
+  #travistrahead {
+    font-size: 18vw;
+    margin-top: -20px;
+  }
+}
+
+/* Optional: Adjust on very large screens */
+@media (min-width: 1400px) {
+  #travistrahead {
+    font-size: 180px;
+  }
+}
