@@ -3,6 +3,11 @@ import { Modal, Button, Form, Row, Col, Image } from 'react-bootstrap'
 import axios from 'axios'
 
 export default function EditPackageModal({ show, onHide, packageData, onUpdated }) {
+
+    const API_BASE_URL = import.meta.env.VITE_API_URL;
+    // console.log(API_BASE_URL);
+
+
     const [formData, setFormData] = useState({
         package_name: '',
         destination: '',
@@ -79,7 +84,7 @@ export default function EditPackageModal({ show, onHide, packageData, onUpdated 
 
 
         try {
-            const res = await axios.patch('http://localhost:4000/api/admin/updatepackage', data, {
+            const res = await axios.patch(`${API_BASE_URL}/api/admin/updatepackage`, data, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     userid: packageData._id,
@@ -150,7 +155,7 @@ export default function EditPackageModal({ show, onHide, packageData, onUpdated 
                             {existingImages.map((img, i) => (
                                 <Image
                                     key={i}
-                                    src={`http://localhost:4000/uploads/${img}`}
+                                    src={`${API_BASE_URL}/uploads/${img}`}
                                     thumbnail
 
                                     alt={`package-img-${i}`}

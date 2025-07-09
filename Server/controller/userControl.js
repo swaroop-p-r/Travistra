@@ -221,6 +221,7 @@ const userViewBookings = async (req, res) => {
         const id = req.user.id;
         // console.log('userViewBookings:',id)
         const booking = await Booking.find({ user: id })
+            .sort({ bookedAt: -1 })
             .populate('package')
             .populate('vehicle')
         res.json(booking);

@@ -35,6 +35,9 @@ import { motion } from 'framer-motion';
 
 export default function Login() {
 
+    const API_BASE_URL = import.meta.env.VITE_API_URL;
+    // console.log(API_BASE_URL);
+
     // ===========BG==============
     const fadeIn = {
         hidden: { opacity: 0 },
@@ -76,7 +79,7 @@ export default function Login() {
     const handleSubmit = async (e) => {
         try {
             e.preventDefault()
-            const res = await AXIOS.post("http://localhost:4000/api/user/login", record)
+            const res = await AXIOS.post(`${API_BASE_URL}/api/user/login`, record)
             if (res.data.status === 200) {
                 localStorage.setItem("token", res.data.token)
                 setSuccess(true);

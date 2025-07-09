@@ -7,6 +7,8 @@ const adminRoutes = require('./routes/adminRoutes')
 
 require('dotenv').config()
 
+const port = process.env.PORT || 4000;
+
 
 app.use(cors())
 app.use(express.json())
@@ -28,6 +30,6 @@ dbConnect()
 app.use('/api/user',userRoutes)
 app.use('/api/admin',adminRoutes)
 
-app.listen(4000,()=>{
+app.listen(port,()=>{
     console.log("Server:4000 Started Successfully")
 })

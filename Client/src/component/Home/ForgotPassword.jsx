@@ -17,7 +17,15 @@ import LockResetIcon from '@mui/icons-material/LockReset';
 import PasswordIcon from '@mui/icons-material/Password';
 import HomeNav from './homeNav';
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 export default function ForgotPassword() {
+
+    const API_BASE_URL = import.meta.env.VITE_API_URL;
+    // console.log(API_BASE_URL);
+
+
     const [email, setEmail] = useState('');
     const [otp, setOtp] = useState('');
     const [newPassword, setNewPassword] = useState('');
@@ -27,9 +35,8 @@ export default function ForgotPassword() {
     const [otpSent, setOtpSent] = useState(false);
     const [passwordReset, setPasswordReset] = useState(false);
     const [status, setStatus] = useState(false);
-    const [step, setStep] = useState('1');
 
-    const navigate=useNavigate();
+    const navigate = useNavigate();
 
 
     const handleSendOtp = async (e) => {
@@ -37,12 +44,11 @@ export default function ForgotPassword() {
 
         try {
             setLoading(true);
-            const response = await axios.post('http://localhost:4000/api/user/sendotp', { email });
+            const response = await axios.post(`${API_BASE_URL}/api/user/sendotp`, { email });
             setMsg(response.data.msg);
-            setOtpSent(true);
             if (response.data.status === 200) {
+                setOtpSent(true);
                 setStatus(true);
-                setStep(2);
             } else {
                 setStatus(false);
             }
@@ -60,12 +66,13 @@ export default function ForgotPassword() {
 
         if (newPassword !== confirmPassword) {
             setMsg("Passwords don't match");
+            setStatus(false);
             return;
         }
 
         try {
             setLoading(true);
-            const response = await axios.post('http://localhost:4000/api/user/resetpassword', {
+            const response = await axios.post(`${API_BASE_URL}/api/user/resetpassword`, {
                 email,
                 otp,
                 newPassword
@@ -74,10 +81,10 @@ export default function ForgotPassword() {
             setPasswordReset(true);
             if (response.data.status === 200) {
                 setStatus(true);
+                toast.success("Password updated, Redirecting...");
                 setTimeout(() => {
                     navigate('/login');
                 }, 2000);
-                navigate('/login');
             } else {
                 setStatus(false);
             }
@@ -92,7 +99,13 @@ export default function ForgotPassword() {
 
     return (
         <>
+
             <HomeNav />
+
+            <div>
+                <ToastContainer style={{marginTop:50,}} />
+            </div>
+
             <Container maxWidth="sm" sx={{ mt: 8 }}>
                 <Card elevation={6}>
                     <CardContent sx={{ p: 4 }}>
@@ -196,7 +209,7 @@ export default function ForgotPassword() {
                                 {msg}
                             </Alert>
                         )}
-                        
+
                     </CardContent>
                 </Card>
             </Container>

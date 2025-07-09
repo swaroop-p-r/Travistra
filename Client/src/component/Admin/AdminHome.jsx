@@ -135,6 +135,10 @@ const SubStatCard = ({ icon, title, value, color }) => (
 
 
 export default function AdminHome() {
+
+  const API_BASE_URL = import.meta.env.VITE_API_URL;
+    // console.log(API_BASE_URL);
+
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -142,7 +146,7 @@ export default function AdminHome() {
   const fetchData = async () => {
     try {
       setLoading(true);
-      const res = await axios.get('http://localhost:4000/api/admin/adminhomedetails');
+      const res = await axios.get(`${API_BASE_URL}/admin/adminhomedetails`);
       if (res.data.status === 200) {
         setData(res.data);
         setError(null);

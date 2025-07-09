@@ -7,6 +7,10 @@ import { Container, Row, Col, Form, Button, Image } from 'react-bootstrap';
 
 export default function UserEditProfile() {
 
+    const API_BASE_URL = import.meta.env.VITE_API_URL;
+    // console.log(API_BASE_URL);
+
+
     const params = useParams();
     const id = params.id;
     // console.log('userId :', params.id);
@@ -24,7 +28,7 @@ export default function UserEditProfile() {
 
     const fetchUser = async () => {
         try {
-            const res = await axios.get('http://localhost:4000/api/user/userprofilebyid',
+            const res = await axios.get(`${API_BASE_URL}/api/user/userprofilebyid`,
                 {
                     headers: {
                         id: id
@@ -34,10 +38,10 @@ export default function UserEditProfile() {
             setRecord(res.data);
             // console.log(res.data);
             if (res.data.profile_image) {
-                setProfilePrev(`http://localhost:4000/uploads/${res.data.profile_image}`);
+                setProfilePrev(`${API_BASE_URL}/uploads/${res.data.profile_image}`);
             }
             if (res.data.image) {
-                setImagePrev(`http://localhost:4000/uploads/${res.data.image}`);
+                setImagePrev(`${API_BASE_URL}/uploads/${res.data.image}`);
             }
 
         } catch (err) {
@@ -121,7 +125,7 @@ export default function UserEditProfile() {
         }
 
         try {
-            const res = await axios.put('http://localhost:4000/api/user/usereditprofile',
+            const res = await axios.put(`${API_BASE_URL}/api/user/usereditprofile`,
                 formData,
                 {
                     headers: {

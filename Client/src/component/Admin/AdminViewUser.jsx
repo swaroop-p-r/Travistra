@@ -16,6 +16,10 @@ import 'react-toastify/dist/ReactToastify.css';
 import { toast } from 'react-toastify';
 
 export default function AdminViewUser() {
+
+    const API_BASE_URL = import.meta.env.VITE_API_URL;
+    // console.log(API_BASE_URL);
+
     const [user, setUser] = useState([])
     const [loading, setLoading] = useState(true);
     const [showModal, setShowModal] = useState(false);
@@ -31,7 +35,7 @@ export default function AdminViewUser() {
 
     const fetchUser = () => {
         // setLoading(true);
-        AXIOS.get("http://localhost:4000/api/admin/viewusers")
+        AXIOS.get(`${API_BASE_URL}/api/admin/viewusers`)
             .then((res) => {
                 setUser(res.data)
             }).catch((err) => {
@@ -46,7 +50,7 @@ export default function AdminViewUser() {
     }, [])
 
     const handleImageClick = (image, username, type) => {
-        const imageUrl = `http://localhost:4000/uploads/${image}`;
+        const imageUrl = `${API_BASE_URL}/uploads/${image}`;
         setCurrentImage(imageUrl);
         setModalTitle(`${username} - ${type}`);
         setShowModal(true);
@@ -54,7 +58,7 @@ export default function AdminViewUser() {
 
     const adminToggleUserStatus = (id) => {
         // console.log("For status:",id)
-        AXIOS.patch("http://localhost:4000/api/admin/userstatus",
+        AXIOS.patch(`${API_BASE_URL}/api/admin/userstatus`,
             {},// 2nd parameter for  body 
             {
                 headers: { userid: id }
@@ -70,7 +74,7 @@ export default function AdminViewUser() {
     const deleteUser = (id) => {
         // console.log("deleteduserid:", id)
         if (!window.confirm('Are sure you want to delete this User?')) return;
-        AXIOS.delete("http://localhost:4000/api/admin/deleteuser", { headers: { userid: id } })
+        AXIOS.delete(`${API_BASE_URL}/api/admin/deleteuser`, { headers: { userid: id } })
             .then((res) => {
                 toast.success("User Deleted Sccessfully");
                 fetchUser()
@@ -193,7 +197,7 @@ export default function AdminViewUser() {
                                             <td>{indexOfFirstUser + index + 1}</td>
                                             <td>
                                                 <img
-                                                    src={`http://localhost:4000/uploads/${item.profile_image}`}
+                                                    src={`${API_BASE_URL}/uploads/${item.profile_image}`}
                                                     alt="Profile"
                                                     style={{
                                                         width: 'auto',
@@ -219,7 +223,7 @@ export default function AdminViewUser() {
                                             <td>{item.address}</td>
                                             <td>
                                                 <img
-                                                    src={`http://localhost:4000/uploads/${item.image}`}
+                                                    src={`${API_BASE_URL}/uploads/${item.image}`}
                                                     alt="ID"
                                                     style={{
                                                         width: '200px',

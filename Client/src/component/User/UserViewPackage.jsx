@@ -15,6 +15,10 @@ import {
 } from '@mui/material';
 
 export default function UserViewPackage() {
+
+    const API_BASE_URL = import.meta.env.VITE_API_URL;
+    // console.log(API_BASE_URL);
+
     const token = localStorage.getItem('token');
     const [packages, setPackages] = useState([]);
 
@@ -22,7 +26,7 @@ export default function UserViewPackage() {
 
     const fetchPackages = async () => {
         try {
-            const res = await axios.get('http://localhost:4000/api/user/userviewpackages', {
+            const res = await axios.get(`${API_BASE_URL}/api/user/userviewpackages`, {
                 headers: { token }
             });
             setPackages(res.data);
@@ -67,7 +71,7 @@ export default function UserViewPackage() {
                                         <CardMedia
                                             component="img"
                                             height="180"
-                                            image={`http://localhost:4000/uploads/${pkg.images[0]}`}
+                                            image={`${API_BASE_URL}/uploads/${pkg.images[0]}`}
                                             alt={`Image of ${pkg.package_name}`}
                                             style={{ width: 300, height: 180 }}
                                         />

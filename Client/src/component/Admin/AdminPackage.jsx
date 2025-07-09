@@ -5,6 +5,9 @@ import AdminNav from './AdminNav'
 
 export default function AdminPackage() {
 
+    const API_BASE_URL = import.meta.env.VITE_API_URL;
+    // console.log(API_BASE_URL);
+
     const [formData, setFormData] = useState({
         package_name: '',
         destination: '',
@@ -87,7 +90,7 @@ export default function AdminPackage() {
             data.append('images', file)
         })
         try {
-            const res = await AXIOS.post('http://localhost:4000/api/admin/adminpackage', data,
+            const res = await AXIOS.post(`${API_BASE_URL}/api/admin/adminpackage`, data,
                 {
                     headers: { 'Content-Type': 'multipart/form-data' }
                 })

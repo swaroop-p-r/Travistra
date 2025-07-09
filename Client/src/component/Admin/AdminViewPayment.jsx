@@ -4,12 +4,16 @@ import { Card, Row, Col, Badge, Spinner } from 'react-bootstrap';
 import AdminNav from './AdminNav';
 
 export default function AdminViewPayment() {
+
+  const API_BASE_URL = import.meta.env.VITE_API_URL;
+    // console.log(API_BASE_URL);
+
   const [payments, setPayments] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const fetchPayments = async () => {
     try {
-      const res = await axios.get('http://localhost:4000/api/admin/adminviewpayments');
+      const res = await axios.get(`${API_BASE_URL}/api/admin/adminviewpayments`);
       if (res.data.status === 200) {
         setPayments(res.data.payment);
       } else {

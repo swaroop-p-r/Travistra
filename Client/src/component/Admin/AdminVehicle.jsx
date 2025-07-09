@@ -8,6 +8,9 @@ import AXIOS from 'axios'
 
 export default function AdminVehicle() {
 
+    const API_BASE_URL = import.meta.env.VITE_API_URL;
+    // console.log(API_BASE_URL);
+
     const [formData, setFormData] = useState({
         vehicle_name: '',
         registration_no: '',
@@ -54,7 +57,7 @@ export default function AdminVehicle() {
         data.append('image', image)
 
         try {
-            const res = await AXIOS.post('http://localhost:4000/api/admin/adminvehicle',
+            const res = await AXIOS.post(`${API_BASE_URL}/api/admin/adminvehicle`,
                 data,
                 {
                     headers: { 'Content-Type': 'multipart/form-data' }

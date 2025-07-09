@@ -7,6 +7,10 @@ import {
 import Select from 'react-select';
 
 export default function AdminViewBookings() {
+
+    const API_BASE_URL = import.meta.env.VITE_API_URL;
+    // console.log(API_BASE_URL);
+
     const [bookings, setBookings] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -26,11 +30,11 @@ export default function AdminViewBookings() {
 
     const fetchData = async () => {
         try {
-            const bookingRes = await axios.get('http://localhost:4000/api/admin/adminviewbookings');
+            const bookingRes = await axios.get(`${API_BASE_URL}/api/admin/adminviewbookings`);
             setBookings(bookingRes.data);
             // console.log("Bookings response:", bookingRes.data);
 
-            const vehicleRes = await axios.get('http://localhost:4000/api/admin/adminviewvehiclestoassign');
+            const vehicleRes = await axios.get(`${API_BASE_URL}/api/admin/adminviewvehiclestoassign`);
             setVehicles(vehicleRes.data);
         } catch (err) {
             console.error(err);
@@ -74,7 +78,7 @@ export default function AdminViewBookings() {
     // Assign vehicle API call
     const assignVehicleToBooking = async (id) => {
         try {
-            const res = await axios.put('http://localhost:4000/api/admin/adminassignvehicle', {}, {
+            const res = await axios.put(`${API_BASE_URL}/api/admin/adminassignvehicle`, {}, {
                 headers: {
                     id: id,
                     vehicleid: assignVehicleId,
@@ -113,7 +117,7 @@ export default function AdminViewBookings() {
         value: vehicle._id,
         label: (
             <div style={{ display: 'flex', alignItems: 'center' }}>
-                <img src={`http://localhost:4000/uploads/${vehicle.image}`} alt={vehicle.vehicle_name} style={{ width: 125, height: 70, marginRight: 10 }} />
+                <img src={`${API_BASE_URL}/uploads/${vehicle.image}`} alt={vehicle.vehicle_name} style={{ width: 125, height: 70, marginRight: 10 }} />
                 <span style={{ color: !vehicle.status ? 'red' : 'black' }}>{vehicle.vehicle_name} - {vehicle.registration_no} - {vehicle.model} ({vehicle.type}) [{vehicle.seat} seats] - {vehicle.status ? 'Active' : 'Inactive'}</span>
             </div>
         )
@@ -130,7 +134,7 @@ export default function AdminViewBookings() {
 
     const handleViewPayment = async (bookingid) => {
         try {
-            const res = await axios.get('http://localhost:4000/api/admin/adminviewpaymentinbooking',
+            const res = await axios.get(`${API_BASE_URL}/api/admin/adminviewpaymentinbooking`,
                 {
                     headers: {
                         bookingid,
@@ -149,7 +153,7 @@ export default function AdminViewBookings() {
     const handleCancel = async (bookingid) => {
         if (!window.confirm("Are you sure you want to cancel this booking?")) return;
         try {
-            const res = await axios.patch('http://localhost:4000/api/admin/admincancelbooking', {}, {
+            const res = await axios.patch(`${API_BASE_URL}/api/admin/admincancelbooking`, {}, {
                 headers: { bookingid },
             });
             fetchData();
@@ -212,7 +216,7 @@ export default function AdminViewBookings() {
                                         <div style={{ width: 250, overflow: 'hidden', flexShrink: 0 }}>
                                             {booking.package?.images?.[0] ? (
                                                 <Image
-                                                    src={`http://localhost:4000/uploads/${booking.package.images[0]}`}
+                                                    src={`${API_BASE_URL}/uploads/${booking.package.images[0]}`}
                                                     alt={booking.package.package_name}
                                                     style={{
                                                         width: '100%',
@@ -384,7 +388,7 @@ export default function AdminViewBookings() {
                             <Card className="shadow-lg rounded-4 overflow-hidden border-0">
                                 <Card.Img
                                     variant="top"
-                                    src={`http://localhost:4000/uploads/${selectedBooking.package.images[0]}`}
+                                    src={`${API_BASE_URL}/uploads/${selectedBooking.package.images[0]}`}
                                     alt={selectedBooking.package.package_name}
                                     style={{ objectFit: 'cover', height: '300px' }}
                                 />
@@ -422,7 +426,7 @@ export default function AdminViewBookings() {
                                                 {selectedBooking.package.images.slice(1).map((img, idx) => (
                                                     <Image
                                                         key={idx}
-                                                        src={`http://localhost:4000/uploads/${img}`}
+                                                        src={`${API_BASE_URL}/uploads/${img}`}
                                                         alt={`Image ${idx + 2}`}
                                                         height="200"
                                                         width="300"

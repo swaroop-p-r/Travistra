@@ -477,6 +477,7 @@ const adminUpdateVehicle = async (req, res) => {
 const adminViewBookings = async (req, res) => {
     try {
         const bookings = await Booking.find()
+            .sort({ bookedAt: -1 })
             .populate('package')
             .populate('vehicle')
             .populate('user')
@@ -578,6 +579,7 @@ const adminCancelBooking = async (req, res) => {
 const adminViewPayments = async (req, res) => {
     try {
         const payment = await Payment.find()
+            .sort({ paidAt: -1 })
             .populate('user')
             .populate({
                 path:'booking',

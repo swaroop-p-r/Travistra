@@ -14,6 +14,10 @@ import Modal from 'react-bootstrap/Modal';
 import AdminEditVehicle from './AdminEditVehicle';
 
 export default function AdminViewVehicle1() {
+
+  const API_BASE_URL = import.meta.env.VITE_API_URL;
+    // console.log(API_BASE_URL);
+
   const [vehicles, setVehicles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -24,7 +28,7 @@ export default function AdminViewVehicle1() {
 
   const fetchVehicles = async () => {
     try {
-      const res = await axios.get('http://localhost:4000/api/admin/adminviewvehicle');
+      const res = await axios.get(`${API_BASE_URL}/api/admin/adminviewvehicle`);
       setVehicles(res.data);
     } catch (err) {
       if (err.response && err.response.data && err.response.data.msg) {
@@ -46,7 +50,7 @@ export default function AdminViewVehicle1() {
   }, []);
 
   const handleImageClick = (image, vehicle_name) => {
-    const imageUrl = `http://localhost:4000/uploads/${image}`;
+    const imageUrl = `${API_BASE_URL}/uploads/${image}`;
     setCurrentImage(imageUrl);
     setModalTitle(vehicle_name);
     setShowModal(true);
@@ -55,7 +59,7 @@ export default function AdminViewVehicle1() {
   const handleStatus = async (id) => {
     // alert(`Vehicle is now ${id}`)
     try {
-      const res = await axios.patch('http://localhost:4000/api/admin/vehiclestatus',
+      const res = await axios.patch(`${API_BASE_URL}/api/admin/vehiclestatus`,
         {},
         {
           headers: { vehicleid: id }
@@ -75,7 +79,7 @@ export default function AdminViewVehicle1() {
   const handleUpdate = async (id) => {
     // alert(`Update vehicle ID: ${id}`)
     try {
-      const res = await axios.get('http://localhost:4000/api/admin/adminviewvehiclebyid',
+      const res = await axios.get(`${API_BASE_URL}/api/admin/adminviewvehiclebyid`,
         {
           headers: { vehicleid: id }
         }
@@ -92,7 +96,7 @@ export default function AdminViewVehicle1() {
     // alert(`Delete vehicle ID: ${id}`)
     if (!window.confirm('Are sure you want to delete this Vehicle?')) return;
     try {
-      const res = await axios.delete('http://localhost:4000/api/admin/admindeletevehicle',
+      const res = await axios.delete(`${API_BASE_URL}/api/admin/admindeletevehicle`,
         {
           headers: { vehicleid: id }
         }
@@ -154,7 +158,7 @@ export default function AdminViewVehicle1() {
                     <td>{index + 1}</td>
                     <td style={{ width: '250px' }}>
                       <img
-                        src={`http://localhost:4000/uploads/${vehicle.image}`}
+                        src={`${API_BASE_URL}/uploads/${vehicle.image}`}
                         alt="Vehicle"
                         className="img-thumbnail"
                         style={{ width: "200px", height: "125px", objectFit: "cover" }}

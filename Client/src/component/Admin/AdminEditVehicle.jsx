@@ -11,6 +11,10 @@ import Row from 'react-bootstrap/Row';
 
 export default function AdminEditVehicle({ show, onHide, vehicleData, onUpdated }) {
 
+    const API_BASE_URL = import.meta.env.VITE_API_URL;
+    // console.log(API_BASE_URL);
+
+
     const [formData, setFormData] = useState({
         vehicle_name: '',
         model: '',
@@ -29,7 +33,7 @@ export default function AdminEditVehicle({ show, onHide, vehicleData, onUpdated 
                 type: vehicleData.type || '',
                 seat: vehicleData.seat || '',
             });
-            setPrevImage(`http://localhost:4000/uploads/${vehicleData.image}`)
+            setPrevImage(`${API_BASE_URL}/uploads/${vehicleData.image}`)
         }
     }, [vehicleData])
 
@@ -58,7 +62,7 @@ export default function AdminEditVehicle({ show, onHide, vehicleData, onUpdated 
 
 
         try {
-            const res = await axios.put('http://localhost:4000/api/admin/adminupdatevehicle',
+            const res = await axios.put(`${API_BASE_URL}/api/admin/adminupdatevehicle`,
                 data,
                 {
                     headers: {

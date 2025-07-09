@@ -25,6 +25,10 @@ import Lottie from 'lottie-react';
 import success from '../../../src/animations/success.json';
 
 export default function UserPayment() {
+
+    const API_BASE_URL = import.meta.env.VITE_API_URL;
+    // console.log(API_BASE_URL);
+
     const { id: bookingid } = useParams();
     const navigate = useNavigate();
     const [tab, setTab] = useState(0);
@@ -45,7 +49,7 @@ export default function UserPayment() {
 
     const fetchBookingDetails = async () => {
         try {
-            const res = await axios.get('http://localhost:4000/api/user/userviewbookingforpayment', {
+            const res = await axios.get(`${API_BASE_URL}/api/user/userviewbookingforpayment`, {
                 headers: { id: bookingid }
             });
             setBooking(res.data);
@@ -109,7 +113,7 @@ export default function UserPayment() {
         
         setIsProcessing(true);
         try {
-            const res = await axios.post('http://localhost:4000/api/user/userpayment', {
+            const res = await axios.post(`${API_BASE_URL}/api/user/userpayment`, {
                 amount: booking.package.price,
                 paymentMethod: tab === 0 ? 'UPI' : tab === 1 ? 'CARD' : 'NETBANKING',
                 paymentDetails: paymentData

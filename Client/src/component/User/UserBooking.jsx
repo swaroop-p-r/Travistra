@@ -16,6 +16,10 @@ import { useNavigate } from 'react-router-dom';
 
 
 export default function UserBooking() {
+
+    const API_BASE_URL = import.meta.env.VITE_API_URL;
+    // console.log(API_BASE_URL);
+
     const [bookings, setBookings] = useState([]);
     const [loading, setLoading] = useState(true);
     const token = localStorage.getItem('token');
@@ -32,7 +36,7 @@ export default function UserBooking() {
 
     const fetchBookings = async () => {
         try {
-            const res = await axios.get('http://localhost:4000/api/user/userbookings', {
+            const res = await axios.get(`${API_BASE_URL}/api/user/userbookings`, {
                 headers: { token },
             });
             setBookings(res.data);
@@ -50,7 +54,7 @@ export default function UserBooking() {
     const handleCancel = async (bookingid) => {
         if (!window.confirm("Are you sure you want to cancel this booking?")) return;
         try {
-            const res = await axios.patch('http://localhost:4000/api/user/usercancelbooking', {}, {
+            const res = await axios.patch(`${API_BASE_URL}/api/user/usercancelbooking`, {}, {
                 headers: { bookingid },
             });
             fetchBookings();
@@ -70,7 +74,7 @@ export default function UserBooking() {
 
     const handleViewPayment = async (bookingid) => {
         try {
-            const res = await axios.get('http://localhost:4000/api/user/userviewpayment',
+            const res = await axios.get(`${API_BASE_URL}/api/user/userviewpayment`,
                 {
                     headers: {
                         bookingid,
@@ -105,7 +109,7 @@ export default function UserBooking() {
     //         return;
     //     }
     //     try {
-    //         const res = await axios.get('http://localhost:4000/api/user/userviewassignedvehicle', {
+    //         const res = await axios.get(`${API_BASE_URL}/api/user/userviewassignedvehicle`, {
     //             headers: { 
     //                 token,
     //                  vehicleid:booking.vehicle,
@@ -132,7 +136,7 @@ export default function UserBooking() {
 
     const handleConfirm = async (id) => {
         try {
-            const res = await axios.patch('http://localhost:4000/api/user/userconfirmpackage',
+            const res = await axios.patch(`${API_BASE_URL}/api/user/userconfirmpackage`,
                 {},
                 {
                     headers: {
@@ -207,7 +211,7 @@ export default function UserBooking() {
                                                 <div style={{ width: 250, overflow: 'hidden', flexShrink: 0 }}>
                                                     {booking.package?.images?.[0] ? (
                                                         <Image
-                                                            src={`http://localhost:4000/uploads/${booking.package.images[0]}`}
+                                                            src={`${API_BASE_URL}/uploads/${booking.package.images[0]}`}
                                                             alt={booking.package.package_name}
                                                             style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 6 }}
                                                             onError={(e) => {
@@ -375,7 +379,7 @@ export default function UserBooking() {
                             <Card className="shadow-lg rounded-4 overflow-hidden border-0">
                                 <Card.Img
                                     variant="top"
-                                    src={`http://localhost:4000/uploads/${selectedBooking.package.images[0]}`}
+                                    src={`${API_BASE_URL}/uploads/${selectedBooking.package.images[0]}`}
                                     alt={selectedBooking.package.package_name}
                                     style={{ objectFit: 'cover', height: '300px' }}
                                 />
@@ -413,7 +417,7 @@ export default function UserBooking() {
                                                 {selectedBooking.package.images.slice(1).map((img, idx) => (
                                                     <Image
                                                         key={idx}
-                                                        src={`http://localhost:4000/uploads/${img}`}
+                                                        src={`${API_BASE_URL}/uploads/${img}`}
                                                         alt={`Image ${idx + 2}`}
                                                         height="200"
                                                         width="300"
@@ -442,7 +446,7 @@ export default function UserBooking() {
                             <Card className="shadow rounded-4 border-0 overflow-hidden">
                                 <Card.Img
                                     variant="top"
-                                    src={`http://localhost:4000/uploads/${selectedVehicle.image}`}
+                                    src={`${API_BASE_URL}/uploads/${selectedVehicle.image}`}
                                     alt={selectedVehicle.vehicle_name}
                                     style={{ objectFit: 'cover', height: '250px' }}
                                     onError={(e) => {

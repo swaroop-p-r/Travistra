@@ -11,6 +11,9 @@ import EditPackageModal from './AdminEditPackage';
 
 export default function AdminViewPackage() {
 
+  const API_BASE_URL = import.meta.env.VITE_API_URL;
+    // console.log(API_BASE_URL);
+
   const [packages, setPackages] = useState([])
   const [showModal, setShowModal] = useState(false);
   const [currentImages, setCurrentImages] = useState([]);
@@ -20,7 +23,7 @@ export default function AdminViewPackage() {
 
 
   const fetchPackage = () => {
-    AXIOS.get('http://localhost:4000/api/admin/adminviewpackage')
+    AXIOS.get(`${API_BASE_URL}/api/admin/adminviewpackage`)
       .then((res) => {
         // console.log(res.data)
         setPackages(res.data)
@@ -36,7 +39,7 @@ export default function AdminViewPackage() {
 
 
   const handleImageClick = (images, packageName) => {
-    const urls = images.map(img => `http://localhost:4000/uploads/${img}`);
+    const urls = images.map(img => `${API_BASE_URL}/uploads/${img}`);
     setCurrentImages(urls);
     setModelTitle(packageName)
     setShowModal(true);
@@ -45,7 +48,7 @@ export default function AdminViewPackage() {
 
 
   const handleToogle = (id) => {
-    AXIOS.patch("http://localhost:4000/api/admin/packagestatus",
+    AXIOS.patch(`${API_BASE_URL}/api/admin/packagestatus`,
       {},
       {
         headers: { userid: id }
@@ -60,7 +63,7 @@ export default function AdminViewPackage() {
 
   const handleDelete = (id) => {
     if (!window.confirm('Are sure you want to delete this Package?')) return;
-    AXIOS.delete("http://localhost:4000/api/admin/deletepackage",
+    AXIOS.delete(`${API_BASE_URL}/api/admin/deletepackage`,
       {
         headers: { userid: id }
       }
@@ -72,7 +75,7 @@ export default function AdminViewPackage() {
     })
   }
   const handleEdit = async (id) => {
-    AXIOS.get(`http://localhost:4000/api/admin/adminviewpackagebyid/${id}`)
+    AXIOS.get(`${API_BASE_URL}/api/admin/adminviewpackagebyid/${id}`)
       .then((res) => {
         setEditPackageData(res.data)
         setShowEditModal(true)
@@ -127,7 +130,7 @@ export default function AdminViewPackage() {
                             {item.images.map((imgName, idx) => (
                               <img
                                 key={idx}
-                                src={`http://localhost:4000/uploads/${imgName}`}
+                                src={`${API_BASE_URL}/uploads/${imgName}`}
                                 alt={`Package ${idx + 1}`}
                                 onClick={() => handleImageClick(item.images, item.package_name)}
                                 style={{

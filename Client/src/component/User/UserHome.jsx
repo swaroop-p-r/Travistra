@@ -51,6 +51,10 @@ const staggerContainer = {
 };
 
 export default function UserHome() {
+
+  const API_BASE_URL = import.meta.env.VITE_API_URL;
+    // console.log(API_BASE_URL);
+
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -61,7 +65,7 @@ export default function UserHome() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:4000/api/user/userhomedetails',
+        const response = await axios.get(`${API_BASE_URL}/api/user/userhomedetails`,
           {
             headers: {
               token
@@ -115,7 +119,7 @@ export default function UserHome() {
               <CardContent>
                 <Box display="flex" alignItems="center">
                   <Avatar
-                    src={`http://localhost:4000/uploads/${userData.userProfilePhoto}`}
+                    src={`${API_BASE_URL}/uploads/${userData.userProfilePhoto}`}
                     sx={{ width: 80, height: 80, mr: 3 }}
                   >
                     <Person fontSize="large" />

@@ -51,6 +51,10 @@ import { motion } from 'framer-motion';
 
 export default function UserReg() {
 
+  const API_BASE_URL = import.meta.env.VITE_API_URL;
+    // console.log(API_BASE_URL);
+
+
   const [record, setRecord] = useState({
     username: "",
     address: "",
@@ -154,7 +158,7 @@ export default function UserReg() {
       return setError('ID Photo is Required')
     }
     try {
-      const res = await AXIOS.post("http://localhost:4000/api/user/register", formData,
+      const res = await AXIOS.post(`${API_BASE_URL}/api/user/register`, formData,
         {
           headers: { 'Content-Type': 'multipart/form-data' }
         })

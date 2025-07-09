@@ -7,6 +7,10 @@ import Modal from 'react-bootstrap/Modal';
 // import { jwtDecode } from 'jwt-decode';
 
 export default function UserProfile() {
+
+    const API_BASE_URL = import.meta.env.VITE_API_URL;
+    // console.log(API_BASE_URL);
+
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const [showModal, setShowModal] = useState(false);
@@ -24,7 +28,7 @@ export default function UserProfile() {
             return;
         }
         try {
-            const res = await axios.get('http://localhost:4000/api/user/userprofile', {
+            const res = await axios.get(`${API_BASE_URL}/api/user/userprofile`, {
                 headers: {
                     token: token
                     // token: decodedToken.id
@@ -49,7 +53,7 @@ export default function UserProfile() {
     }, []);
 
     const handleImageClick = (image, type) => {
-        const imageUrl = `http://localhost:4000/uploads/${image}`;
+        const imageUrl = `${API_BASE_URL}/uploads/${image}`;
         setCurrentImage(imageUrl);
         setModalTitle(type);
         setShowModal(true);
@@ -87,7 +91,7 @@ export default function UserProfile() {
                 <Card.Body>
                     <div className="d-flex bg-white flex-wrap align-items-center">
                         <Image
-                            src={user.profile_image ? `http://localhost:4000/uploads/${user.profile_image}` : 'https://via.placeholder.com/120?text=No+Image'}
+                            src={user.profile_image ? `${API_BASE_URL}/uploads/${user.profile_image}` : 'https://via.placeholder.com/120?text=No+Image'}
                             roundedCircle
                             width={120}
                             height={120}
@@ -105,7 +109,7 @@ export default function UserProfile() {
                             <div style={{ padding: 10 }}>
                                 {user.image ? (
                                     <Image
-                                        src={`http://localhost:4000/uploads/${user.image}`}
+                                        src={`${API_BASE_URL}/uploads/${user.image}`}
                                         rounded
                                         width={120}
                                         height={120}
