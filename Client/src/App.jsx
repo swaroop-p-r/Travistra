@@ -71,7 +71,7 @@ import loadingAnimation from './animations/loading.json';
 // import DragDropSortableUploader from "./component/Admin/AdminViewVehicle1"; // Normal import since likely not reused elsewhere
 
 const HomePg = lazy(() => import('./component/Home/homePg'));
-const UserReg = lazy(() => import('./component/User/userReg'));
+const UserReg = lazy(() => import('./component/User/UserReg'));
 const Login = lazy(() => import('./component/Login'));
 const AdminHome = lazy(() => import('./component/Admin/adminHome'));
 const UserHome = lazy(() => import('./component/User/UserHome'));
