@@ -67,7 +67,6 @@ export default function Login() {
     const [success, setSuccess] = useState(false);
 
     const [forgot, setForgot] = useState(false);
-
     const navigate = useNavigate()
 
     const handleChange = (e) => {
@@ -91,6 +90,7 @@ export default function Login() {
                     setForgot(true);
                 }
                 setError(res.data.msg || 'Login Failed')
+                setError(res.data.msg || 'LoginF')
             }
         } catch (err) {
             console.log(err)

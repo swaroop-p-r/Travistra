@@ -28,7 +28,9 @@ export default function EditPackageModal({ show, onHide, packageData, onUpdated 
             })
             setItinerary(packageData.itinerary || [''])
             setExistingImages(packageData.images || [])
+
             setNewImages([])
+
         }
     }, [packageData])
 
@@ -51,11 +53,13 @@ export default function EditPackageModal({ show, onHide, packageData, onUpdated 
         setItinerary(updated)
     }
 
+
     const handleImage = (e) => {
         const selectedFiles = Array.from(e.target.files)
         const sortedFiles = selectedFiles.sort((a, b) => a.lastModified - b.lastModified)
         setNewImages((prev) => [...prev, ...sortedFiles])
         e.target.value = null
+
     }
 
     const handleSubmit = async () => {
@@ -65,12 +69,14 @@ export default function EditPackageModal({ show, onHide, packageData, onUpdated 
         }
 
         itinerary.forEach((point) => {
+
             data.append('itinerary', point.trim())
         })
 
         newImages.forEach((file) => {
             data.append('images', file)
         })
+
 
         try {
             const res = await axios.patch('http://localhost:4000/api/admin/updatepackage', data, {
@@ -117,7 +123,10 @@ export default function EditPackageModal({ show, onHide, packageData, onUpdated 
                                 <Col xs={10}>
                                     <Form.Control
                                         type="text"
+
                                         value={point}
+
+
                                         onChange={e => handleItineraryChange(i, e.target.value)}
                                     />
                                 </Col>
@@ -143,6 +152,7 @@ export default function EditPackageModal({ show, onHide, packageData, onUpdated 
                                     key={i}
                                     src={`http://localhost:4000/uploads/${img}`}
                                     thumbnail
+
                                     alt={`package-img-${i}`}
                                     style={{ borderRadius: 8, width: '100px', height: '100px', objectFit: 'cover' }}
                                 />
@@ -152,6 +162,7 @@ export default function EditPackageModal({ show, onHide, packageData, onUpdated 
 
                     <Form.Group className="mb-3">
                         <Form.Label>Upload New Images (optional)</Form.Label>
+
                         <div className="card-body">
                             <input type="file" multiple onChange={handleImage} />
                             <div className="d-flex flex-wrap gap-2 mt-2">
@@ -162,6 +173,7 @@ export default function EditPackageModal({ show, onHide, packageData, onUpdated 
                                 ))}
                             </div>
                         </div>
+
                     </Form.Group>
                 </Form>
             </Modal.Body>

@@ -1,5 +1,6 @@
 const express = require('express')
 const { registerUser, loginAdminUser, userViewProfile, userProfilebyid, userEditProfile, userViewPackages, userSelectPackage, userBookPackage, userViewBookings, userViewAssignedVehicle, userConfirmPackage, userBookingForPayment, userPayment, userViewPayment, userCancelBooking, userHomeDetails, sendOTP, passwordReset } = require('../controller/userControl')
+
 const upload = require('../middleware/upload');
 const verifyToken = require('../middleware/verifyToken');
 const userRoutes = express.Router()
@@ -12,8 +13,10 @@ userRoutes.post('/register', upload.fields([
 
 userRoutes.post('/login', loginAdminUser);
 
+
 userRoutes.post('/sendotp',sendOTP)
 userRoutes.post('/resetpassword',passwordReset)
+
 
 userRoutes.get('/userprofile',verifyToken,userViewProfile)
 userRoutes.get('/userprofilebyid',userProfilebyid)

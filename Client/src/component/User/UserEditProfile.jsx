@@ -151,6 +151,7 @@ export default function UserEditProfile() {
                 <div className="text-center mb-4">
                     <h2 className="fw-bold" style={{ color: 'white' }}>Profile Update</h2>
                     <p className="text-#3498db" style={{ color: 'silver' }}>Update your personal information</p>
+
                 </div>
                 <div >
                     <Form onSubmit={handleSubmit} className="p-4 rounded-3 shadow-sm" style={{ backgroundColor: '#f8f9fa' }}>
@@ -269,8 +270,10 @@ export default function UserEditProfile() {
                                             type="password"
                                             name="password"
                                             placeholder="Enter new password"
+
                                             value={password}
                                             onChange={(e) => setPassword(e.target.value)}
+
                                             className="py-2"
                                         />
                                     </Form.Group>

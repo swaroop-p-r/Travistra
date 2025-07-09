@@ -27,6 +27,7 @@ export default function AdminPackage() {
     }
 
     const handleImage = (e) => {
+
         // const selected = Array.from(e.target.files);
         // setImages((prev) => [...prev, ...selected]);
         // e.target.value = null; // allow reselecting same file
@@ -269,7 +270,9 @@ export default function AdminPackage() {
                                         <h4 className="mb-0">Package Images</h4>
                                     </div>
                                     <div className="card-body">
+
                                         <input type="file" multiple onChange={handleImage} />
+
 
                                         <div className="d-flex flex-wrap gap-2">
                                             {Array.from(images).map((file, i) => (

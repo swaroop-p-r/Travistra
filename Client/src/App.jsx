@@ -1,3 +1,4 @@
+
 // // import './App.css'
 // import { BrowserRouter, Routes, Route } from "react-router-dom";
 // import HomePg from './component/Home/homePg';
@@ -65,10 +66,9 @@
 import { Suspense, lazy } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
-//anime
 import Lottie from 'lottie-react';
 import loadingAnimation from './animations/loading.json';
-import DragDropSortableUploader from "./component/Admin/AdminViewVehicle1";
+// import DragDropSortableUploader from "./component/Admin/AdminViewVehicle1"; // Normal import since likely not reused elsewhere
 
 const HomePg = lazy(() => import('./component/Home/homePg'));
 const UserReg = lazy(() => import('./component/User/userReg'));
@@ -80,7 +80,6 @@ const AdminViewPackage = lazy(() => import('./component/Admin/AdminViewPackage')
 const AdminPackage = lazy(() => import('./component/Admin/AdminPackage'));
 const AdminVehicle = lazy(() => import('./component/Admin/AdminVehicle'));
 const AdminViewVehicle = lazy(() => import('./component/Admin/AdminViewVehicle'));
-// const DragDropSortableUploader = lazy(() => import('./component/Admin/AdminViewVehicle1'));
 const UserProfile = lazy(() => import('./component/User/UserProfile'));
 const UserEditProfile = lazy(() => import('./component/User/UserEditProfile'));
 const UserViewPackage = lazy(() => import('./component/User/UserViewPackage'));
@@ -90,44 +89,31 @@ const AdminViewBookings = lazy(() => import('./component/Admin/AdminViewBookings
 const UserPayment = lazy(() => import('./component/User/UserPayment'));
 const AdminViewPayment = lazy(() => import('./component/Admin/AdminViewPayment'));
 const MissingPage = lazy(() => import('./component/MissingPg/MissingPage'));
-const ForgotPage = lazy(()=> import('./component/Home/ForgotPassword'));
-
+const ForgotPage = lazy(() => import('./component/Home/ForgotPassword'));
 
 function App() {
   return (
     <BrowserRouter>
-      <Suspense
-        fallback={
-          <div
-            className="d-flex flex-column align-items-center"
-            style={{ marginTop: '50px' }}
-          >
-            <Lottie
-              animationData={loadingAnimation}
-              loop={true}
-              style={{ maxHeight: '150px', maxWidth: '250px' }}
-            />
-          </div>}
-      >
+      <Suspense fallback={
+        <div className="d-flex flex-column align-items-center" style={{ marginTop: '50px' }}>
+          <Lottie animationData={loadingAnimation} loop={true} style={{ maxHeight: '150px', maxWidth: '250px' }} />
+        </div>
+      }>
         <Routes>
-          {/* Missing Page */}
           <Route path="/*" element={<MissingPage />} />
-          {/* Home page route */}
           <Route path="/" element={<HomePg />} />
-          <Route path='/register' element={<UserReg />} />
-          <Route path='/login' element={<Login />} />
-          <Route path="/forgotpassword" element={<ForgotPage/>}/>
-          {/* Admin page route */}
+          <Route path="/register" element={<UserReg />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/forgotpassword" element={<ForgotPage />} />
           <Route path="/adminhome" element={<AdminHome />} />
           <Route path="/adminviewusers" element={<AdminViewUser />} />
           <Route path="/adminviewpackage" element={<AdminViewPackage />} />
           <Route path="/adminpackage" element={<AdminPackage />} />
           <Route path="/adminvehicle" element={<AdminVehicle />} />
           <Route path="/adminviewvehicle" element={<AdminViewVehicle />} />
-          <Route path="/adminviewvehicle1" element={<DragDropSortableUploader />} />
+          {/* <Route path="/adminviewvehicle1" element={<DragDropSortableUploader />} /> */}
           <Route path="/adminviewbooking" element={<AdminViewBookings />} />
           <Route path="/adminviewpayments" element={<AdminViewPayment />} />
-          {/* User page route */}
           <Route path="/userhome" element={<UserHome />} />
           <Route path="/userprofile" element={<UserProfile />} />
           <Route path="/edituser/:id" element={<UserEditProfile />} />
@@ -141,4 +127,4 @@ function App() {
   );
 }
 
-export default App
+export default App;

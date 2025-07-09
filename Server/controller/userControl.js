@@ -139,7 +139,6 @@ const userEditProfile = async (req, res) => {
         if (password && password.trim() !== '') {
             hashedPassword = await argon2.hash(password);
         }
-
         const updatedUser = await User.findByIdAndUpdate(
             id,
             {
@@ -502,4 +501,5 @@ const passwordReset = async (req, res) => {
 };
 
 module.exports = { passwordReset, sendOTP, userHomeDetails, userCancelBooking, userViewPayment, userPayment, userBookingForPayment, userConfirmPackage, userViewBookings, userBookPackage, userSelectPackage, userViewPackages, userEditProfile, userProfilebyid, userViewProfile, registerUser, loginAdminUser };
+
 
