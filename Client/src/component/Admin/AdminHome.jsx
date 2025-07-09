@@ -146,7 +146,7 @@ export default function AdminHome() {
   const fetchData = async () => {
     try {
       setLoading(true);
-      const res = await axios.get(`${API_BASE_URL}/admin/adminhomedetails`);
+      const res = await axios.get(`${API_BASE_URL}/api/admin/adminhomedetails`);
       if (res.data.status === 200) {
         setData(res.data);
         setError(null);
