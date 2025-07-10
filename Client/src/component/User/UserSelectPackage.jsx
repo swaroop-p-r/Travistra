@@ -8,6 +8,10 @@ import { Modal, Button, Table } from 'react-bootstrap';
 
 
 export default function UserSelectPackage() {
+
+    const API_BASE_URL = import.meta.env.VITE_API_URL;
+    // console.log(API_BASE_URL);
+
     const { id } = useParams();
     // console.log(`ID:${id}`)
     const [pkg, setPkg] = useState(null);
@@ -28,7 +32,7 @@ export default function UserSelectPackage() {
 
     const fetchPackage = async () => {
         try {
-            const res = await axios.get('http://localhost:4000/api/user/userselectpackage',
+            const res = await axios.get(`${API_BASE_URL}/api/user/userselectpackage`,
                 {
                     headers: {
                         id: id
@@ -71,7 +75,7 @@ export default function UserSelectPackage() {
             alert('Package is Inactive\nContact Admin');
         } else {
             try {
-                const res = await axios.post('http://localhost:4000/api/user/userbookpackage',
+                const res = await axios.post(`${API_BASE_URL}/api/user/userbookpackage`,
                     { bookingDate, bookingTime },
                     {
                         headers: {
@@ -109,7 +113,7 @@ export default function UserSelectPackage() {
                     {/* Main Image */}
                     <Card.Img
                         variant="top"
-                        src={`http://localhost:4000/uploads/${pkg.images[0]}`}
+                        src={`${API_BASE_URL}/uploads/${pkg.images[0]}`}
                         alt={pkg.package_name}
                         style={{ objectFit: 'cover', height: '350px' }}
                     />
@@ -151,7 +155,7 @@ export default function UserSelectPackage() {
                                     {pkg.images.slice(1).map((img, idx) => (
                                         <Image
                                             key={idx}
-                                            src={`http://localhost:4000/uploads/${img}`}
+                                            src={`${API_BASE_URL}/uploads/${img}`}
                                             alt={`Image ${idx + 2}`}
                                             height="200"
                                             width="300"
