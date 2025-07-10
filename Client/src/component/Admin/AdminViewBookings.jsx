@@ -478,7 +478,7 @@ export default function AdminViewBookings() {
                             <Card className="shadow rounded-4 border-0 overflow-hidden">
                                 <Card.Img
                                     variant="top"
-                                    src={`http://localhost:4000/uploads/${selectedVehicle.image}`}
+                                    src={`${API_BASE_URL}/uploads/${selectedVehicle.image}`}
                                     alt={selectedVehicle.vehicle_name}
                                     style={{ objectFit: 'cover', height: '250px' }}
                                     onError={(e) => {
