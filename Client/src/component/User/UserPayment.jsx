@@ -353,7 +353,7 @@ export default function UserPayment() {
                     </Typography>
                     
                     <Typography variant="body2" sx={{ mt: 2, fontStyle: 'italic' }}>
-                        Redirecting to bookings page...
+                        Click Below to Redirect to Bookings Page...
                     </Typography>
                     
                     <CircularProgress 

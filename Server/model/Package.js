@@ -38,6 +38,9 @@ const packageSchema = new mongoose.Schema({
     type: [String],
     required: true
   },
+  poster: {
+    type: String,
+  },
   images: {
     type: [String],
     default: []

@@ -211,23 +211,24 @@ export default function AdminViewBookings() {
                     <Row>
                         {bookings.map((booking) => (
                             <Col key={booking._id} xs={12} className="mb-4">
-                                <Card className={`shadow-sm ${booking.status === 'Cancelled' || booking.status === 'Admin Cancelled' ? 'cancelled-card' : ''}`}>
-                                    <div className="d-flex">
-                                        <div style={{ width: 250, overflow: 'hidden', flexShrink: 0 }}>
-                                            {booking.package?.images?.[0] ? (
+                                <Card className={`shadow-sm mb-4 ${booking.status === 'Cancelled' || booking.status === 'Admin Cancelled' ? 'cancelled-card' : ''}`}>
+                                    <div className="row g-0">
+                                        {/* Image Section */}
+                                        <div className="col-12 col-md-2">
+                                            {booking.package?.poster? (
                                                 <Image
-                                                    src={`${API_BASE_URL}/uploads/${booking.package.images[0]}`}
+                                                    src={`${API_BASE_URL}/uploads/${booking.package.poster}`}
                                                     alt={booking.package.package_name}
                                                     style={{
                                                         width: '100%',
                                                         height: '100%',
                                                         objectFit: 'cover',
-                                                        borderRadius: 6,
+                                                        borderRadius: '6px 0 0 6px',
+                                                        minHeight: '180px',
                                                     }}
                                                     onError={(e) => {
                                                         e.target.onerror = null;
-                                                        e.target.src =
-                                                            'https://via.placeholder.com/300x180?text=No+Image';
+                                                        e.target.src = 'https://via.placeholder.com/300x180?text=No+Image';
                                                     }}
                                                 />
                                             ) : (
@@ -240,23 +241,24 @@ export default function AdminViewBookings() {
                                                         alignItems: 'center',
                                                         justifyContent: 'center',
                                                         minHeight: 180,
+                                                        borderRadius: '6px 0 0 6px',
                                                     }}
                                                 >
                                                     <span className="text-muted">No image available</span>
                                                 </div>
                                             )}
                                         </div>
-                                        <Card.Body className="d-flex flex-column">
-                                            <div className="d-flex flex-column h-100">
-                                                <div>
-                                                    <Card.Title className="mb-3">
-                                                        {booking.user?.username}
-                                                        ---
-                                                        {booking.user?.email}
-                                                         <br />
+
+                                        {/* Content Section */}
+                                        <div className="col-12 col-md-8">
+                                            <Card.Body className="d-flex flex-column h-100">
+                                                <div className="mb-3">
+                                                    <Card.Title className="mb-2">
+                                                        {booking.user?.username} --- {booking.user?.email} <br />
                                                         {booking.package?.package_name || 'Unnamed Package'}
                                                     </Card.Title>
-                                                    <div className="d-flex flex-wrap gap-4 mb-3">
+
+                                                    <div className="d-flex flex-wrap gap-3 mb-2">
                                                         <div className="d-flex align-items-center">
                                                             <i className="bi bi-geo-alt me-2"></i>
                                                             <span>{booking.package?.destination || 'Not specified'}</span>
@@ -271,7 +273,8 @@ export default function AdminViewBookings() {
                                                         </div>
                                                     </div>
 
-                                                    <div className="d-flex flex-wrap align-items-center gap-3 mb-3">
+                                                    {/* Button Actions */}
+                                                    <div className="d-flex flex-wrap gap-2 mb-3">
                                                         <Button
                                                             variant="outline-primary"
                                                             size="sm"
@@ -292,9 +295,7 @@ export default function AdminViewBookings() {
                                                         </Button>
 
                                                         <Button
-                                                            variant={
-                                                                booking.vehicle ? 'outline-danger' : 'outline-success'
-                                                            }
+                                                            variant={booking.vehicle ? 'outline-danger' : 'outline-success'}
                                                             size="sm"
                                                             onClick={() => handleAssignVehicle(booking)}
                                                             disabled={booking.status === 'Cancelled' || booking.status === 'Admin Cancelled'}
@@ -308,20 +309,22 @@ export default function AdminViewBookings() {
                                                                 variant="outline-success"
                                                                 size="sm"
                                                                 onClick={() => handleViewPayment(booking._id)}
-                                                                className="me-2"
                                                             >
                                                                 <i className="bi bi-credit-card me-1"></i> View Payment
                                                             </Button>
                                                         )}
+                                                    </div>
 
-                                                        <div className="d-flex align-items-center ms-auto">
+                                                    {/* Status and Payment */}
+                                                    <div className="d-flex flex-wrap align-items-center justify-between gap-3">
+                                                        <div className="d-flex align-items-center">
                                                             <span className="me-2">Status:</span>
                                                             <span
                                                                 className={`badge ${booking.status === 'Confirmed'
-                                                                    ? 'bg-success'
-                                                                    : booking.status === 'Cancelled'
-                                                                        ? 'bg-danger'
-                                                                        : 'bg-warning'
+                                                                        ? 'bg-success'
+                                                                        : booking.status === 'Cancelled'
+                                                                            ? 'bg-danger'
+                                                                            : 'bg-warning'
                                                                     }`}
                                                             >
                                                                 {booking.status}
@@ -331,45 +334,42 @@ export default function AdminViewBookings() {
                                                         <div className="d-flex align-items-center">
                                                             <span className="me-2">Payment:</span>
                                                             <span
-                                                                className={`badge ${booking.paymentStatus === 'Paid'
-                                                                    ? 'bg-success'
-                                                                    : 'bg-danger'
+                                                                className={`badge ${booking.paymentStatus === 'Paid' ? 'bg-success' : 'bg-danger'
                                                                     }`}
                                                             >
                                                                 {booking.paymentStatus}
                                                             </span>
                                                         </div>
                                                     </div>
-                                                    <div>
-                                                        {(booking.status === 'Cancelled' || booking.status === 'Admin Cancelled') && (
-                                                            <>
-                                                                <hr />
-                                                                <i
-                                                                    style={{ color: 'red' }}
-                                                                >
-                                                                    This Booking is Cancelled By {booking.status === 'Cancelled' ? 'User' : 'Admin'}
-                                                                </i>
-                                                            </>
-                                                        )}
-                                                        {(booking.status === 'Confirmed' || booking.status === 'Processing') && (
-                                                            <>
-                                                                <hr />
-                                                                <Button
-                                                                    variant="outline-danger"
-                                                                    size="sm"
-                                                                    onClick={() => handleCancel(booking._id)}
-                                                                // disabled={isCancelled}
-                                                                >
-                                                                    <i className="bi bi-x-circle me-1"></i> Cancel Booking
-                                                                </Button>
-                                                            </>
-                                                        )}
-                                                    </div>
                                                 </div>
-                                            </div>
-                                        </Card.Body>
+
+                                                {/* Cancellation Info */}
+                                                {(booking.status === 'Cancelled' || booking.status === 'Admin Cancelled') && (
+                                                    <>
+                                                        <hr />
+                                                        <span style={{ color: 'red' }}>
+                                                            This Booking is Cancelled By {booking.status === 'Cancelled' ? 'User' : 'Admin'}
+                                                        </span>
+                                                    </>
+                                                )}
+
+                                                {(booking.status === 'Confirmed' || booking.status === 'Processing') && (
+                                                    <>
+                                                        <hr />
+                                                        <Button
+                                                            variant="outline-danger"
+                                                            size="sm"
+                                                            onClick={() => handleCancel(booking._id)}
+                                                        >
+                                                            <i className="bi bi-x-circle me-1"></i> Cancel Booking
+                                                        </Button>
+                                                    </>
+                                                )}
+                                            </Card.Body>
+                                        </div>
                                     </div>
                                 </Card>
+
                             </Col>
                         ))}
                     </Row>
@@ -388,7 +388,7 @@ export default function AdminViewBookings() {
                             <Card className="shadow-lg rounded-4 overflow-hidden border-0">
                                 <Card.Img
                                     variant="top"
-                                    src={`${API_BASE_URL}/uploads/${selectedBooking.package.images[0]}`}
+                                    src={`${API_BASE_URL}/uploads/${selectedBooking.package.poster}`}
                                     alt={selectedBooking.package.package_name}
                                     style={{ objectFit: 'cover', height: '300px' }}
                                 />
@@ -423,7 +423,7 @@ export default function AdminViewBookings() {
                                         <div className="mb-4">
                                             <h5 className="fw-semibold mb-3">📷 More Images</h5>
                                             <div className="d-flex gap-3 overflow-auto pb-2">
-                                                {selectedBooking.package.images.slice(1).map((img, idx) => (
+                                                {selectedBooking.package.images.map((img, idx) => (
                                                     <Image
                                                         key={idx}
                                                         src={`${API_BASE_URL}/uploads/${img}`}

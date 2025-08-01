@@ -128,8 +128,21 @@ const userEditProfile = async (req, res) => {
             phone,
             gender,
         } = req.body;
-        const profileImage = req.files?.profile_image?.[0]?.filename || user.profile_image;
-        const Image = req.files?.image?.[0]?.filename || user.image;
+
+        // console.log(req.body.profile_image);
+        let profileImage;
+        if (req.body.profile_image === 'removed') {
+            profileImage = null;
+        } else {
+            profileImage = req.files?.profile_image?.[0]?.filename || user.profile_image;
+        }
+
+        let Image;
+        if (req.body.image === 'removed') {
+            Image = null;
+        } else {
+            Image = req.files?.image?.[0]?.filename || user.image;
+        } 
 
         if (!Image) {
             return res.json({ msg: 'ID Photo Required', status: 400 })
@@ -397,6 +410,7 @@ const userHomeDetails = async (req, res) => {
         const totalBus = await Vehicle.countDocuments({ type: 'Bus' })
         const totalCar = await Vehicle.countDocuments({ type: 'Car' })
         const totalJeep = await Vehicle.countDocuments({ type: 'Jeep' })
+        const totalSuv = await Vehicle.countDocuments({ type: 'Suv' })
 
         const totalPackage = await Package.countDocuments();
 
@@ -422,6 +436,7 @@ const userHomeDetails = async (req, res) => {
             totalBus,
             totalCar,
             totalJeep,
+            totalSuv,
 
             totalPackage,
 

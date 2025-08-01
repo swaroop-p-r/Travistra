@@ -12,7 +12,7 @@ import EditPackageModal from './AdminEditPackage';
 export default function AdminViewPackage() {
 
   const API_BASE_URL = import.meta.env.VITE_API_URL;
-    // console.log(API_BASE_URL);
+  // console.log(API_BASE_URL);
 
   const [packages, setPackages] = useState([])
   const [showModal, setShowModal] = useState(false);
@@ -20,6 +20,15 @@ export default function AdminViewPackage() {
   const [modelTitle, setModelTitle] = useState('')
   const [showEditModal, setShowEditModal] = useState(false);
   const [editPackageData, setEditPackageData] = useState(null);
+
+  const [showItineraryModal, setShowItineraryModal] = useState(false);
+  const [currentItinerary, setCurrentItinerary] = useState([]);
+
+  const handleOpenItineraryModal = (item) => {
+    setCurrentItinerary(item.itinerary || []);
+    setModelTitle(item.package_name || 'Package');
+    setShowItineraryModal(true);
+  };
 
 
   const fetchPackage = () => {
@@ -126,13 +135,36 @@ export default function AdminViewPackage() {
                               overflowX: 'auto',
                               maxWidth: '300px',
                             }}
+                            onClick={() =>
+                              handleImageClick(
+                                [item.poster, ...item.images], // Combine poster and images
+                                item.package_name
+                              )
+                            }
                           >
+                            {/* Display the poster first */}
+                            {item.poster && (
+                              <img
+                                src={`${API_BASE_URL}/uploads/${item.poster}`}
+                                alt="Poster"
+                                style={{
+                                  width: '100px',
+                                  height: '100px',
+                                  objectFit: 'cover',
+                                  marginRight: '5px',
+                                  cursor: 'pointer',
+                                  borderRadius: '5px',
+                                  border: '2px solid #000',
+                                }}
+                              />
+                            )}
+
+                            {/* Then the other images */}
                             {item.images.map((imgName, idx) => (
                               <img
                                 key={idx}
                                 src={`${API_BASE_URL}/uploads/${imgName}`}
                                 alt={`Package ${idx + 1}`}
-                                onClick={() => handleImageClick(item.images, item.package_name)}
                                 style={{
                                   width: '100px',
                                   height: '100px',
@@ -145,16 +177,13 @@ export default function AdminViewPackage() {
                             ))}
                           </div>
                         </td>
+
                         <td>{item.package_name}</td>
                         <td>{item.destination}</td>
                         <td>{item.duration}</td>
                         <td>{item.price}</td>
                         <td>
-                          <ul style={{ paddingLeft: "20px", margin: 0 }}>
-                            {item.itinerary.map((step, idx) => (
-                              <li key={idx}>{step}</li>
-                            ))}
-                          </ul>
+                          <Button variant='outline-dark' onClick={() => handleOpenItineraryModal(item)}>View Itinerary</Button>
                         </td>
                         <td>{item.seats}</td>
                         <td>{item.total_seats}</td>
@@ -213,6 +242,22 @@ export default function AdminViewPackage() {
           </div>
         </Modal.Body>
       </Modal>
+      {/* for Itinerary Modal */}
+      <Modal show={showItineraryModal} onHide={() => setShowItineraryModal(false)} size="lg" centered>
+        <Modal.Header closeButton>
+          <Modal.Title>{modelTitle} Itinerary</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div style={{ maxHeight: '60vh', overflowY: 'auto' }}>
+            <ul style={{ paddingLeft: '20px', margin: 0 }}>
+              {currentItinerary?.map((step, idx) => (
+                <li key={idx}>{step}</li>
+              ))}
+            </ul>
+          </div>
+        </Modal.Body>
+      </Modal>
+
       {/* for updateModal */}
       {editPackageData && (
         <EditPackageModal

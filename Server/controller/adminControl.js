@@ -76,8 +76,10 @@ const adminAddPackage = async (req, res) => {
             itinerary = [req.body.itinerary];
         }
 
+        const poster = req.files?.poster?.[0]?.filename;
+
         // Collect image filenames from multer
-        const imageFiles = req.files.map(file => file.filename);
+        const imageFiles = req.files.images?.map(file => file.filename);
 
         // Create and save new package
         const newPackage = new Package({
@@ -89,7 +91,8 @@ const adminAddPackage = async (req, res) => {
             total_seats,
             status,
             itinerary,
-            images: imageFiles
+            poster,
+            images: imageFiles,
         });
 
         await newPackage.save();
@@ -223,7 +226,8 @@ const adminUpdatePackage = async (req, res) => {
             itinerary = [itinerary];
         }
 
-        const newImages = req.files.map(file => file.filename);
+        const newPoster = req.files?.poster?.[0].filename;
+        const newImages = req.files?.images?.map(file => file.filename) || [];
 
         const pkg = await Package.findById(id);
         if (!pkg) {
@@ -238,7 +242,11 @@ const adminUpdatePackage = async (req, res) => {
         pkg.total_seats = total_seats;
         pkg.itinerary = itinerary;
 
-        if (newImages.length > 0 && pkg.images && pkg.images.length > 0) {
+        if (newPoster) {
+            pkg.poster = newPoster;
+        }
+
+        if (newImages.length > 0) {
             // //for fs deletion 
             // for (const img of pkg.images) {
             //     const imgPath = path.join(__dirname, '..', 'uploads', img)
@@ -618,6 +626,7 @@ const adminHomeDetails = async (req, res) => {
         const totalBus = await Vehicle.countDocuments({ type: 'Bus' })
         const totalCar = await Vehicle.countDocuments({ type: 'Car' })
         const totalJeep = await Vehicle.countDocuments({ type: 'Jeep' })
+        const totalSuv = await Vehicle.countDocuments({ type: 'Suv' })
 
         const totalPackage = await Package.countDocuments();
         const activePackage = await Package.countDocuments({ status: 'Active' });
@@ -643,6 +652,7 @@ const adminHomeDetails = async (req, res) => {
             totalBus,
             totalCar,
             totalJeep,
+            totalSuv,
             
             totalPackage,
             activePackage,

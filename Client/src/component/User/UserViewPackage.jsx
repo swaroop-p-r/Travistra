@@ -71,7 +71,7 @@ export default function UserViewPackage() {
                                         <CardMedia
                                             component="img"
                                             height="180"
-                                            image={`${API_BASE_URL}/uploads/${pkg.images[0]}`}
+                                            image={`${API_BASE_URL}/uploads/${pkg.poster}`}
                                             alt={`Image of ${pkg.package_name}`}
                                             style={{ width: 300, height: 180 }}
                                         />

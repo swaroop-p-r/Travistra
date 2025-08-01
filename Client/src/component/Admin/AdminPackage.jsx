@@ -19,6 +19,18 @@ export default function AdminPackage() {
         itinerary: []
     })
 
+    const [poster, setPoster] = useState(null);
+
+    const handlePoster = (e) => {
+        const file = e.target.files[0];
+        if (file && file.type.startsWith("image/")) {
+            setPoster(file);
+        } else {
+            setPoster(null); // clear if not valid
+            alert("Please select a valid image file.");
+        }
+    };
+
     const [newItineraryItem, setnewItineraryItem] = useState('');
     const [images, setImages] = useState([]);
 
@@ -38,11 +50,11 @@ export default function AdminPackage() {
         const selected = Array.from(e.target.files);
         console.log(selected.map(f => ({ name: f.name, lastModified: f.lastModified })));
 
-    
-    const sortedFiles = selected.sort((a, b) => a.lastModified - b.lastModified);
-    
-    setImages((prev) => [...prev, ...sortedFiles]);
-    e.target.value = null;
+
+        const sortedFiles = selected.sort((a, b) => a.lastModified - b.lastModified);
+
+        setImages((prev) => [...prev, ...sortedFiles]);
+        e.target.value = null;
     }
 
 
@@ -70,6 +82,10 @@ export default function AdminPackage() {
             alert("Please add at least one itinerary item.");
             return;
         }
+        if (!poster) {
+            alert("Please add poster image.");
+            return;
+        }
         if (images.length === 0) {
             alert("Please add at least one image.");
             return;
@@ -85,6 +101,8 @@ export default function AdminPackage() {
         formData.itinerary.forEach((item, index) => {
             data.append(`itinerary[${index}]`, item)
         })
+
+        data.append('poster',poster);
 
         images.forEach((file) => {
             data.append('images', file)
@@ -106,6 +124,7 @@ export default function AdminPackage() {
                     status: 'Active',
                     itinerary: []
                 });
+                setPoster(null);
                 setImages([]);
                 setnewItineraryItem('');
                 if (fileInputRef.current) {
@@ -121,8 +140,8 @@ export default function AdminPackage() {
     return (
         <>
             <AdminNav />
-            <div className="container" style={{ maxWidth: '800px', margin: '2rem auto' }}>
-                <div className="card shadow">
+            <div className="container" style={{ maxWidth: '800px', margin: '2rem auto', }}>
+                <div className="card shadow ">
                     <div className="card-header bg-black text-white">
                         <h2 className="mb-0">Add New Tour Package</h2>
                     </div>
@@ -266,6 +285,26 @@ export default function AdminPackage() {
                                     </div>
                                 </div>
                             </div>
+
+                            <div className="mb-4">
+                                <div className="card border-0 shadow-sm">
+                                    <div className="card-header bg-light">
+                                        <h4 className="mb-0">Package Poster</h4>
+                                    </div>
+                                    <div className="card-body">
+                                        <input type="file" onChange={handlePoster} accept="image/*" />
+
+                                        {poster && (
+                                            <div className="d-flex flex-wrap gap-2 mt-2">
+                                                <div className="badge bg-secondary p-2">
+                                                    {poster.name}
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+
 
                             <div className="mb-4">
                                 <div className="card border-0 shadow-sm">

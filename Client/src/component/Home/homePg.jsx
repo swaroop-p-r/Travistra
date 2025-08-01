@@ -61,7 +61,7 @@ import HomeNav from './homeNav';
 import bgImage from './HomeImage/blended.png'
 import travistraBgImage from './HomeImage/travitsralogobg1.jpeg'
 
-import { motion } from 'framer-motion';
+import { motion, wrap } from 'framer-motion';
 
 
 
@@ -248,131 +248,141 @@ export default function HomePg() {
 
   return (
     <>
-      <div style={{ backgroundColor: 'black' }}>
+      <div style={{ backgroundColor: 'black', display:'flex', flexDirection:'column' }}>
 
         <HomeNav />
-        {/* ====================Header============================= */}
-
+        {/* ====================Header & Hero============================= */}
 
         <style>
           {`
-            @keyframes animateBg {
-              0% { background-position-x: 0; }
-              100% { background-position-x: -200px; }
-            }
-            @keyframes bounceUp {
-              0%, 100% {
-                transform: translateY(0);
-            }
-              50% {
-                transform: translateY(-6px);
-              }
-            }
-          `}
+    @keyframes animateBg {
+      0% { background-position-x: 0; }
+      100% { background-position-x: -200px; }
+    }
+    @keyframes bounceUp {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-6px);
+      }
+    }
+  `}
         </style>
 
+        <motion.div initial="hidden" animate="visible" variants={staggerContainer}>
 
-
-        <motion.div
-          initial="hidden"
-          animate="visible"
-          variants={staggerContainer}>
-
-          <h1 id='travistrahead' style={{
-            marginTop: '-30px',
-            textAlign: 'center',
-            zIndex: -1,
-            fontSize: '15vw',
-            fontFamily: "'Cinzel', serif",
-            backgroundImage: `url(${travistraBgImage})`,
-            backgroundPosition: 'center',
-            backgroundSize: 'cover',
-            backgroundClip: 'text',
-            WebkitBackgroundClip: 'text',       // needed for Safari/Chrome
-            color: 'rgba(255, 255, 255, 0.5)',
-            animation: 'animateBg 10s linear infinite',
-          }}>
-            <motion.div variants={slideUp}>
+          {/* Travistra Heading */}
+          <motion.div variants={slideUp}>
+            <h1
+              id='travistrahead'
+              style={{
+                marginTop: '0px',
+                textAlign: 'center',
+                fontSize: '15vw',
+                fontFamily: "'Cinzel', serif",
+                backgroundImage: `url(${travistraBgImage})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundClip: 'text',
+                WebkitBackgroundClip: 'text',
+                color: 'transparent',
+                animation: 'animateBg 10s linear infinite',
+              }}
+            >
               Travistra
-            </motion.div>
-          </h1>
-
+            </h1>
+          </motion.div>
 
           {/* ==================Hero================== */}
           <motion.div variants={fadeIn}>
-            <div style={{ padding: 70, backgroundColor: 'transparent', marginTop: '-150px' }}>
+            <Box
+              component="section"
+              id="/"
+              sx={{
+                position: 'relative',
+                minWidth: { xs: '300px', md: '700px' },
+                minHeight: { xs: '500px', md: '700px',lg: '50rem' },
+                backgroundImage: `url(${bgImage})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                display: 'flex',
+                alignItems: 'center',
+                mt: { xs: -12, md: -19 },
+                px: 2,
+                py: { xs: 6, md: 0 },
+                color: 'white',
+              }}
+            >
+              <Container maxWidth="md" sx={{ textAlign: 'center' }}>
+                <Typography
+                  variant="h2"
+                  fontWeight="bold"
+                  gutterBottom
+                  sx={{
+                    fontSize: { xs: '2.5rem', sm: '3rem', md: '3.5rem', lg: '4rem' },
+                  }}
+                >
+                  Discover the World with Us
+                </Typography>
 
-              <Box
-                component="section" id="/"
-                sx={{
-                  position: 'relative',
-                  width: '100%',
-                  height: '700px',
-                  // clipPath: 'polygon(0 0, 100% 0, 100% 85%, 0 100%)',
-                  // backgroundImage: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1530789253388-582c481c54b0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80')`,
-                  backgroundImage: `url(${bgImage})`,
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center',
-                  display: 'flex',
-                  alignItems: 'center',
-                  marginTop: -9,
-                  color: 'white',
-                }}
-              >
-                <Container maxWidth="md" sx={{ textAlign: 'center', }}>
-                  <Typography variant="h2" fontWeight="bold" gutterBottom>
-                    Discover the World with Us
-                  </Typography>
-                  <Typography variant="h5" sx={{ mb: 4 }}>
-                    Unforgettable adventures await. Experience breathtaking destinations
-                    with our expert guides.
-                  </Typography>
-                  <br />
-                  <br />
-                  <br />
-                  <Stack
+                <Typography
+                  variant="h5"
+                  sx={{
+                    mb: 4,
+                    fontSize: { xs: '1rem', sm: '1.25rem', md: '1.4rem' },
+                  }}
+                >
+                  Unforgettable adventures await. Experience breathtaking destinations
+                  with our expert guides.
+                </Typography>
 
-                    direction={{ xs: 'column', sm: 'row' }}
-                    spacing={2}
-                    justifyContent="center"
+                <Stack
+                  direction={{ xs: 'column', sm: 'row' }}
+                  spacing={2}
+                  justifyContent="center"
+                  alignItems="center"
+                  sx={{ mt: { xs: 3, md: 5 } }}
+                >
+                  <Button
+                    onClick={handleLogin}
+                    variant="outlined"
+                    color="inherit"
+                    startIcon={<CalendarIcon size={20} />}
+                    sx={{
+                      width: { xs: '100%', sm: 'auto' },
+                      borderColor: 'white',
+                      '&:hover': {
+                        backgroundColor: 'white',
+                        color: 'black',
+                      },
+                    }}
                   >
+                    Book a Tour
+                  </Button>
 
-                    <Button
-                      onClick={handleLogin}
-                      variant="outlined"
-                      color="inherit"
-                      startIcon={<CalendarIcon size={20} />}
-                      sx={{
-                        borderColor: 'white',
-                        '&:hover': {
-                          backgroundColor: 'white',
-                          color: 'black',
-                        },
-                      }}
-                    >
-                      Book a Tour
-                    </Button>
-                    <Button
-                      onClick={handleLogin}
-                      variant="outlined"
-                      color="inherit"
-                      startIcon={<MapIcon size={20} />}
-                      sx={{
-                        borderColor: 'white',
-                        '&:hover': {
-                          backgroundColor: 'white',
-                          color: 'black',
-                        },
-                      }}
-                    >
-                      Explore Destinations
-                    </Button>
-                  </Stack>
-                </Container>
-              </Box>
-            </div>
+                  <Button
+                    onClick={handleLogin}
+                    variant="outlined"
+                    color="inherit"
+                    startIcon={<MapIcon size={20} />}
+                    sx={{
+                      width: { xs: '100%', sm: 'auto' },
+                      borderColor: 'white',
+                      '&:hover': {
+                        backgroundColor: 'white',
+                        color: 'black',
+                      },
+                    }}
+                  >
+                    Explore Destinations
+                  </Button>
+                </Stack>
+              </Container>
+            </Box>
           </motion.div>
         </motion.div>
+
         {/* ===================LOGO========================= */}
         {/* <MouseAttractText/> */}
         {/* ==================Tour========================== */}
@@ -678,16 +688,16 @@ export default function HomePg() {
             {/* Content Grid */}
             <Grid container spacing={6}>
               {/* Contact Form */}
-              <Grid >
+              <Grid item xs={12} md={6}>
                 <Paper elevation={1} sx={{ p: 4, bgcolor: '#f9fafb' }}>
                   <Typography variant="h5" fontWeight="bold" gutterBottom>
                     Send Us a Message
                   </Typography>
                   <Grid container spacing={2} mt={1}>
-                    <Grid >
+                    <Grid item xs={12}>
                       <TextField fullWidth label="Full Name" placeholder="John Doe" />
                     </Grid>
-                    <Grid >
+                    <Grid item xs={12}>
                       <TextField fullWidth label="Email Address" placeholder="john@example.com" />
                     </Grid>
                   </Grid>
@@ -715,15 +725,15 @@ export default function HomePg() {
               </Grid>
 
               {/* Contact Info */}
-              <Grid marginLeft={18} >
-                <Typography color='white' variant="h5" fontWeight="bold" gutterBottom>
+              <Grid item xs={12} md={6} sx={{ ml: { xs: 0, md: 4 } }}>
+                <Typography color="white" variant="h5" fontWeight="bold" gutterBottom>
                   Contact Information
                 </Typography>
 
-                <Box maxHeight={70} mt={3} display="flex" gap={2}>
+                <Box mt={3} display="flex" flexDirection={{ xs: 'column', sm: 'row' }} gap={2}>
                   <MapPin style={{ color: 'white', marginTop: 4 }} />
                   <Box>
-                    <Typography fontWeight="bold" color='white'>Our Office</Typography>
+                    <Typography fontWeight="bold" color="white">Our Office</Typography>
                     <Typography color="white">
                       123 Adventure Avenue
                       <br />
@@ -734,32 +744,31 @@ export default function HomePg() {
                   </Box>
                 </Box>
 
-                <Box maxHeight={50} mt={4} display="flex" gap={2}>
+                <Box mt={5} display="flex" flexDirection={{ xs: 'column', sm: 'row' }} gap={2}>
                   <Phone style={{ color: 'white', marginTop: 4 }} />
                   <Box>
-                    <Typography color='white' fontWeight="bold">Phone</Typography>
+                    <Typography color="white" fontWeight="bold">Phone</Typography>
                     <Typography color="white">+1 (555) 123-4567</Typography>
                     <Typography color="white">Mon-Fri 9:00 AM - 6:00 PM PT</Typography>
                   </Box>
                 </Box>
 
-                <Box maxHeight={50} mt={4} display="flex" gap={2}>
+                <Box mt={4} display="flex" flexDirection={{ xs: 'column', sm: 'row' }} gap={2}>
                   <Mail style={{ color: 'white', marginTop: 4 }} />
                   <Box>
-                    <Typography color='white' fontWeight="bold">Email</Typography>
+                    <Typography color="white" fontWeight="bold">Email</Typography>
                     <Typography color="white">info@travistra.com</Typography>
                     <Typography color="white">bookings@travistra.com</Typography>
                   </Box>
                 </Box>
 
-
                 <Divider sx={{ my: 4 }} />
 
                 {/* Social Media */}
-                <Typography color='white' variant="h6" fontWeight="bold" gutterBottom>
+                <Typography color="white" variant="h6" fontWeight="bold" gutterBottom>
                   Follow Us
                 </Typography>
-                <Box display="flex" gap={2}>
+                <Box display="flex" flexWrap="wrap" gap={2}>
                   <IconButton
                     href="#"
                     sx={{
@@ -801,6 +810,7 @@ export default function HomePg() {
             </Grid>
           </Box>
         </Box>
+
         {/* ============================footer=============================== */}
         <Box component="footer" sx={{ bgcolor: 'grey.900', color: 'white', py: 8 }}>
           <Box className="container" sx={{ px: 2, mx: 'auto' }}>

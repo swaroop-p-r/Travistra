@@ -18,12 +18,18 @@ const upload = multer({storage})
 adminRoutes.get("/viewusers",adminViewUser)
 adminRoutes.delete("/deleteuser",adminDeleteUser)
 adminRoutes.patch("/userstatus",adminToggleUserStatus)
-adminRoutes.post("/adminpackage",upload.array('images'),adminAddPackage)
+adminRoutes.post("/adminpackage",upload.fields([
+    {name:'poster', maxCount:1},
+    {name:'images'}
+]),adminAddPackage);
 adminRoutes.get('/adminviewpackage',adminViewPackage)
 adminRoutes.patch('/packagestatus',adminTogglePackageStatus)
 adminRoutes.delete('/deletepackage',adminDeletePackage)
 adminRoutes.get('/adminviewpackagebyid/:id',adminViewPackageById)
-adminRoutes.patch('/updatepackage', upload.array('images'), adminUpdatePackage);
+adminRoutes.patch('/updatepackage', upload.fields([
+    {name:'poster', maxCount:1},
+    {name:'images'}
+]), adminUpdatePackage);
 adminRoutes.post('/adminvehicle',upload.single('image'),adminAddVehicle)
 adminRoutes.get('/adminviewvehicle',adminViewVehicle)
 adminRoutes.patch('/vehiclestatus',adminToggleVehicleStatus)

@@ -113,7 +113,7 @@ export default function UserSelectPackage() {
                     {/* Main Image */}
                     <Card.Img
                         variant="top"
-                        src={`${API_BASE_URL}/uploads/${pkg.images[0]}`}
+                        src={`${API_BASE_URL}/uploads/${pkg.poster}`}
                         alt={pkg.package_name}
                         style={{ objectFit: 'cover', height: '350px' }}
                     />
@@ -148,25 +148,37 @@ export default function UserSelectPackage() {
                         </div>
 
                         {/* More Images */}
-                        {pkg.images.length > 1 && (
-                            <div className="mt-5">
-                                <h5 className="fw-semibold mb-3">📷 More Images</h5>
-                                <div className="d-flex gap-3 overflow-auto pb-2">
-                                    {pkg.images.slice(1).map((img, idx) => (
-                                        <Image
-                                            key={idx}
-                                            src={`${API_BASE_URL}/uploads/${img}`}
-                                            alt={`Image ${idx + 2}`}
-                                            height="200"
-                                            width="300"
-                                            rounded
-                                            style={{ objectFit: 'cover' }}
-                                            className="shadow-sm"
-                                        />
-                                    ))}
-                                </div>
-                            </div>
-                        )}
+{pkg.images.length > 1 && (
+  <div className="mt-5">
+    <h5 className="fw-semibold mb-3">📷 More Images</h5>
+    
+    {/* SCROLLABLE CONTAINER */}
+    <div
+      className="d-flex gap-3 overflow-auto pb-2"
+      style={{
+        overflowX: 'auto',
+        whiteSpace: 'nowrap',
+      }}
+    >
+      {pkg.images.map((img, idx) => (
+        <Image
+          key={idx}
+          src={`${API_BASE_URL}/uploads/${img}`}
+          alt={`Image ${idx + 2}`}
+          height="200"
+          width="300"
+          rounded
+          style={{
+            objectFit: 'cover',
+            flex: '0 0 auto', // Don't shrink or grow
+          }}
+          className="shadow-sm"
+        />
+      ))}
+    </div>
+  </div>
+)}
+
                         <hr />
                         <div className='d-flex flex-column align-items-center ' >For Booking </div>
                         <hr />

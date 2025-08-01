@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { 
-  Card, 
-  CardContent, 
-  Typography, 
-  Grid, 
+import {
+  Card,
+  CardContent,
+  Typography,
+  Grid,
   CircularProgress,
   Button,
   Box
 } from '@mui/material';
-import { 
+import {
   People as PeopleIcon,
   CalendarToday as BookingIcon,
   DirectionsCar as VehicleIcon,
@@ -27,6 +27,8 @@ import { GiJeep } from "react-icons/gi";
 import { FaBus } from "react-icons/fa";
 import { motion } from 'framer-motion';
 import AdminNav from './AdminNav';
+
+import { MdDirectionsCarFilled } from 'react-icons/md';
 
 // ... rest of your component code remains the same ...
 
@@ -48,9 +50,9 @@ const cardVariants = {
 };
 
 const StatCard = ({ icon, title, value, color }) => (
-  <Card 
-    sx={{ 
-      minWidth: 275, 
+  <Card
+    sx={{
+      minWidth: 275,
       borderRadius: 3,
       boxShadow: 3,
       background: color,
@@ -72,7 +74,7 @@ const StatCard = ({ icon, title, value, color }) => (
             {value}
           </Typography>
         </div>
-        <Box 
+        <Box
           sx={{
             backgroundColor: 'rgba(255,255,255,0.2)',
             borderRadius: '50%',
@@ -91,8 +93,8 @@ const StatCard = ({ icon, title, value, color }) => (
 );
 
 const SubStatCard = ({ icon, title, value, color }) => (
-  <Card 
-    sx={{ 
+  <Card
+    sx={{
       minWidth: 200,
       borderRadius: 2,
       boxShadow: 2,
@@ -105,7 +107,7 @@ const SubStatCard = ({ icon, title, value, color }) => (
   >
     <CardContent sx={{ padding: '12px !important' }}>
       <Box display="flex" alignItems="center" gap={2}>
-        <Box 
+        <Box
           sx={{
             backgroundColor: `${color}20`,
             borderRadius: '50%',
@@ -137,7 +139,7 @@ const SubStatCard = ({ icon, title, value, color }) => (
 export default function AdminHome() {
 
   const API_BASE_URL = import.meta.env.VITE_API_URL;
-    // console.log(API_BASE_URL);
+  // console.log(API_BASE_URL);
 
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -184,9 +186,9 @@ export default function AdminHome() {
           <Typography color="error" gutterBottom>
             Error: {error}
           </Typography>
-          <Button 
-            variant="contained" 
-            color="primary" 
+          <Button
+            variant="contained"
+            color="primary"
             onClick={fetchData}
             startIcon={<RefreshIcon />}
           >
@@ -346,6 +348,14 @@ export default function AdminHome() {
               title="Jeeps"
               value={data.totalJeep}
               color="#009688"
+            />
+          </Grid>
+          <Grid>
+            <SubStatCard
+              icon={<MdDirectionsCarFilled />}
+              title="SUVs"
+              value={data.totalSuv}
+              color="#22359cff"
             />
           </Grid>
         </Grid>

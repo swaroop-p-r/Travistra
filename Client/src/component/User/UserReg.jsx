@@ -213,98 +213,95 @@ export default function UserReg() {
       <HomeNav />
       {/* ============BG=================== */}
       {/* === Fixed Background === */}
-      <div
-        style={{
-          position: 'fixed',
-          top: 70,
-          left: 0,
-          width: '100vw',
-          height: '100vh',
-          backgroundColor: 'black',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          zIndex: -1,
-          filter: 'blur(2px)',
-          transform: 'scale(1.05)',
-        }}
-      >
-        <style>
-          {`
-                        @keyframes animateBg {
-                          0% { background-position-x: 0; }
-                              100% { background-position-x: -200px; }
-                                         }
-                            @keyframes bounceUp {
-                           0%, 100% {
-                                        transform: translateY(0);
-                                    }
-                                      50% {
-                                   transform: translateY(-6px);
-                                          }
-                                    }
-                            `}
-        </style>
-
-        <motion.div
-          initial="hidden"
-          animate="visible"
-          variants={staggerContainer}>
-
-          <h1 id='travistrahead' style={{
-            marginTop: '-30px',
-            textAlign: 'center',
-            zIndex: -1,
-            fontSize: '15vw',
-            fontFamily: "'Cinzel', serif",
-            backgroundImage: `url(${travistraBgImage})`,
-            backgroundPosition: 'center',
-            backgroundSize: 'cover',
-            backgroundClip: 'text',
-            WebkitBackgroundClip: 'text',       // needed for Safari/Chrome
-            color: 'rgba(255, 255, 255, 0.5)',
-            animation: 'animateBg 10s linear infinite',
-          }}>
-            <motion.div variants={slideUp}>
-              Travistra
-            </motion.div>
-          </h1>
-
-
-          {/* ==================Hero================== */}
-          <motion.div variants={fadeIn}>
-            <div style={{ padding: 70, backgroundColor: 'transparent', marginTop: '-150px' }}>
-
-              <Box
-                component="section" id="/"
+      <Box
                 sx={{
-                  position: 'relative',
-                  width: '100%',
-                  height: '700px',
-                  // clipPath: 'polygon(0 0, 100% 0, 100% 85%, 0 100%)',
-                  // backgroundImage: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1530789253388-582c481c54b0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80')`,
-                  backgroundImage: `url(${bgImage})`,
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center',
-                  display: 'flex',
-                  alignItems: 'center',
-                  marginTop: -9,
-                  color: 'white',
+                    position: 'fixed',
+                    top: 70,
+                    left: 0,
+                    width: '100vw',
+                    height: '100vh',
+                    backgroundColor: 'black',
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    zIndex: -1,
+                    filter: 'blur(2px)',
+                    transform: 'scale(1.05)',
+                    pt: { xs: 6, md: 2 }, // paddingTop: 48px on xs, 16px on md
+                    px: { xs: 2, md: 4 }, // horizontal padding (optional)
                 }}
-              >
-                <Container maxWidth="md" sx={{ textAlign: 'center', }}>
-                  <Typography variant="h2" fontWeight="bold" gutterBottom>
-                    Discover the World with Us
-                  </Typography>
-                  <Typography variant="h5" sx={{ mb: 4 }}>
-                    Unforgettable adventures await. Experience breathtaking destinations
-                    with our expert guides.
-                  </Typography>
-                </Container>
-              </Box>
-            </div>
-          </motion.div>
-        </motion.div>
-      </div>
+            >
+                <style>
+                    {`
+      @keyframes animateBg {
+        0% { background-position-x: 0; }
+        100% { background-position-x: -200px; }
+      }
+      @keyframes bounceUp {
+        0%, 100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-6px);
+        }
+      }
+    `}
+                </style>
+
+                <motion.div initial="hidden" animate="visible" variants={staggerContainer}>
+                    <Typography
+                        id="travistrahead"
+                        component="h1"
+                        sx={{
+                            mt: { xs: -2, md: -4 },
+                            textAlign: 'center',
+                            zIndex: -1,
+                            fontSize: 'clamp(3rem, 15vw, 10rem)',
+                            fontFamily: "'Cinzel', serif",
+                            backgroundImage: `url(${travistraBgImage})`,
+                            backgroundPosition: 'center',
+                            backgroundSize: 'cover',
+                            backgroundClip: 'text',
+                            WebkitBackgroundClip: 'text',
+                            color: 'rgba(255, 255, 255, 0.5)',
+                            animation: 'animateBg 10s linear infinite',
+                        }}
+                    >
+                        <motion.div variants={slideUp}>Travistra</motion.div>
+                    </Typography>
+
+                    {/* Hero Section */}
+                    <motion.div variants={fadeIn}>
+                        <Box
+                            component="section"
+                            id="/"
+                            sx={{
+                                position: 'relative',
+                                width: '100%',
+                                minHeight: { xs: '100vh', md: '700px' },
+                                backgroundImage: `url(${bgImage})`,
+                                backgroundSize: 'cover',
+                                backgroundPosition: 'center',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                mt: { xs: -4, md: -9 },
+                                px: { xs: 2, md: 4 },
+                                py: { xs: 6, md: 0 },
+                                color: 'white',
+                            }}
+                        >
+                            <Container maxWidth="md" sx={{ textAlign: 'center' }}>
+                                <Typography variant="h2" fontWeight="bold" gutterBottom>
+                                    Discover the World with Us
+                                </Typography>
+                                <Typography variant="h5" sx={{ mb: { xs: 4, md: 6 } }}>
+                                    Unforgettable adventures await. Experience breathtaking destinations with our expert guides.
+                                </Typography>
+                            </Container>
+                        </Box>
+                    </motion.div>
+                </motion.div>
+            </Box>
       {/* ============Reg=================== */}
       <motion.div initial="hidden"
         animate="visible"

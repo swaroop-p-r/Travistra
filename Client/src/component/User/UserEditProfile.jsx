@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState, } from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import UserNav from './UserNav';
 import { Container, Row, Col, Form, Button, Image } from 'react-bootstrap';
 
@@ -9,6 +9,8 @@ export default function UserEditProfile() {
 
     const API_BASE_URL = import.meta.env.VITE_API_URL;
     // console.log(API_BASE_URL);
+
+    const navigate=useNavigate();
 
 
     const params = useParams();
@@ -25,6 +27,10 @@ export default function UserEditProfile() {
     const imageInputRef = useRef(null);
 
     const [password, setPassword] = useState('');
+
+    const [deleteProfileImage, setDeleteProfileImage] = useState(false);
+    const [deleteImage, setDeleteImage] = useState(false);
+
 
     const fetchUser = async () => {
         try {
@@ -81,12 +87,11 @@ export default function UserEditProfile() {
         }
     }
     const handleRemoveProfileImage = () => {
-        setProfileImage(null);
+        setProfileImage('removed');
         setProfilePrev(null);
         if (profileInputRef.current) {
             profileInputRef.current.value = '';
         }
-
     }
 
     const handleImage = (e) => {
@@ -97,7 +102,7 @@ export default function UserEditProfile() {
         }
     }
     const handleRemoveImage = () => {
-        setImage(null);
+        setImage('removed');
         setImagePrev(null);
         if (imageInputRef.current) {
             imageInputRef.current.value = '';
@@ -121,7 +126,7 @@ export default function UserEditProfile() {
         }
 
         if (image) {
-            formData.append('image', image); // Optional on edit, unless required
+            formData.append('image', image); 
         }
 
         try {
@@ -137,7 +142,9 @@ export default function UserEditProfile() {
             console.log(res.data);
             alert(res.data.msg);
             if (res.data.status === 200) {
-                // Optional: Redirect or refresh
+                setTimeout(() => {
+                    navigate('/userprofile');
+                }, 1000);
             }
         } catch (err) {
             console.log('Profile update failed', err)
@@ -151,7 +158,7 @@ export default function UserEditProfile() {
     return (
         <>
             <UserNav />
-            <Container className="mt-4 mb-5 bg-black" style={{ borderRadius: 8, paddingTop: 10, height: '820px' }}>
+            <Container className="mt-4 mb-5 bg-black" style={{ borderRadius: 8, padding: 10, }}>
                 <div className="text-center mb-4">
                     <h2 className="fw-bold" style={{ color: 'white' }}>Profile Update</h2>
                     <p className="text-#3498db" style={{ color: 'silver' }}>Update your personal information</p>

@@ -53,14 +53,14 @@ const staggerContainer = {
 export default function UserHome() {
 
   const API_BASE_URL = import.meta.env.VITE_API_URL;
-    // console.log(API_BASE_URL);
+  // console.log(API_BASE_URL);
 
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   const token = localStorage.getItem('token');
-  const navigate=useNavigate();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -115,20 +115,33 @@ export default function UserHome() {
         <Box p={3}>
           {/* User Profile Header */}
           <motion.div variants={slideUp}>
-            <Card elevation={3} sx={{ mb: 4 }}>
+            <Card elevation={3} sx={{ mb: { xs: 3, md: 4 }, px: { xs: 1, md: 2 } }}>
               <CardContent>
-                <Box display="flex" alignItems="center">
+                <Box
+                  display="flex"
+                  flexDirection={{ xs: 'column', md: 'row' }}
+                  alignItems={{ xs: 'center', md: 'flex-start' }}
+                  textAlign={{ xs: 'center', md: 'left' }}
+                  gap={2}
+                >
                   <Avatar
                     src={`${API_BASE_URL}/uploads/${userData.userProfilePhoto}`}
-                    sx={{ width: 80, height: 80, mr: 3 }}
+                    sx={{
+                      width: { xs: 60, md: 80 },
+                      height: { xs: 60, md: 80 },
+                      mb: { xs: 2, md: 0 },
+                      mr: { md: 3 },
+                    }}
                   >
                     <Person fontSize="large" />
                   </Avatar>
+
                   <Box>
-                    <Typography variant="h4" gutterBottom>
+                    <Typography variant="h5" gutterBottom sx={{ fontSize: { xs: '1.3rem', md: '2rem' } }}>
                       Welcome, {userData.username}
                     </Typography>
-                    <Box display="flex" flexWrap="wrap" gap={2}>
+
+                    <Box display="flex" flexDirection="column" gap={1}>
                       <Paper
                         elevation={1}
                         sx={{
@@ -139,14 +152,22 @@ export default function UserHome() {
                           py: 0.5,
                           backgroundColor: userData.userStatus ? 'success.light' : 'warning.light',
                           color: 'black',
-                          borderRadius: 4
+                          borderRadius: 4,
+                          width: 'fit-content',
+                          alignSelf: { xs: 'center', md: 'flex-start' },
                         }}
                       >
                         <Person fontSize="small" />
                         Status: {userData.userStatus ? 'Active' : 'Inactive'}
                       </Paper>
 
-                      <Box display="flex" flexWrap="wrap" gap={2}>
+                      <Box
+                        display="flex"
+                        flexDirection={{ xs: 'column', sm: 'row' }}
+                        flexWrap="wrap"
+                        justifyContent={{ xs: 'center', md: 'flex-start' }}
+                        gap={1}
+                      >
                         <Paper
                           elevation={1}
                           sx={{
@@ -158,6 +179,7 @@ export default function UserHome() {
                             borderRadius: 4,
                             backgroundColor: 'primary.light',
                             color: 'primary.contrastText',
+                            width: 'fit-content',
                           }}
                         >
                           <Payment fontSize="small" />
@@ -176,6 +198,7 @@ export default function UserHome() {
                               borderRadius: 4,
                               backgroundColor: 'secondary.light',
                               color: 'secondary.contrastText',
+                              width: 'fit-content',
                             }}
                           >
                             <Payment fontSize="small" />
@@ -183,13 +206,13 @@ export default function UserHome() {
                           </Paper>
                         )}
                       </Box>
-
                     </Box>
                   </Box>
                 </Box>
               </CardContent>
             </Card>
           </motion.div>
+
 
           {/* Stats Grid */}
           <Grid container spacing={3}>
@@ -279,7 +302,13 @@ export default function UserHome() {
                           <Typography variant="body2">Jeeps</Typography>
                         </Card>
                       </Grid>
-                      
+                      <Grid item xs={6}>
+                        <Card variant="outlined" sx={{ p: 1.5, textAlign: 'center' }}>
+                          <Typography variant="h5">{userData.totalSuv}</Typography>
+                          <Typography variant="body2">Suvs</Typography>
+                        </Card>
+                      </Grid>
+
                     </Grid>
                   </CardContent>
                 </Card>

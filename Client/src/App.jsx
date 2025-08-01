@@ -94,11 +94,21 @@ const ForgotPage = lazy(() => import('./component/Home/ForgotPassword'));
 function App() {
   return (
     <BrowserRouter>
-      <Suspense fallback={
-        <div className="d-flex flex-column align-items-center" style={{ marginTop: '50px' }}>
-          <Lottie animationData={loadingAnimation} loop={true} style={{ maxHeight: '150px', maxWidth: '250px' }} />
-        </div>
-      }>
+      <Suspense
+        fallback={
+          <div
+            className="d-flex justify-content-center align-items-center"
+            style={{ height: '100vh',background:'#fff4e6' }}
+          >
+            <Lottie
+              animationData={loadingAnimation}
+              loop={true}
+              style={{ maxHeight: '150px', maxWidth: '250px' }}
+            />
+          </div>
+        }
+      >
+
         <Routes>
           <Route path="/*" element={<MissingPage />} />
           <Route path="/" element={<HomePg />} />

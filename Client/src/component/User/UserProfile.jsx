@@ -36,7 +36,8 @@ export default function UserProfile() {
             });
 
             if (res.data.status === false) {
-                alert(res.data.msg || "Unauthorized");
+                alert(res.data.msg || "Login Again");
+                navigate('/login');
             } else {
                 setUser(res.data);
             }
@@ -91,11 +92,11 @@ export default function UserProfile() {
                 <Card.Body>
                     <div className="d-flex bg-white flex-wrap align-items-center">
                         <Image
-                            src={user.profile_image ? `${API_BASE_URL}/uploads/${user.profile_image}` : 'https://via.placeholder.com/120?text=No+Image'}
+                            src={user.profile_image ? `${API_BASE_URL}/uploads/${user.profile_image}` : '/project_image/profile_error.png'}
                             roundedCircle
                             width={120}
                             height={120}
-                            alt="User"
+                            alt="Profile not added"
                             className="mr-3 mb-3"
                             onClick={()=>handleImageClick(user.profile_image,'Profile Photo')}
                         />
