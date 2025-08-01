@@ -248,7 +248,7 @@ export default function HomePg() {
 
   return (
     <>
-      <div style={{ backgroundColor: 'black', display:'flex', flexDirection:'column' }}>
+      <div style={{ backgroundColor: 'black', display: 'flex', flexDirection: 'column' }}>
 
         <HomeNav />
         {/* ====================Header & Hero============================= */}
@@ -302,25 +302,28 @@ export default function HomePg() {
               sx={{
                 position: 'relative',
                 minWidth: { xs: '300px', md: '700px' },
-                minHeight: { xs: '500px', md: '700px',lg: '50rem' },
+                minHeight: { xs: '500px', md: '700px', lg: '80rem' },
                 backgroundImage: `url(${bgImage})`,
-                backgroundSize: 'cover',
+                backgroundRepeat: 'no-repeat',
+                backgroundSize: 'contain', // ✅ responsive background size
                 backgroundPosition: 'center',
                 display: 'flex',
                 alignItems: 'center',
-                mt: { xs: -12, md: -19 },
+                mt: { xs: -22, md: -20 ,lg: -45 },
                 px: 2,
                 py: { xs: 6, md: 0 },
                 color: 'white',
               }}
             >
+
               <Container maxWidth="md" sx={{ textAlign: 'center' }}>
                 <Typography
                   variant="h2"
                   fontWeight="bold"
                   gutterBottom
                   sx={{
-                    fontSize: { xs: '2.5rem', sm: '3rem', md: '3.5rem', lg: '4rem' },
+                    fontSize: { xs: '2rem', sm: '3rem', md: '3.5rem', lg: '6rem' },
+                    mt: { xs: 20, md: 0 ,lg: 0 },
                   }}
                 >
                   Discover the World with Us
